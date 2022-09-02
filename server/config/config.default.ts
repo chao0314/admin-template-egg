@@ -11,23 +11,30 @@ export default (appInfo: EggAppInfo) => {
     config.middleware = [];
     config.mysql2 = {
         client: {
-            host:'117.50.187.251',
-            port:3306,
-            user:'template',
-            password:'template',
-            database:'template_db',
+            host: '117.50.187.251',
+            port: 3306,
+            user: 'template',
+            password: 'template',
+            database: 'template_db',
             waitForConnections: true,
             connectionLimit: 10,
             queueLimit: 0
         }
 
+    };
+
+    config.redis = {
+        client: {
+            host: '117.50.187.251',
+            port: 6379
+        }
     }
 
-    config.onerror =  {
+    config.onerror = {
 
-        all(err:Error,ctx:Context){
+        all(err: Error, ctx: Context) {
 
-            console.log('egg error',err);
+            console.log('egg error', err);
             ctx.body = 'egg error'
         }
     }

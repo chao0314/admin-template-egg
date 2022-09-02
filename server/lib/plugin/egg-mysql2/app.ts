@@ -1,16 +1,18 @@
 import {Application} from "egg";
-import {MysqlConfig} from "./typings";
+import {MysqlConfig, Rows, Info} from "./typings";
+import {Pool} from "mysql2/promise";
 
 const mysql2 = require('mysql2');
 
-class BookHook {
-    private app:Application&{mysql2:any};
+class MySql2BootHook {
+    private app: Application & { mysql2: Pool };
+
     constructor(app) {
-        this.app =  app;
-        this.app.addSingleton('mysql2',this.createMysqlPool)
+        this.app = app;
+        this.app.addSingleton('mysql2', this.createMysqlPool)
     }
 
-    private createMysqlPool(config:MysqlConfig) {
+    private createMysqlPool(config: MysqlConfig) {
 
 
         const pool = mysql2.createPool(config);
@@ -18,26 +20,25 @@ class BookHook {
 
     }
 
-    async didLoad(){
-
+    async didLoad() {
 
         // this.app.addSingleton('mysql2',this.createMysqlPool)
 
     }
 
-    async willReady(){
+    async willReady() {
 
         try {
 
-           const rows = await this.app.mysql2.execute('select now() as currentTime');
-            console.log('mysql success',rows)
-        }catch (e) {
-
-            console.error('mysql error');
+            const [rows] = await this.app.mysql2.execute<Rows<Info>>('select now() as currentTime');
+            this.app.coreLogger.info('mysql2 pool init success ,time is: ', rows[0].currentTime);
+            console.log('mysql2 pool init success ,time is: ', rows[0].currentTime);
+        } catch (e) {
+            console.error('mysql2 init failed', e);
             throw  e;
         }
 
     }
 }
 
-module.exports = BookHook;
+module.exports = MySql2BootHook;

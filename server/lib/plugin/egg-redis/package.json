@@ -1,5 +1,5 @@
 {
-  "name": "egg-mysql2",
+  "name": "egg-redis",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,11 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mysql2": "^2.3.3"
+    "ioredis": "^5.2.3"
   },
   "eggPlugin": {
-    "name": "mysql2",
+    "name": "redis",
     "dependencies": []
   }
-
 }

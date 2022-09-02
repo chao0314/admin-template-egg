@@ -1,3 +1,5 @@
+import {RowDataPacket} from "mysql2";
+
 export type MysqlConfig = {
     host:string,
     port:number,
@@ -8,4 +10,15 @@ export type MysqlConfig = {
     connectionLimit?: number,
     queueLimit?: number
 
+}
+
+
+
+export type  Row<T> = RowDataPacket & T;
+
+export type Rows<T> = Row<T>[];
+
+export  interface Info{
+
+    currentTime:string
 }
