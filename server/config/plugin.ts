@@ -14,7 +14,7 @@ const plugin: EggPlugin = {
         path:path.join(__dirname,'../lib/plugin/egg-mysql2')
     },
     redis:{
-        enable:true,
+        enable:false,
         path:path.join(__dirname,'../lib/plugin/egg-redis')
     }
 };
