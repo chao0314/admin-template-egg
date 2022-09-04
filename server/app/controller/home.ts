@@ -12,6 +12,7 @@ export default class HomeController extends Controller {
 
     const {data,text} =  this.app.createCaptcha();
     console.log(text)
+
     this.ctx.body = data
 
 
