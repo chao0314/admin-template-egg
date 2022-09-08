@@ -9,6 +9,17 @@ export default (appInfo: EggAppInfo) => {
 
     // add your egg config in here
     config.middleware = [];
+
+    config.security = {
+        csrf:{
+            enable:false
+        }
+    }
+
+    config.i18n = {
+        defaultLocale: 'zh-CN'
+    }
+
     config.mysql2 = {
         client: {
             host: '117.50.187.251',
@@ -22,7 +33,6 @@ export default (appInfo: EggAppInfo) => {
         }
 
     };
-
     config.redis = {
         client: {
             host: '117.50.187.251',
@@ -39,24 +49,55 @@ export default (appInfo: EggAppInfo) => {
         color: true, // 验证码的字符是否有颜色，默认没有，如果设定了背景，则默认有
         background: '#eee' // 验证码图片背景颜色
     }
+    config.mailer = {
+        host: "smtp.qq.com",
+        port: 465,
+        secure: true,
+        auth: {
+            user: "125301689@qq.com", // generated ethereal user
+            pass: "yuexpioyxjvkbicj", // generated ethereal password
+        }
+    }
+    config.cloud = {
+
+        tencentCloud: {
+            client: {
+                credential: {
+                    secretId: 'AKID74lCNHuGK8fvud5GAoBH6evve6ICpBH5',
+                    secretKey: 'YppZ2E9oCI8j36rQijTw94j7F6gy0lFS',
+                },
+                region: "ap-guangzhou",
+            },
+
+            sms: {
+                SmsSdkAppId: '1400733130',
+                SignName: '个人技术记录个人网',
+                TemplateId: '1533430'
+            }
+
+        }
+
+    }
 
     config.onerror = {
 
         all(err: Error, ctx: Context) {
 
-            console.log('egg error', err);
-            ctx.body = 'egg error'
+            console.error('Server Internal Error !', err);
+            ctx.logger.error('Server Internal Error !', err);
+            ctx.status = 500;
+            ctx.body = 'Server Internal Error!'
         }
     }
 
     // add your special config in here
-    const bizConfig = {
-        sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
+    const comConfig = {
+        // sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
     };
 
     // the return config will combines to EggAppConfig
     return {
         ...config,
-        ...bizConfig,
+        ...comConfig,
     };
 };

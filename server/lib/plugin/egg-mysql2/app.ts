@@ -29,7 +29,6 @@ class MySql2BootHook {
     async willReady() {
 
         try {
-
             const [rows] = await this.app.mysql2.execute<Rows<Info>>('select now() as currentTime');
             this.app.coreLogger.info('mysql2 pool init success ,time is: ', rows[0].currentTime);
             console.log('mysql2 pool init success ,time is: ', rows[0].currentTime);

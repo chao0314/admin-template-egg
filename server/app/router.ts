@@ -6,4 +6,8 @@ export default (app: Application) => {
   router.get('/', controller.home.index);
 
   router.get('/captcha',controller.home.getCaptcha);
+  router.get('/mail',controller.home.sendMail);
+  router.get('/sms',controller.home.sendSms);
+
+
 };

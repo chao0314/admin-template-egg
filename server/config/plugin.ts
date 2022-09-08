@@ -16,7 +16,17 @@ const plugin: EggPlugin = {
     redis:{
         enable:false,
         path:path.join(__dirname,'../lib/plugin/egg-redis')
+    },
+    cloud:{
+        enable:false,
+        path:path.join(__dirname,'../lib/plugin/egg-cloud')
+    },
+    validator:{
+        enable:true,
+        path:path.join(__dirname,'../lib/plugin/egg-validator')
     }
+
+
 };
 
 export default plugin;
