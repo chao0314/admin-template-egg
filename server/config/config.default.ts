@@ -1,4 +1,5 @@
 import {Context, EggAppConfig, EggAppInfo, PowerPartial} from 'egg';
+import * as path from "path";
 
 export default (appInfo: EggAppInfo) => {
     const config = {} as PowerPartial<EggAppConfig>;
@@ -11,8 +12,8 @@ export default (appInfo: EggAppInfo) => {
     config.middleware = [];
 
     config.security = {
-        csrf:{
-            enable:false
+        csrf: {
+            enable: false
         }
     }
 
@@ -61,10 +62,12 @@ export default (appInfo: EggAppInfo) => {
     config.cloud = {
 
         tencentCloud: {
+            secretPath:path.join(__dirname,'../.sec'),
             client: {
+                //注意秘钥的安全性
                 credential: {
-                    secretId: 'AKID74lCNHuGK8fvud5GAoBH6evve6ICpBH5',
-                    secretKey: 'YppZ2E9oCI8j36rQijTw94j7F6gy0lFS',
+                    secretId: null,
+                    secretKey: null,
                 },
                 region: "ap-guangzhou",
             },

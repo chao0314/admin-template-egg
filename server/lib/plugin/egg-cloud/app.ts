@@ -2,6 +2,9 @@ import {Application} from "egg";
 
 import * as tencentCloud from 'tencentcloud-sdk-nodejs-sms';
 
+import {createInterface} from "readline";
+import {createReadStream} from "fs";
+
 const SmsClient = tencentCloud.sms.v20210111.Client;
 
 class CloudBootHook {
@@ -17,7 +20,30 @@ class CloudBootHook {
         const config = this.app.config.cloud;
         if (typeof config.tencentCloud === 'object') {
 
-            const {client, sms} = config.tencentCloud;
+            const {client, sms, secretPath} = config.tencentCloud;
+
+            // secret path 配置的 参数 替换掉 硬编码(不安全)
+            if (secretPath) {
+                const rl = createInterface({
+                    input: createReadStream(secretPath)
+                    // output: process.stdout
+                });
+
+                rl.on('line', (data) => {
+
+                    //secretId:xxx
+                    //secretKey:xxx
+                    const [key, value] = data.split(':');
+                    client.credential[key] = value;
+
+                })
+
+                // rl.on('close', () => {
+                //
+                //
+                // })
+
+            }
 
             const smsClient = new SmsClient(client);
 
