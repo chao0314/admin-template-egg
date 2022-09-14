@@ -11,8 +11,14 @@ import {ElConfigProvider} from 'element-plus'
 
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import App from './App.vue';
+import {locale as loc} from './locale/zh-cn';
+import type {Locale} from './locale/zh-cn';
+import {provide} from "vue";
 
-const locale =  zhCn;
+const locale = zhCn;
+
+provide<Locale>('locale', loc);
+
 </script>
 
 <style scoped>
