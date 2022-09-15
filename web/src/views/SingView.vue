@@ -1,5 +1,4 @@
 <template>
-
   <el-dialog :model-value="true"
              :show-close="false"
              :title="title"
@@ -8,17 +7,20 @@
   >
     <router-view></router-view>
   </el-dialog>
-
-
 </template>
 
 <script setup lang="ts">
-import SingIn from '../components/home/SingIn.vue';
-import SingUp from '../components/home/SingUp.vue';
-import {inject, ref} from "vue";
+import {computed, inject} from "vue";
 import type {Locale} from "@/locale/zh-cn";
-const locale =  inject<Locale>('locale');
-const title =  ref(locale?.singIn);
+import {useRoute} from "vue-router";
+
+const locale = inject<Locale>('locale');
+const route = useRoute();
+const title = computed(() => {
+  const name = route.name;
+  if (name && locale) return locale[name as keyof Locale];
+  else return locale?.singIn;
+})
 </script>
 
 <style scoped>

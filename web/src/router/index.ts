@@ -1,22 +1,22 @@
 import {createRouter, createWebHistory} from 'vue-router';
-import HomeView from '../views/HomeView.vue';
-import SingIn from '../components/home/SingIn.vue';
-import SingUp from '../components/home/SingUp.vue';
+import SingView from '../views/SingView.vue';
+import SingIn from '../components/sing/SingIn.vue';
+import SingUp from '../components/sing/SingUp.vue';
 // const UserView = () => import(/* webpackChunkName: "user" */'../views/UserView.vue');
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
-            path: '/',
-            name: 'home',
-            component: HomeView,
+            path: '/sing',
+            name: 'sing',
+            component: SingView,
             children: [
                 {
-                    path: '',
+                    path: 'in',
                     name: 'singIn',
                     component: SingIn
                 }, {
-                    path: 'singUp',
+                    path: 'up',
                     name: 'singUp',
                     component: SingUp
 
