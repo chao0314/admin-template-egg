@@ -9,5 +9,7 @@ export default (app: Application) => {
   router.get('/mail',controller.home.sendMail);
   router.get('/sms',controller.home.sendSms);
 
-
+  router.post('/singUp',controller.home.singUp)
+  router.post('/singUpEmail',controller.home.singUpEmail);
+  router.post('/singUpPhone',controller.home.singUpPhone);
 };

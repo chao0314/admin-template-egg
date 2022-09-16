@@ -1,6 +1,7 @@
 {
-    "emailCode":"邮箱验证码",
-    "email %s Text %s":"正在注册的 %s 账号，邮箱验证码是 %s，五分钟有效。",
-    "codeExpired": "验证码过期"
-
+  "emailCode": "邮箱验证码",
+  "email %s Text %s": "正在注册的 %s 账号，邮箱验证码是 %s，五分钟有效。",
+  "codeExpired": "验证码过期",
+  "checkUsername": "请输入用户名,可以是数字、字母、下划线",
+  "checkPassword": "需同时包含大小写字母和数字，最少6位，最多10位"
 }

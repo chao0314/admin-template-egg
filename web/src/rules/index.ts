@@ -8,6 +8,7 @@ const index: FormRules = {
     username: {
         type: 'string',
         required: true,
+        pattern: /^\w+$/g,
         message: () => locale?.checkUsername
 
     },
@@ -18,25 +19,6 @@ const index: FormRules = {
         message: () => locale?.checkPassword
 
     },
-    password2:[
-        {
-
-            type:'string',
-            required:true,
-        },
-        {
-
-            validator(rule, value, callback, source, options){
-
-                console.log(rule);
-                console.log(value);
-                console.log(callback);
-                console.log("source---",source);
-                console.log(options)
-                return []
-            }
-        }
-    ],
     verificationCode: {
         type: "string",
         required: true,

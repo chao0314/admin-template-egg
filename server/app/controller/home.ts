@@ -1,5 +1,5 @@
 import {Controller} from 'egg';
-import {emailDes, phoneDes, ValidateError} from "../descriptor";
+import {emailDes, phoneDes, usernameDes, passwordDes, ValidateError} from "../descriptor";
 
 export default class HomeController extends Controller {
     public async index() {
@@ -60,20 +60,6 @@ export default class HomeController extends Controller {
     }
 
 
-    async singUpEmail() {
-        const {app, ctx} = this;
-        const {email, code} = ctx.request.body;
-        const rCode = await app.redis.get(email);
-        if (code && rCode && rCode === code) {
-            //todo
-
-
-            ctx.success();
-        } else ctx.failure(ctx.__('codeExpired'));
-
-
-    }
-
     async sendSms() {
         const {app, ctx} = this;
         const {phone: phoneNum} = ctx.query;
@@ -97,6 +83,20 @@ export default class HomeController extends Controller {
 
     }
 
+    async singUpEmail() {
+        const {app, ctx} = this;
+        const {email, code} = ctx.request.body;
+        const rCode = await app.redis.get(email);
+        if (code && rCode && rCode === code) {
+            //todo
+            console.log('sing up email');
+            console.log(email);
+
+            ctx.success();
+        } else ctx.failure(ctx.__('codeExpired'));
+
+
+    }
 
     async singUpPhone() {
 
@@ -108,6 +108,8 @@ export default class HomeController extends Controller {
 
         if (code && rCode && code === rCode) {
             //todo...
+            console.log('sing up phone');
+            console.log(phone);
 
             ctx.success();
         } else ctx.failure(ctx.__('codeExpired'));
@@ -115,15 +117,23 @@ export default class HomeController extends Controller {
     }
 
 
-    async singUp(){
+    async singUp() {
 
-        const {app,ctx} =  this;
+        const {app, ctx,service} = this;
 
-        const {username,password} = ctx.request.body;
+        const {username, password} = ctx.request.body;
 
-        console.log(app,username,password);
+        const des = Object.assign({}, usernameDes, passwordDes);
+        const validator = app.validator(des);
 
-        //todo
+        try {
+            await validator.validate({username, password});
+        } catch (e: unknown) {
+            return ctx.badRequest(`${username} ${password}`);
+        }
+
+        await service.home.createUser(username,password);
+
 
         ctx.success();
 

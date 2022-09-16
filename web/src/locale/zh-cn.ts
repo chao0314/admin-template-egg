@@ -6,14 +6,15 @@ export const locale = {
     password: '密码',
     password2: '确认密码',
     emailOrPhone: '邮箱或手机号',
-    checkUsername: '请输入用户名',
+    checkUsername: '请输入用户名,可以是数字、字母、下划线',
     checkPassword: '需同时包含大小写字母和数字，最少6位，最多10位',
     verificationCode: '验证码',
     checkCode: '格式有误',
     account: '账户',
     checkAccount: '账户格式有误',
     dynamicCode: '动态码',
-    otherSingIn: '其他登录方式'
+    otherSingIn: '其他登录方式',
+    passwordConfirm:'两次密码不一致'
 
 }
 

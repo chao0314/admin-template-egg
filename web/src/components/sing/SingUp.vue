@@ -73,13 +73,9 @@
       </el-form>
     </el-tab-pane>
   </el-tabs>
-  <el-divider class="sing-in__divider">{{ locale?.otherSingIn }}</el-divider>
-  <el-row justify="center">
-    <img src="../../assets/wx.png" alt="" class="sing-in__wx">
-  </el-row>
   <div class="sing-in__button">
     <el-button type="primary">
-      {{ locale.singIn }}
+      {{ locale.singUp }}
     </el-button>
   </div>
 </template>
@@ -115,5 +111,11 @@ const handleClick = () => {
 </script>
 
 <style scoped>
+
+.sing-in__button {
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+}
 
 </style>

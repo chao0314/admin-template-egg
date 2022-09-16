@@ -72,7 +72,8 @@
   </el-tabs>
   <el-divider class="sing-in__divider">{{ locale?.otherSingIn }}</el-divider>
   <el-row justify="center">
-    <img src="../../assets/wx.png" alt="" class="sing-in__wx">
+    <img src="../../assets/wx.png" alt="" class="sing-in__icon">
+    <img src="../../assets/github.png" alt="" class="sing-in__icon">
   </el-row>
   <div class="sing-in__button">
     <el-button type="primary">
@@ -125,9 +126,12 @@ const mode = ref('password')
   font-size: 12px;
 }
 
-.sing-in__wx {
+.sing-in__icon {
 
   cursor: pointer;
+  margin-right: 5px;
 }
+
+
 
 </style>
