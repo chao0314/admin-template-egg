@@ -49,6 +49,9 @@
           <el-form-item :label="locale.password" prop="password">
             <el-input type="password" v-model="otherFormData.password"/>
           </el-form-item>
+          <el-form-item :label="locale.password2" prop="password">
+            <el-input type="password" v-model="otherFormData.password2"/>
+          </el-form-item>
           <el-form-item :label="locale.verificationCode" prop="verificationCode">
             <el-row :gutter="4">
               <el-col :span="14">
@@ -66,7 +69,7 @@
               <el-input v-model="otherFormData.dynamicCode"/>
             </el-col>
             <el-col :span="6">
-              <el-button type="primary" plain>60</el-button>
+              <el-button type="primary" plain>发送/60</el-button>
             </el-col>
           </el-row>
         </el-form-item>
@@ -100,6 +103,7 @@ const formData = reactive({
 const otherFormData = reactive({
   account: '',
   password: '',
+  password2: '',
   dynamicCode: ''
 })
 

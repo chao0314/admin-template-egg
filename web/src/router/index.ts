@@ -2,10 +2,16 @@ import {createRouter, createWebHistory} from 'vue-router';
 import SingView from '../views/SingView.vue';
 import SingIn from '../components/sing/SingIn.vue';
 import SingUp from '../components/sing/SingUp.vue';
+
+const HomeView = () => import(/* webpackChunkName: "home" */'../views/HomeView.vue');
 // const UserView = () => import(/* webpackChunkName: "user" */'../views/UserView.vue');
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
+        {
+            path: '/',
+            component: HomeView
+        },
         {
             path: '/sing',
             name: 'sing',

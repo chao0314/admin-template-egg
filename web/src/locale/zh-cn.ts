@@ -14,7 +14,18 @@ export const locale = {
     checkAccount: '账户格式有误',
     dynamicCode: '动态码',
     otherSingIn: '其他登录方式',
-    passwordConfirm:'两次密码不一致'
+    passwordConfirm:'两次密码不一致',
+    query:'查询',
+    exportSearchResult:'导出搜索结果',
+    createUser:'添加用户',
+    importUser:'导入用户',
+    role:'角色',
+    state:'状态',
+    operation:'操作',
+    email:'邮箱',
+    phone:'电话',
+    cancel:'取消',
+    confirm:'确认'
 
 }
 

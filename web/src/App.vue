@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app">
     <router-view></router-view>
   </div>
 </template>
@@ -12,4 +12,11 @@
 
 <style scoped>
 
+</style>
+
+<style>
+html {
+  height: 100%;
+  background: #f0f0f0;
+}
 </style>
