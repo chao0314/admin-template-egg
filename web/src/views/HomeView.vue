@@ -10,12 +10,8 @@
         </div>
       </el-header>
       <el-container>
-        <el-aside width="100px">
-          <home-menu></home-menu>
-        </el-aside>
-        <el-main>
-          <home-main></home-main>
-        </el-main>
+        <home-menu></home-menu>
+        <home-main></home-main>
       </el-container>
     </el-container>
   </div>

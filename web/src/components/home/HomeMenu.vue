@@ -1,80 +1,121 @@
 <template>
-<!--  <el-button class="menu-arrow">-->
-<!--    <el-icon>-->
-<!--      <DArrowRight/>-->
-<!--    </el-icon>-->
-<!--  </el-button>-->
+
   <el-menu
+      class="home-menu"
       default-active="2"
-      class="el-menu-vertical-demo"
       :collapse="isCollapse"
       @open="handleOpen"
       @close="handleClose"
+      @select="handleSelect"
   >
-    <el-sub-menu index="1">
+    <el-menu-item index="0">
+      <el-button v-if="isCollapse"
+                 @click="isCollapse = false"
+                 class="menu__collapse-button"
+      >
+        <el-icon>
+          <DArrowRight/>
+        </el-icon>
+      </el-button>
+      <template v-if="!isCollapse" #title>
+        <el-button type="primary"
+                   @click="isCollapse = true"
+                   class="menu__collapse-button"
+        >
+          <el-icon>
+            <DArrowLeft/>
+          </el-icon>
+        </el-button>
+      </template>
+    </el-menu-item>
+    <el-sub-menu index="user">
       <template #title>
         <el-icon>
-          <location/>
+          <HomeFilled/>
         </el-icon>
-        <span>Navigator One</span>
+        <span>{{ locale.userManagement }}</span>
       </template>
-      <el-menu-item-group>
-        <template #title><span>Group One</span></template>
-        <el-menu-item index="1-1">item one</el-menu-item>
-        <el-menu-item index="1-2">item two</el-menu-item>
-      </el-menu-item-group>
-      <el-menu-item-group title="Group Two">
-        <el-menu-item index="1-3">item three</el-menu-item>
-      </el-menu-item-group>
-      <el-sub-menu index="1-4">
-        <template #title><span>item four</span></template>
-        <el-menu-item index="1-4-1">item one</el-menu-item>
-      </el-sub-menu>
+      <el-menu-item index="list">
+        <el-icon>
+          <User/>
+        </el-icon>
+        <template #title>
+          {{ locale.userList }}
+        </template>
+      </el-menu-item>
     </el-sub-menu>
-    <el-menu-item index="2">
-      <el-icon>
-        <icon-menu/>
-      </el-icon>
-      <template #title>Navigator Two</template>
-    </el-menu-item>
-    <el-menu-item index="3" disabled>
-      <el-icon>
-        <document/>
-      </el-icon>
-      <template #title>Navigator Three</template>
-    </el-menu-item>
-    <el-menu-item index="4">
-      <el-icon>
-        <setting/>
-      </el-icon>
-      <template #title>Navigator Four</template>
-    </el-menu-item>
+    <el-sub-menu index="permission">
+      <template #title>
+        <el-icon>
+          <List/>
+        </el-icon>
+        <span>{{ locale.permissionManagement }}</span>
+      </template>
+      <el-menu-item index="role">
+        <el-icon>
+          <View/>
+        </el-icon>
+        <template #title>
+          {{ locale.roleList }}
+        </template>
+      </el-menu-item>
+      <el-menu-item index="list">
+        <el-icon>
+          <Unlock/>
+        </el-icon>
+        <template #title>
+          {{ locale.permissionList }}
+        </template>
+      </el-menu-item>
+    </el-sub-menu>
   </el-menu>
+
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
+import {inject, ref} from 'vue';
+import {useRouter} from "vue-router";
 import {
-  Document,
-  Menu as IconMenu,
-  Location,
-  Setting,
   DArrowLeft,
-  DArrowRight
+  DArrowRight,
+  HomeFilled,
+  User,
+  List,
+  View,
+  Unlock
 } from '@element-plus/icons-vue';
+import type {Locale} from "@/locale/zh-cn";
+const router =  useRouter();
 // const props = withDefaults(defineProps<{}>(), {})
-const isCollapse = ref(true)
+const locale = inject<Locale>('locale');
+const isCollapse = ref(false);
+
 const handleOpen = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
+  console.log('open',key, keyPath)
 }
 const handleClose = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
+  console.log('close',key, keyPath)
+}
+const handleSelect = (key:string,keyPath:string[]) => {
+  console.log(keyPath,keyPath.join('/'));
+  router.push(`/${keyPath.join('/')}`)
+
 }
 </script>
 
 <style scoped>
+.home-menu {
+  height: calc(100vh - 100px);
+}
 
-/*.menu-arrow{*/
-/*  width: 100%;*/
-/*}*/
+.home-menu:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 400px;
+}
+
+.menu__collapse-button {
+  width: 100%;
+  border: none;
+}
+
 </style>

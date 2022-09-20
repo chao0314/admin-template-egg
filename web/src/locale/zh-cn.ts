@@ -14,18 +14,32 @@ export const locale = {
     checkAccount: '账户格式有误',
     dynamicCode: '动态码',
     otherSingIn: '其他登录方式',
-    passwordConfirm:'两次密码不一致',
-    query:'查询',
-    exportSearchResult:'导出搜索结果',
-    createUser:'添加用户',
-    importUser:'导入用户',
-    role:'角色',
-    state:'状态',
-    operation:'操作',
-    email:'邮箱',
-    phone:'电话',
-    cancel:'取消',
-    confirm:'确认'
+    passwordConfirm: '两次密码不一致',
+    query: '查询',
+    exportSearchResult: '导出搜索结果',
+    createUser: '添加用户',
+    importUser: '导入用户',
+    role: '角色',
+    state: '状态',
+    operation: '操作',
+    email: '邮箱',
+    phone: '电话',
+    cancel: '取消',
+    confirm: '确认',
+    userManagement: '用户管理',
+    permissionManagement: '权限管理',
+    userList: '用户列表',
+    roleList: '角色列表',
+    permissionList: '权限列表',
+    routeMap: {
+        index: '首页',
+        user: '用户管理',
+        'user/list': '用户列表',
+        permission: '权限管理',
+        'permission/role': '角色列表',
+        'permission/list': '权限列表'
+
+    }
 
 }
 
