@@ -2,13 +2,13 @@
 
   <el-menu
       class="home-menu"
-      default-active="2"
+      :default-active="defaultActive"
       :collapse="isCollapse"
       @open="handleOpen"
       @close="handleClose"
       @select="handleSelect"
   >
-    <el-menu-item index="0">
+    <el-menu-item index="-1">
       <el-button v-if="isCollapse"
                  @click="isCollapse = false"
                  class="menu__collapse-button"
@@ -35,7 +35,7 @@
         </el-icon>
         <span>{{ locale.userManagement }}</span>
       </template>
-      <el-menu-item index="list">
+      <el-menu-item index="user/list">
         <el-icon>
           <User/>
         </el-icon>
@@ -51,7 +51,7 @@
         </el-icon>
         <span>{{ locale.permissionManagement }}</span>
       </template>
-      <el-menu-item index="role">
+      <el-menu-item index="permission/role">
         <el-icon>
           <View/>
         </el-icon>
@@ -59,7 +59,7 @@
           {{ locale.roleList }}
         </template>
       </el-menu-item>
-      <el-menu-item index="list">
+      <el-menu-item index="permission/list">
         <el-icon>
           <Unlock/>
         </el-icon>
@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import {inject, ref} from 'vue';
+import {computed, inject, ref} from 'vue';
 import {useRouter} from "vue-router";
 import {
   DArrowLeft,
@@ -85,22 +85,26 @@ import {
   Unlock
 } from '@element-plus/icons-vue';
 import type {Locale} from "@/locale/zh-cn";
-const router =  useRouter();
+
+const router = useRouter();
 // const props = withDefaults(defineProps<{}>(), {})
 const locale = inject<Locale>('locale');
 const isCollapse = ref(false);
 
+const defaultActive = computed(() => router.currentRoute.value.fullPath.slice(1))
 const handleOpen = (key: string, keyPath: string[]) => {
-  console.log('open',key, keyPath)
+  console.log('open', key, keyPath)
 }
 const handleClose = (key: string, keyPath: string[]) => {
-  console.log('close',key, keyPath)
+  console.log('close', key, keyPath)
 }
-const handleSelect = (key:string,keyPath:string[]) => {
-  console.log(keyPath,keyPath.join('/'));
-  router.push(`/${keyPath.join('/')}`)
+const handleSelect = (key: string, keyPath: string[]) => {
+
+  if (key !== '-1') router.push(`/${key}`)
 
 }
+
+
 </script>
 
 <style scoped>

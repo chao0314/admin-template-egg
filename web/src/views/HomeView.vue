@@ -4,10 +4,11 @@
       <el-header>
         <img src="../assets/home.png" alt="">
         <div class="home__header-right">
-          <img src="../assets/avatar.png" alt="">
-          <span>用户名</span>
-          <el-button>退出</el-button>
+          <img src="../assets/avatar.png" alt="" @click="handleUserInfo">
+          <span>{{ locale.username }}</span>
+          <el-button>{{ locale.singOut }}</el-button>
         </div>
+        <upload-avatar-dialog></upload-avatar-dialog>
       </el-header>
       <el-container>
         <home-menu></home-menu>
@@ -19,9 +20,15 @@
 
 
 <script setup lang="ts">
-// const props = withDefaults(defineProps<{}>(), {})
+import {inject} from "vue";
 import HomeMenu from '../components/home/HomeMenu.vue';
 import HomeMain from '../components/home/HomeMain.vue';
+import UploadAvatarDialog from '../components/common/UploadAvatarDialog.vue';
+import type {Locale} from "@/locale/zh-cn";
+// const props = withDefaults(defineProps<{}>(), {})
+const locale = inject<Locale>('locale');
+
+
 </script>
 
 <style scoped>
@@ -31,11 +38,14 @@ import HomeMain from '../components/home/HomeMain.vue';
   display: flex;
   justify-content: space-between;
   align-items: center;
+
 }
 
 .home:deep(.el-header) img {
   width: 30px;
   height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 .home__header-right {
