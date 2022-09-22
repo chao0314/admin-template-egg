@@ -7,6 +7,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    CardTablePagination: typeof import('./src/components/common/CardTablePagination.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
     ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem']
@@ -55,6 +56,7 @@ declare module '@vue/runtime-core' {
     RouterView: typeof import('vue-router')['RouterView']
     SingIn: typeof import('./src/components/sing/SingIn.vue')['default']
     SingUp: typeof import('./src/components/sing/SingUp.vue')['default']
+    TablePagination: typeof import('./src/components/common/TablePagination.vue')['default']
     TheWelcome: typeof import('./src/components/TheWelcome.vue')['default']
     UploadAvatarDialog: typeof import('./src/components/common/UploadAvatarDialog.vue')['default']
     UploadDialog: typeof import('./src/components/common/UploadDialog.vue')['default']

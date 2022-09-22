@@ -20,7 +20,7 @@ const router = createRouter({
             component: HomeView,
             children: [
                 {
-                    path: 'index',
+                    path: '',
                     name: 'homeIndex',
                     component: HomeIndex
                 }, {

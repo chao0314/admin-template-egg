@@ -18,6 +18,7 @@ export const locale = {
     otherSingIn: '其他登录方式',
     passwordConfirm: '两次密码不一致',
     query: '查询',
+    create:'添加',
     exportSearchResult: '导出搜索结果',
     createUser: '添加用户',
     importUser: '导入用户',
@@ -37,6 +38,7 @@ export const locale = {
     uploadFile: '上传文件',
     selectFile: '选择文件',
     lessThan: '小于',
+    keyword:'关键字',
     routeMap: {
         index: '首页',
         user: '用户管理',

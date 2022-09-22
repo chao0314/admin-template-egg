@@ -3,7 +3,7 @@
     <el-breadcrumb separator="/"
                    class="main__breadcrumb"
     >
-      <el-breadcrumb-item :to="{ path: '/index' }">{{ routeMap.index }}</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/' }">{{ routeMap.index }}</el-breadcrumb-item>
       <el-breadcrumb-item v-for="(path,index) in paths">
         <a href="" v-if="paths[index+1]">{{ routeMap[path] }}</a>
         <template v-else>{{ routeMap[path] }}</template>

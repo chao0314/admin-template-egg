@@ -71,11 +71,12 @@
           />
         </template>
       </el-table-column>
-      <el-table-column prop="Operation" :label="locale.operation">
+      <el-table-column prop="operation" :label="locale.operation">
         <template #default="scope">
-          <el-button size="small"
-                     type="primary"
-                     @click="handleEdit(scope.$index, scope.row)"
+          <el-button
+              size="small"
+              type="primary"
+              @click="handleEdit(scope.$index, scope.row)"
           >
             <el-icon>
               <Edit/>
@@ -104,7 +105,6 @@
         </template>
       </el-table-column>
     </el-table>
-
   </el-card>
   <el-pagination class="main__card-pagination"
                  v-model:currentPage="currentPage2"
