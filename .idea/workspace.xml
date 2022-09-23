@@ -3,17 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="8d274c5b-0fea-4388-887a-12074aeced64" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/controller/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/controller/home.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/descriptor/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/descriptor/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/extend/helper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/extend/helper.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/router.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/router.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/service/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/service/home.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/config/locale/zh-CN.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/config/locale/zh-CN.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/config/plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/config/plugin.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/components/sing/SingIn.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/sing/SingIn.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/components/sing/SingUp.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/sing/SingUp.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/components.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/components.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/components/common/TablePagination.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/common/TablePagination.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/components/common/UploadFileDialog.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/common/UploadFileDialog.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/components/permission/PermissionList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/permission/PermissionList.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/components/permission/PermissionRole.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/permission/PermissionRole.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/components/user/UserList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/user/UserList.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/src/locale/zh-cn.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/locale/zh-cn.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/rules/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/rules/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,23 +39,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "E:/workspace/admin-template-egg/web/src/assets",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.keymap",
-    "ts.external.directory.path": "E:\\workspace\\admin-template-egg\\web\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/wzc/Desktop/vue3-ts-cms13&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;E:\\workspace\\admin-template-egg\\web\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\workspace\admin-template-egg\web\src\assets" />
@@ -90,17 +86,19 @@
       <workItem from="1663118812666" duration="9003000" />
       <workItem from="1663131527383" duration="4284000" />
       <workItem from="1663203701267" duration="20263000" />
-      <workItem from="1663290167755" duration="9829000" />
+      <workItem from="1663290167755" duration="10248000" />
+      <workItem from="1663550471046" duration="7531000" />
+      <workItem from="1663559052472" duration="12292000" />
+      <workItem from="1663637273090" duration="2285000" />
+      <workItem from="1663640004153" duration="19063000" />
+      <workItem from="1663721531025" duration="15370000" />
+      <workItem from="1663811543691" duration="15448000" />
+      <workItem from="1663894732599" duration="19544000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-    <option name="exactExcludedFiles">
-      <list>
-        <option value="$PROJECT_DIR$/server/app/descriptor/index.d.ts" />
-      </list>
-    </option>
     <option name="includedJSSourcePackages">
       <set>
         <option value="@vue/runtime-core" />

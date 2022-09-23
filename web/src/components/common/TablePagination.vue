@@ -36,19 +36,16 @@
 </template>
 
 <script setup lang="ts">
-
-
 import {ref} from "_vue@3.2.39@vue";
 
 export type Column = {
 
   prop: string,
-  label: string,
+  label?: string,
   width?: string,
   slotName?: string
   [key: string]: any
 }
-
 
 export interface TableData {
 
@@ -61,7 +58,10 @@ export interface TableData {
 
 export interface Config {
 
-  tableData: Partial<TableData>
+  tableData: Partial<TableData>,
+  currentPage?:number,
+  pageSize?:number
+
 }
 
 const props = withDefaults(defineProps<Config>(), {
@@ -71,7 +71,9 @@ const props = withDefaults(defineProps<Config>(), {
     tableSettings: {},
     columns: [],
     data: []
-  })
+  }),
+  currentPage:1,
+  pageSize:1
 })
 
 const currentPage2 = ref(5)

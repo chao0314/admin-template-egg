@@ -7,7 +7,7 @@
         class="file-uploader"
         action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
         :auto-upload="false"
-        multiple
+        :multiple="props.multiple"
     >
       <template #trigger>
         <el-button type="primary">{{ locale.selectFile }}</el-button>
@@ -26,7 +26,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ locale.cancel }}</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">{{locale.confirm}}</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">{{ locale.confirm }}</el-button>
       </span>
     </template>
   </el-dialog>
@@ -35,19 +35,28 @@
 <script setup lang="ts">
 const props = withDefaults(defineProps<{
   size?: string,
-  fileTypes?: string
-}>(), {size: '1M', fileTypes: 'jpg/png'})
-import {inject, ref} from 'vue'
+  fileTypes?: string,
+  multiple?: boolean
+}>(), {size: '1M', fileTypes: 'jpg/png', multiple: true})
+import {inject, ref, watch} from 'vue'
 import type {UploadInstance} from 'element-plus'
 import type {Locale} from "@/locale/zh-cn";
 
 const locale = inject<Locale>('locale');
 const dialogFormVisible = ref(false);
+
+
 const uploadRef = ref<UploadInstance>()
+
 
 const submitUpload = () => {
   uploadRef.value!.submit()
 }
+
+defineExpose({
+  showDialog: () => dialogFormVisible.value = true
+
+})
 </script>
 
 <style scoped>

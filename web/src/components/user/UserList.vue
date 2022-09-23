@@ -1,9 +1,9 @@
 <template>
-  <el-card class="main__card">
+  <table-pagination :table-data="tableData">
     <template #header>
-      <el-row :gutter="4">
+      <el-row :gutter="4" class="user-list__header">
         <el-col :span="3">
-          <el-select v-model="value" class="m-2" placeholder="Select">
+          <el-select v-model="value" :placeholder="locale.select">
             <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -13,7 +13,7 @@
           </el-select>
         </el-col>
         <el-col :span="3">
-          <el-select v-model="value" class="m-2" placeholder="Select">
+          <el-select v-model="value" :placeholder="locale.select">
             <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -23,7 +23,7 @@
           </el-select>
         </el-col>
         <el-col :span="3">
-          <el-select v-model="value" class="m-2" placeholder="Select">
+          <el-select v-model="value" :placeholder="locale.select">
             <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -33,7 +33,7 @@
           </el-select>
         </el-col>
         <el-col :span="4">
-          <el-input v-model="input" placeholder="Please input" clearable/>
+          <el-input v-model="input" :placeholder="locale.select" clearable/>
         </el-col>
         <el-col :span="2">
           <el-button type="primary">{{ locale.query }}</el-button>
@@ -48,118 +48,84 @@
           </el-button>
         </el-col>
         <el-col :span="2" :offset="1">
-          <el-button type="primary">{{ locale.importUser }}</el-button>
+          <el-button type="primary"
+                     @click="handleImportUser"
+          >{{ locale.importUser }}
+          </el-button>
         </el-col>
       </el-row>
     </template>
-    <el-table :data="tableData" stripe border highlight-current-row
-              style="width: 100%;"
-              height="600"
-              :cell-style="{height:'56px',padding:0}"
-
-    >
-      <el-table-column type="index" width="48"/>
-      <el-table-column prop="username" :label="locale.username" width="100"/>
-      <el-table-column prop="email" :label="locale.email" width="280"/>
-      <el-table-column prop="phone" :label="locale.phone"/>
-      <el-table-column prop="role" :label="locale.role"/>
-      <el-table-column prop="state" :label="locale.state" width="100">
-        <template #default="scope">
-          <el-switch
-              v-model="scope.row.state"
-              style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column prop="operation" :label="locale.operation">
-        <template #default="scope">
-          <el-button
-              size="small"
-              type="primary"
-              @click="handleEdit(scope.$index, scope.row)"
-          >
-            <el-icon>
-              <Edit/>
-            </el-icon>
-          </el-button
-          >
-          <el-button
-              size="small"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)"
-          >
-            <el-icon>
-              <Delete/>
-            </el-icon>
-          </el-button>
-          <el-button
-              size="small"
-              type="warning"
-              @click="handleDelete(scope.$index, scope.row)"
-          >
-            <el-icon>
-              <Setting/>
-            </el-icon>
-          </el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
-  </el-card>
-  <el-pagination class="main__card-pagination"
-                 v-model:currentPage="currentPage2"
-                 v-model:page-size="pageSize2"
-                 :page-sizes="[100, 200, 300, 400]"
-                 :small="small"
-                 :disabled="disabled"
-                 :background="background"
-                 layout="total, sizes, prev, pager, next, jumper"
-                 :total="1000"
-                 @size-change="handleSizeChange"
-                 @current-change="handleCurrentChange"
-  />
-
-  <el-dialog width="40%" top="10vh" v-model="dialogVisibleRef" title="添加">
-    <el-form
-        label-position="top"
-        :model="form"
-        :rules=rules
-    >
-      <el-form-item :label="locale.username" prop="username">
-        <el-input :prefix-icon="User" v-model="form.username" autocomplete="off"/>
-      </el-form-item>
-      <el-form-item :label="locale.email" prop="email">
-        <el-input :prefix-icon="Message" v-model="form.email" autocomplete="off"/>
-      </el-form-item>
-      <el-form-item :label="locale.phone" prop="phone">
-        <el-input :prefix-icon="Phone" v-model="form.phone" autocomplete="off"/>
-      </el-form-item>
-      <el-form-item :label="locale.password" prop="password">
-        <el-input :prefix-icon="Lock" v-model="form.password" autocomplete="off"/>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogVisibleRef = false">{{ locale.cancel }}</el-button>
-        <el-button type="primary" @click="dialogVisibleRef = false"
-        >{{ locale.confirm }}</el-button
-        >
-      </span>
+    <template #state="{row}">
+      <el-switch
+          v-model="row.state"
+          style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+      />
     </template>
-  </el-dialog>
-
-  <upload-file-dialog></upload-file-dialog>
+    <template #operation="scope">
+      <el-tooltip
+          effect="dark"
+          :content="locale.edit"
+          placement="top"
+      >
+        <el-button
+            size="small"
+            type="primary"
+            @click="handleEdit(scope.$index, scope.row)"
+        >
+          <el-icon>
+            <Edit></Edit>
+          </el-icon>
+        </el-button>
+      </el-tooltip>
+      <el-tooltip
+          effect="dark"
+          :content="locale.del"
+          placement="top"
+      >
+        <el-button
+            size="small"
+            type="danger"
+            @click="handleDelete(scope.$index, scope.row)"
+        >
+          <el-icon>
+            <Edit></Edit>
+          </el-icon>
+        </el-button>
+      </el-tooltip>
+      <el-tooltip
+          effect="dark"
+          :content="locale.roleSetting"
+          placement="top"
+      >
+        <el-button
+            size="small"
+            type="warning"
+            @click="handleEdit(scope.$index, scope.row)"
+        >
+          <el-icon>
+            <Setting></Setting>
+          </el-icon>
+        </el-button>
+      </el-tooltip>
+    </template>
+  </table-pagination>
+  <form-dialog :form-data="formData" ref="createUserDialogRef"></form-dialog>
+  <upload-file-dialog ref="importDialogRef"></upload-file-dialog>
 </template>
 
 <script setup lang="ts">
+import TablePagination from '../common/TablePagination.vue';
+import type {TableData} from "@/components/common/TablePagination.vue";
+//@ts-ignore
 import UploadFileDialog from '../common/UploadFileDialog.vue';
-import {ref, inject, reactive} from 'vue';
+//@ts-ignore
+import FormDialog from '../common/FormDialog.vue';
+import type {FormData} from "@/components/common/FormDialog.vue";
+import {Types} from "@/components/common";
+import {inject, reactive, ref} from 'vue';
 // @ts-ignore
-import {
-  Edit, Delete, Setting, User, Phone, Message, Lock
-} from '@element-plus/icons-vue';
+import {Delete, Edit, Lock, Message, Phone, Setting, User} from '@element-plus/icons-vue';
 import type {Locale} from "@/locale/zh-cn";
-
 import useRules from "@/rules";
 
 const {username, password, email, phone} = useRules();
@@ -172,25 +138,67 @@ const rules = {
     required: false
   }
 }
-
 const locale = inject<Locale>('locale');
 // const props = withDefaults(defineProps<{}>(), {})
-
-
-const dialogVisibleRef = ref(false);
-const form = reactive({
-  username: '',
-  email: '',
-  phone: '',
-  password: ''
-})
+const formData: FormData = {
+  rules,
+  items: [
+    {
+      type: Types.input,
+      prop: 'username',
+      label: locale?.username,
+      props: {
+        'prefix-icon': User
+      }
+    },
+    {
+      type: Types.input,
+      prop: 'email',
+      label: locale?.email,
+      props: {
+        'prefix-icon': Message
+      }
+    },
+    {
+      type: Types.input,
+      prop: 'phone',
+      label: locale?.phone,
+      props: {
+        'prefix-icon': Phone
+      }
+    },
+    {
+      type: Types.input,
+      prop: 'password',
+      label: locale?.password,
+      props: {
+        'prefix-icon': Lock
+      }
+    },
+    // {
+    //   type: Types.select,
+    //   prop: 'username',
+    //   label: locale?.username,
+    //   options: [
+    //     {
+    //       value: 'value 1',
+    //       label: 'label 1'
+    //     },
+    //     {
+    //       value: 'value 2',
+    //       label: 'label 2'
+    //     }
+    //   ]
+    // }
+  ]
+}
+const createUserDialogRef = ref<InstanceType<typeof FormDialog> | null>(null);
 const handleCreateUser = () => {
-  dialogVisibleRef.value = true;
+  createUserDialogRef.value?.showDialog();
 
 }
 const value = ref('');
 const input = ref('')
-
 const options = [
   {
     value: 'Option1',
@@ -213,98 +221,110 @@ const options = [
     label: 'Option5',
   },
 ];
-const tableData = [
-  {
-    username: 'it666',
-    email: 'zhichao0314@126.comzhichao0314@126.com',
-    phone: '18258414234',
-    role: 'admin',
-    state: true,
-    operation: ['edit', 'del', 'setting']
-  },
-  {
-    username: 'it888',
-    email: 'zhichao0314@126.com',
-    phone: '18258414234',
-    role: 'admin',
-    state: false,
-    operation: ['edit', 'del', 'setting']
-  },
-  {
-    username: 'it666',
-    email: 'zhichao0314@126.com',
-    phone: '18258414234',
-    role: 'admin',
-    state: true,
-    operation: ['edit', 'del', 'setting']
-  },
-  {
-    username: 'it888',
-    email: 'zhichao0314@126.com',
-    phone: '18258414234',
-    role: 'admin',
-    state: false,
-    operation: ['edit', 'del', 'setting']
-  }, {
-    username: 'it666',
-    email: 'zhichao0314@126.com',
-    phone: '18258414234',
-    role: 'admin',
-    state: true,
-    operation: ['edit', 'del', 'setting']
-  },
-  {
-    username: 'it888',
-    email: 'zhichao0314@126.com',
-    phone: '18258414234',
-    role: 'admin',
-    state: false,
-    operation: ['edit', 'del', 'setting']
-  }, {
-    username: 'it666',
-    email: 'zhichao0314@126.com',
-    phone: '18258414234',
-    role: 'admin',
-    state: true,
-    operation: ['edit', 'del', 'setting']
-  },
-  {
-    username: 'it888',
-    email: 'zhichao0314@126.com',
-    phone: '18258414234',
-    role: 'admin',
-    state: false,
-    operation: ['edit', 'del', 'setting']
-  }, {
-    username: 'it666',
-    email: 'zhichao0314@126.com',
-    phone: '18258414234',
-    role: 'admin',
-    state: true,
-    operation: ['edit', 'del', 'setting']
-  },
-  {
-    username: 'it888',
-    email: 'zhichao0314@126.com',
-    phone: '18258414234',
-    role: 'admin',
-    state: false,
-    operation: ['edit', 'del', 'setting']
-  }, {
-    username: 'it888',
-    email: 'zhichao0314@126.com',
-    phone: '18258414234',
-    role: 'admin',
-    state: false,
-    operation: ['edit', 'del', 'setting']
-  }
+const tableData: TableData = {
+  showIndex: true,
+  columns: [
+    {prop: 'username', label: locale?.username, width: '100'},
+    {prop: 'email', label: locale?.email, width: '280'},
+    {prop: 'phone', label: locale?.phone},
+    {prop: 'role', label: locale?.role},
+    {prop: 'state', label: locale?.state, width: '100', slotName: 'state'},
+    {prop: 'operation', label: locale?.operation, slotName: 'operation'}
+  ],
+  data: [
+    {
+      username: 'it666',
+      email: 'zhichao0314@126.comzhichao0314@126.com',
+      phone: '18258414234',
+      role: 'admin',
+      state: true,
+      operation: ['edit', 'del', 'setting']
+    },
+    {
+      username: 'it888',
+      email: 'zhichao0314@126.com',
+      phone: '18258414234',
+      role: 'admin',
+      state: false,
+      operation: ['edit', 'del', 'setting']
+    },
+    {
+      username: 'it666',
+      email: 'zhichao0314@126.com',
+      phone: '18258414234',
+      role: 'admin',
+      state: true,
+      operation: ['edit', 'del', 'setting']
+    },
+    {
+      username: 'it888',
+      email: 'zhichao0314@126.com',
+      phone: '18258414234',
+      role: 'admin',
+      state: false,
+      operation: ['edit', 'del', 'setting']
+    },
+    {
+      username: 'it666',
+      email: 'zhichao0314@126.com',
+      phone: '18258414234',
+      role: 'admin',
+      state: true,
+      operation: ['edit', 'del', 'setting']
+    },
+    {
+      username: 'it888',
+      email: 'zhichao0314@126.com',
+      phone: '18258414234',
+      role: 'admin',
+      state: false,
+      operation: ['edit', 'del', 'setting']
+    },
+    {
+      username: 'it666',
+      email: 'zhichao0314@126.com',
+      phone: '18258414234',
+      role: 'admin',
+      state: true,
+      operation: ['edit', 'del', 'setting']
+    },
+    {
+      username: 'it888',
+      email: 'zhichao0314@126.com',
+      phone: '18258414234',
+      role: 'admin',
+      state: false,
+      operation: ['edit', 'del', 'setting']
+    },
+    {
+      username: 'it666',
+      email: 'zhichao0314@126.com',
+      phone: '18258414234',
+      role: 'admin',
+      state: true,
+      operation: ['edit', 'del', 'setting']
+    },
+    {
+      username: 'it888',
+      email: 'zhichao0314@126.com',
+      phone: '18258414234',
+      role: 'admin',
+      state: false,
+      operation: ['edit', 'del', 'setting']
+    },
+    {
+      username: 'it888',
+      email: 'zhichao0314@126.com',
+      phone: '18258414234',
+      role: 'admin',
+      state: false,
+      operation: ['edit', 'del', 'setting']
+    }
 
-]
+  ]
 
+}
 
-const currentPage2 = ref(5)
-
-const pageSize2 = ref(100)
 
 const small = ref(false)
 const background = ref(false)
@@ -328,22 +348,18 @@ const handleEdit = (index: number, row: User) => {
 }
 const handleDelete = (index: number, row: User) => {
   console.log(index, row)
+
+}
+const importDialogRef = ref<InstanceType<typeof UploadFileDialog> | null>(null);
+const handleImportUser = () => {
+
+  importDialogRef.value?.showDialog()
 }
 </script>
 
 <style scoped>
 
-
-.main__card {
-
-  margin-top: 20px;
-
+.user-list__header {
+  margin: 10px 0;
 }
-
-.main__card-pagination {
-  margin-top: 10px;
-
-}
-
-
 </style>

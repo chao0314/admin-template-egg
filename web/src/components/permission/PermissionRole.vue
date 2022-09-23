@@ -20,6 +20,41 @@
           style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
       />
     </template>
+    <template #operation="scope">
+      <el-tooltip
+          effect="dark"
+          :content="locale.edit"
+          placement="top"
+      >
+        <el-button type="primary">
+          <el-icon>
+            <Edit></Edit>
+          </el-icon>
+        </el-button>
+      </el-tooltip>
+      <el-tooltip
+          effect="dark"
+          :content="locale.del"
+          placement="top"
+      >
+        <el-button type="danger">
+          <el-icon>
+            <Delete></Delete>
+          </el-icon>
+        </el-button>
+      </el-tooltip>
+      <el-tooltip
+          effect="dark"
+          :content="locale.permissionRoleSetting"
+          placement="top"
+      >
+        <el-button type="warning">
+          <el-icon>
+            <Setting></Setting>
+          </el-icon>
+        </el-button>
+      </el-tooltip>
+    </template>
   </table-pagination>
 </template>
 
@@ -28,6 +63,7 @@ import TablePagination from '../common/TablePagination.vue';
 import type {TableData} from "@/components/common/TablePagination.vue";
 import {ref, inject} from "vue";
 import type {Locale} from "@/locale/zh-cn";
+import {Edit, Delete, Setting} from '@element-plus/icons-vue';
 // const props = withDefaults(defineProps<{}>(), {})
 const locale = inject<Locale>('locale');
 const input = ref('');
@@ -35,17 +71,17 @@ const tableData: TableData = {
   showIndex: true,
   columns: [{
     prop: 'roleName',
-    label: '角色名称'
+    label: locale?.roleName
   }, {
     prop: 'roleDes',
-    label: '角色描述'
+    label: locale?.roleDes
   }, {
     prop: 'state',
-    label: '状态',
+    label: locale?.state,
     slotName: 'state'
   }, {
     prop: 'operation',
-    label: '操作',
+    label: locale?.operation,
     slotName: 'operation'
   }],
   data: [
