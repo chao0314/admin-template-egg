@@ -61,6 +61,7 @@ declare module '@vue/runtime-core' {
     SingUp: typeof import('./src/components/sing/SingUp.vue')['default']
     TablePagination: typeof import('./src/components/common/TablePagination.vue')['default']
     TheWelcome: typeof import('./src/components/TheWelcome.vue')['default']
+    TreeDialog: typeof import('./src/components/common/TreeDialog.vue')['default']
     UploadAvatarDialog: typeof import('./src/components/common/UploadAvatarDialog.vue')['default']
     UploadDialog: typeof import('./src/components/common/UploadDialog.vue')['default']
     UploadFileDialog: typeof import('./src/components/common/UploadFileDialog.vue')['default']

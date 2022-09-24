@@ -1,5 +1,5 @@
 <template>
-  <el-dialog width="40%" top="10vh"
+  <el-dialog width="35%" top="10vh"
              v-model="dialogVisibleRef"
              :title="mode === Mode.create?locale.create:locale.edit">
     <el-form :model="form"
@@ -45,18 +45,13 @@
 import type {Locale} from "@/locale/zh-cn";
 import type {FormRules} from "element-plus";
 import type {Types as ItemTypes} from "@/components/common/index";
-import {Types} from "@/components/common/index";
+import {Types, Mode} from "@/components/common/index";
+import {inject, reactive, ref, toRaw} from 'vue'
 
 const props = withDefaults(defineProps<{
   formData: FormData
 }>(), {})
-import {inject, reactive, ref, toRaw} from 'vue'
 
-
-const enum Mode {
-  create = 'create',
-  edit = 'edit'
-}
 
 export type Item = {
   type: ItemTypes,
@@ -75,42 +70,44 @@ export type FormData = {
   data?: Record<string, any>
 }
 
+const emits = defineEmits<{
+  (e: 'confirm', payload: Record<string, any>): void
+
+}>()
 const locale = inject<Locale>('locale');
 const dialogVisibleRef = ref(false);
 let mode = ref(Mode.create);
 
 const form = reactive<Record<string, any>>({});
 
+
 const handleConfirm = () => {
 
   dialogVisibleRef.value = false;
   console.log(toRaw(form));
+  emits('confirm', toRaw(form));
 }
 
-defineExpose({
+defineExpose<{
+
+  showDialog(initData?: Record<string, any>): void
+
+}>({
   showDialog: (initData?: Record<string, any>) => {
 
 
-    if (initData === void 0) {
+    if (initData) mode.value = Mode.edit;
 
-      props.formData.items.forEach(item => {
-        //todo...初始化 可能有数组等
-        form[item.prop] = ''
-      });
-
-    } else {
-      mode.value = Mode.edit;
-      Object.assign(form, initData);
-    }
+    props.formData.items.forEach(item => {
+      //todo...初始化 checkbox可能有数组等,还需完善
+      form[item.prop] = initData === void 0 ? '' : initData[item.prop]
+    });
 
     dialogVisibleRef.value = true;
 
   }
 })
 
-const onSubmit = () => {
-  console.log('submit!')
-}
 </script>
 
 <style scoped>

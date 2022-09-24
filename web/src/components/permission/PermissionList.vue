@@ -1,6 +1,8 @@
 <template>
 
-  <table-pagination :table-data="tableData">
+  <table-pagination :table-data="tableData"
+                    :total="100"
+  >
     <template #header>
 
       <el-row :gutter="4" class="permission-list__header">

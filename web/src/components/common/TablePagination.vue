@@ -22,14 +22,14 @@
     </el-table>
   </el-card>
   <el-pagination class="main__card-pagination"
-                 v-model:currentPage="currentPage2"
-                 v-model:page-size="pageSize2"
-                 :page-sizes="[100, 200, 300, 400]"
-                 :small="small"
-                 :disabled="disabled"
-                 :background="background"
-                 layout="total, sizes, prev, pager, next, jumper"
-                 :total="1000"
+                 :page-sizes="props.pageSizes"
+                 :small="props.small"
+                 :disabled="props.disabled"
+                 :background="props.background"
+                 :layout="props.layout"
+                 :total="props.total"
+                 v-model:currentPage="currentPageRef"
+                 v-model:page-size="pageSizeRef"
                  @size-change="handleSizeChange"
                  @current-change="handleCurrentChange"
   />
@@ -59,8 +59,14 @@ export interface TableData {
 export interface Config {
 
   tableData: Partial<TableData>,
-  currentPage?:number,
-  pageSize?:number
+  total: number,
+  currentPage?: number,
+  pageSize?: number,
+  pageSizes?: number[],
+  layout?: string,
+  small?: boolean,
+  background?: boolean,
+  disabled?: boolean
 
 }
 
@@ -72,23 +78,29 @@ const props = withDefaults(defineProps<Config>(), {
     columns: [],
     data: []
   }),
-  currentPage:1,
-  pageSize:1
+  currentPage: 1,
+  pageSize: 10,
+  pageSizes: () => [10, 20, 50, 100],
+  layout: "total, sizes, prev, pager, next, jumper",
+  small: false,
+  background: false,
+  disabled: false
 })
 
-const currentPage2 = ref(5)
-
-const pageSize2 = ref(100)
-
-const small = ref(false)
-const background = ref(false)
-const disabled = ref(false)
+type Emits = {
+  (e: 'size-change', currentSize: number): void
+  (e: 'current-change', currentPage: number): void
+}
+const emits = defineEmits<Emits>();
+const currentPageRef = ref(props.currentPage);
+const pageSizeRef = ref(props.pageSize);
 
 const handleSizeChange = (val: number) => {
-  console.log(`${val} items per page`)
+
+  emits("size-change", val);
 }
 const handleCurrentChange = (val: number) => {
-  console.log(`current page: ${val}`)
+  emits("current-change", val);
 }
 </script>
 
