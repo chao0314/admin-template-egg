@@ -12,7 +12,7 @@
       <template v-for="column in tableData.columns">
         <el-table-column show-overflow-tooltip v-bind="column">
           <template v-if="column.slotName" #default="scope">
-            <slot :name="column.slotName" :row="scope.row">
+            <slot :name="column.slotName" :row="scope.row" :$index="scope.$index">
               {{ scope.row[column.prop] }}
             </slot>
           </template>

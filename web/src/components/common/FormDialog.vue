@@ -25,7 +25,7 @@
 
           </el-select>
         </el-form-item>
-
+        <slot :form="form"></slot>
       </template>
 
     </el-form>
@@ -66,8 +66,7 @@ export type Item = {
 
 export type FormData = {
   rules?: FormRules,
-  items: Item[],
-  data?: Record<string, any>
+  items: Item[]
 }
 
 const emits = defineEmits<{
