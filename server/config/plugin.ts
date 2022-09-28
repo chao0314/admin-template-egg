@@ -18,7 +18,7 @@ const plugin: EggPlugin = {
         path:path.join(__dirname,'../lib/plugin/egg-redis')
     },
     cloud:{
-        enable:true,
+        enable:false,
         path:path.join(__dirname,'../lib/plugin/egg-cloud')
     },
     validator:{

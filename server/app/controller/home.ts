@@ -119,7 +119,7 @@ export default class HomeController extends Controller {
 
     async singUp() {
 
-        const {app, ctx,service} = this;
+        const {app, ctx, service} = this;
 
         const {username, password} = ctx.request.body;
 
@@ -132,10 +132,11 @@ export default class HomeController extends Controller {
             return ctx.badRequest(`${username} ${password}`);
         }
 
-        await service.home.createUser(username,password);
+        const res = await service.home.createUser(username, password);
 
+        if (res) ctx.failure(res.message)
 
-        ctx.success();
+        else ctx.success();
 
 
     }
