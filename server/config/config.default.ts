@@ -62,7 +62,7 @@ export default (appInfo: EggAppInfo) => {
     config.cloud = {
 
         tencentCloud: {
-            secretPath:path.join(__dirname,'../.sec'),
+            secretPath: path.join(__dirname, '../.sec'),
             client: {
                 //注意秘钥的安全性
                 credential: {
@@ -96,6 +96,7 @@ export default (appInfo: EggAppInfo) => {
     // add your special config in here
     const comConfig = {
         // sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
+        apiVersion: "v1"
     };
 
     // the return config will combines to EggAppConfig

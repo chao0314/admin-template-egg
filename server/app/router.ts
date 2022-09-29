@@ -1,7 +1,7 @@
 import { Application } from 'egg';
 
 export default (app: Application) => {
-  const { controller, router } = app;
+  const { controller, router,config:{apiVersion} } = app;
 
   router.get('/', controller.home.index);
 
@@ -12,4 +12,6 @@ export default (app: Application) => {
   router.post('/singUp',controller.home.singUp)
   router.post('/singUpEmail',controller.home.singUpEmail);
   router.post('/singUpPhone',controller.home.singUpPhone);
+
+  // router.post(`${apiVersion}/createUser`,)
 };

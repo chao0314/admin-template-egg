@@ -1,5 +1,6 @@
 import {Controller} from 'egg';
 import {emailDes, phoneDes, usernameDes, passwordDes, ValidateError} from "../descriptor";
+import {Locale} from "../../config/locale";
 
 export default class HomeController extends Controller {
     public async index() {
@@ -43,11 +44,11 @@ export default class HomeController extends Controller {
 
         const code = await app.redis.get(to);
         if (!code) {
-            const name = '测试';
+            const name = ctx.__(Locale.development);
             const code = ctx.helper.randomHex(4);
             const body = {
-                subject: ctx.__('emailCode'),
-                text: ctx.__("email %s Text %s", name, code)
+                subject: ctx.__(Locale.emailCode),
+                text: ctx.__(Locale.emailText, name, code)
             }
 
             await app.sendMail(to, body);
@@ -84,45 +85,55 @@ export default class HomeController extends Controller {
     }
 
     async singUpEmail() {
-        const {app, ctx} = this;
-        const {email, code} = ctx.request.body;
+        const {app, ctx, service} = this;
+        const {email, password, code} = ctx.request.body;
+
+        const des = Object.assign({}, emailDes, passwordDes);
+        const validator = app.validator(des);
+        try {
+            await validator.validate({email, password});
+        } catch (e) {
+            return ctx.badRequest(`${email} ${password}`);
+        }
+
         const rCode = await app.redis.get(email);
         if (code && rCode && rCode === code) {
-            //todo
-            console.log('sing up email');
-            console.log(email);
 
-            ctx.success();
-        } else ctx.failure(ctx.__('codeExpired'));
+            const error = await service.home.creatUserByEmail(email, password);
+            if (error) ctx.failure(error.message);
+            else ctx.success();
+        } else ctx.failure(ctx.__(Locale.codeExpired));
 
 
     }
 
     async singUpPhone() {
 
-        const {app, ctx} = this;
+        const {app, ctx, service} = this;
+        const {phone, password, code} = ctx.request.body;
+        const des = Object.assign({}, phoneDes, passwordDes);
+        const validator = app.validator(des);
 
-        const {phone, code} = ctx.request.body;
+        try {
+            await validator.validate({phone, password});
+        } catch (e) {
+            return ctx.badRequest(`${phone} ${password}`);
+        }
 
         const rCode = await app.redis.get(phone);
 
         if (code && rCode && code === rCode) {
-            //todo...
-            console.log('sing up phone');
-            console.log(phone);
-
-            ctx.success();
-        } else ctx.failure(ctx.__('codeExpired'));
+            const error = await service.home.createUserByPhone(phone, password);
+            if (error) ctx.failure(error.message);
+            else ctx.success();
+        } else ctx.failure(ctx.__(Locale.codeExpired));
 
     }
-
 
     async singUp() {
 
         const {app, ctx, service} = this;
-
         const {username, password} = ctx.request.body;
-
         const des = Object.assign({}, usernameDes, passwordDes);
         const validator = app.validator(des);
 
@@ -132,12 +143,21 @@ export default class HomeController extends Controller {
             return ctx.badRequest(`${username} ${password}`);
         }
 
-        const res = await service.home.createUser(username, password);
+        const error = await service.home.createUser(username, password);
 
-        if (res) ctx.failure(res.message)
+        if (error) ctx.failure(error.message)
 
         else ctx.success();
 
 
+    }
+
+    async singIn(){
+
+        const {app,ctx,service} = this;
+
+        const {username,password} =  ctx.request.body;
+
+        const
     }
 }
