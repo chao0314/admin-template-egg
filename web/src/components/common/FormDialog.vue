@@ -43,31 +43,13 @@
 
 <script setup lang="ts">
 import type {Locale} from "@/locale/zh-cn";
-import type {FormRules} from "element-plus";
-import type {Types as ItemTypes} from "@/components/common/index";
-import {Types, Mode} from "@/components/common/index";
+import {Types, Mode,FormData} from "@/components/common/index";
 import {inject, reactive, ref, toRaw} from 'vue'
 
 const props = withDefaults(defineProps<{
   formData: FormData
 }>(), {})
 
-
-export type Item = {
-  type: ItemTypes,
-  prop: string,
-  label?: string,
-  options?: {
-    value: string,
-    label: string
-  } [],
-  props?: Record<string, any>
-}
-
-export type FormData = {
-  rules?: FormRules,
-  items: Item[]
-}
 
 const emits = defineEmits<{
   (e: 'confirm', payload: Record<string, any>): void

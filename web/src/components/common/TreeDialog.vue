@@ -28,19 +28,13 @@
 
 <script setup lang="ts">
 
-import {defineEmits, inject, isReactive, ref} from "vue";
+import {defineEmits, inject, ref} from "vue";
 import type {Locale} from "@/locale/zh-cn";
 //@ts-ignore
 import {ElTree} from 'element-plus';
 import type Node from 'element-plus/es/components/tree/src/model/node'
+import {TreeNode,CheckedNode} from "@/components/common/index";
 
-export interface TreeNode {
-  id: number
-  label: string
-  children?: TreeNode[]
-}
-
-export type CheckedNode = Omit<TreeNode, 'children'>;
 
 const props = withDefaults(defineProps<{
   data: TreeNode[],

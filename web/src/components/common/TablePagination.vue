@@ -36,27 +36,11 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from "_vue@3.2.39@vue";
+import {ref} from "vue";
+import {TableData} from "@/components/common/index";
 
-export type Column = {
 
-  prop: string,
-  label?: string,
-  width?: string,
-  slotName?: string
-  [key: string]: any
-}
-
-export interface TableData {
-
-  showIndex?: boolean,
-  tableSettings?: Record<string, string>,
-  columns: Column[],
-  data: any[]
-
-}
-
-export interface Config {
+interface TableConfig {
 
   tableData: Partial<TableData>,
   total: number,
@@ -70,7 +54,7 @@ export interface Config {
 
 }
 
-const props = withDefaults(defineProps<Config>(), {
+const props = withDefaults(defineProps<TableConfig>(), {
 
   tableData: () => ({
     showIndex: true,

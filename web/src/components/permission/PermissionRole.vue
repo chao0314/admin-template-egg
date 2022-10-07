@@ -75,17 +75,13 @@
 
 <script setup lang="ts">
 import TablePagination from '../common/TablePagination.vue';
-import type {FormData} from '../common/FormDialog.vue';
-//@ts-ignore
+import {FormData, TableData, CheckedNode} from "@/components/common";
 import TreeDialog from '../common/TreeDialog.vue';
-//@ts-ignore
 import FormDialog from '../common/FormDialog.vue';
-import type {TableData} from "@/components/common/TablePagination.vue";
 import {inject, ref} from "vue";
 import type {Locale} from "@/locale/zh-cn";
 import {Delete, Edit, Setting} from '@element-plus/icons-vue';
 import {Types} from "@/components/common";
-import type {TreeNode, CheckedNode} from "@/components/common/TreeDialog.vue";
 // const props = withDefaults(defineProps<{}>(), {})
 const locale = inject<Locale>('locale');
 const input = ref('');
@@ -162,7 +158,7 @@ const handleCreateUser = () => {
   formDialogRef.value.showDialog();
 }
 
-const handleEdit = (index:number,row:any) => {
+const handleEdit = (index: number, row: any) => {
 
   formDialogRef.value.showDialog(row)
 }
