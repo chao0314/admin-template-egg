@@ -71,8 +71,7 @@
   </table-pagination>
   <form-dialog :form-data="form" ref="permissionCreateDialogRef">
     <template #default="scope">
-
-      {{ scope.form }}
+      <!--      {{ scope.form }}-->
       <el-form-item :label="locale.requestMethod" :disabled="scope.form.permissionType !==2">
         <el-select v-model="requestMethod">
           <el-option v-for="option in options"
@@ -215,9 +214,9 @@ const form: FormData = {
       prop: 'permissionLevel',
       label: locale?.permissionLevel,
       options: [
-        {label: '一级权限', value: '一级权限'},
-        {label: '二级权限', value: '二级权限'},
-        {label: '三级权限', value: '三级权限'}
+        {label: '一级权限', value: 1},
+        {label: '二级权限', value: 2},
+        {label: '三级权限', value: 3}
       ]
     },
     {
