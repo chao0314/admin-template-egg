@@ -70,29 +70,33 @@
     </template>
   </table-pagination>
   <form-dialog :form-data="form" ref="permissionCreateDialogRef">
-    <el-form-item :label="locale.requestMethod" #default="scope">
-      <el-select v-model="requestMethod" :disabled="scope.form.permissionType ===2">
-        <el-option v-for="option in options"
-                   :key="option.label"
-                   :label="option.label"
-                   :value="option.value"/>
-      </el-select>
-    </el-form-item>
-    <el-form-item :label="locale.permissionParent" #default="scope">
-      <el-select v-model="permissionParent" :disabled="scope.form.permissionLevel ===1">
-        <el-option v-for="option in options"
-                   :key="option.label"
-                   :label="option.label"
-                   :value="option.value"/>
-      </el-select>
-    </el-form-item>
+    <template #default="scope">
+
+      {{ scope.form }}
+      <el-form-item :label="locale.requestMethod" :disabled="scope.form.permissionType !==2">
+        <el-select v-model="requestMethod">
+          <el-option v-for="option in options"
+                     :key="option.label"
+                     :label="option.label"
+                     :value="option.value"/>
+        </el-select>
+      </el-form-item>
+      <el-form-item :label="locale.permissionParent" :disabled="scope.form.permissionLevel ===0">
+        <el-select v-model="permissionParent">
+          <el-option v-for="option in options"
+                     :key="option.label"
+                     :label="option.label"
+                     :value="option.value"/>
+        </el-select>
+      </el-form-item>
+    </template>
 
   </form-dialog>
 </template>
 
 <script setup lang="ts">
 import TablePagination from '../common/TablePagination.vue';
-import type {FormData} from '../common/FormDialog.vue';
+import {FormData} from "@/components/common";
 //@ts-ignore
 import FormDialog from '../common/FormDialog.vue';
 import {inject, reactive, ref} from "vue";
@@ -135,21 +139,21 @@ const tableData = {
     {
       permissionName: 'permission name',
       permissionDes: 'permission des',
-      permissionLevel: '1',
+      permissionLevel: 1,
       state: true,
       operation: 'del edit'
     },
     {
       permissionName: 'permission name',
       permissionDes: 'permission des',
-      permissionLevel: '2',
+      permissionLevel: 2,
       state: false,
       operation: 'del edit'
     },
     {
       permissionName: 'permission name',
       permissionDes: 'permission des',
-      permissionLevel: '3',
+      permissionLevel: 3,
       state: true,
       operation: 'del edit'
     }

@@ -1,6 +1,5 @@
 import {Context} from "egg";
 import {Rows} from "../../lib/plugin/egg-mysql2/typings";
-// import {Rows} from "../../lib/plugin/egg-mysql2/typings";
 
 export default function (ctx: Context) {
     const {app, helper} = ctx;

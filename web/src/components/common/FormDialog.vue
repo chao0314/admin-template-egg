@@ -25,9 +25,8 @@
 
           </el-select>
         </el-form-item>
-        <slot :form="form"></slot>
       </template>
-
+      <slot :form="form"></slot>
     </el-form>
     <template #footer>
       <span class="dialog-footer">

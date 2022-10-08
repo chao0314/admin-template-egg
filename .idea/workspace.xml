@@ -3,13 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="8d274c5b-0fea-4388-887a-12074aeced64" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/app/model/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/model/user.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/app/router.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/router.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/components.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/components.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/components/common/TablePagination.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/common/TablePagination.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/components/common/UploadFileDialog.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/common/UploadFileDialog.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/components/common/FormDialog.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/common/FormDialog.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/src/components/permission/PermissionList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/permission/PermissionList.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/components/permission/PermissionRole.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/permission/PermissionRole.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/components/user/UserList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/user/UserList.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/locale/zh-cn.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/locale/zh-cn.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,14 +43,14 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/wzc/Desktop/vue3-ts-cms13&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/workspace/admin-template-egg&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;E:\\workspace\\admin-template-egg\\web\\node_modules\\typescript\\lib&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;E:\\workspace\\admin-template-egg\\server\\node_modules\\typescript\\lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -93,7 +91,16 @@
       <workItem from="1663640004153" duration="19063000" />
       <workItem from="1663721531025" duration="15370000" />
       <workItem from="1663811543691" duration="15448000" />
-      <workItem from="1663894732599" duration="19544000" />
+      <workItem from="1663894732599" duration="19936000" />
+      <workItem from="1663980542307" duration="19608000" />
+      <workItem from="1664248694597" duration="9688000" />
+      <workItem from="1664327487522" duration="2375000" />
+      <workItem from="1664339477095" duration="5500000" />
+      <workItem from="1664415336036" duration="1142000" />
+      <workItem from="1664416592146" duration="15158000" />
+      <workItem from="1665190156701" duration="2777000" />
+      <workItem from="1665195182685" duration="45000" />
+      <workItem from="1665195236244" duration="10142000" />
     </task>
     <servers />
   </component>
