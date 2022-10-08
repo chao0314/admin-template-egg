@@ -36,16 +36,63 @@ export default class Home extends Service {
         await model.createByEmail({email, password: passHash});
     }
 
-    async queryByNameAndPass(username:string,password:string):Promise<Error|{token:string}>{
+    async queryByNameAndPass(username: string, password: string): Promise<Error | { username: string }> {
 
-        const {ctx} =  this;
-        const model =  user(ctx);
+        const {ctx} = this;
+        const model = user(ctx);
         const passHash = ctx.helper.md5(password);
-        const [res] = await model.queryByNameAndPass({username,password:passHash});
+        const [res] = await model.queryByNameAndPass({username, password: passHash});
 
-        if(res.length===0) return new Error(ctx.__(Locale.errorOfUsernameOrPassword));
+        if (res.length === 0) return new Error(ctx.__(Locale.errorOfUsernameOrPassword));
+        return res[0];
+
+    }
+
+    async queryByEmail(payload: { email: string, password?: string, code?: string }): Promise<Error | { email: string }> {
+
+        const {app, ctx} = this;
+        const model = user(ctx);
+        const {email, password, code} = payload;
+
+        if (password) {
+            const passHash = ctx.helper.md5(password);
+            const [res] = await model.queryByEmailAndPass({email, password: passHash});
+            return (res.length === 0) ? new Error(ctx.__(Locale.errorOfEmailOrPassword)) : res[0];
+
+        } else if (code) {
+
+            const {redis} = app;
+
+            const rCode = await redis.get(email);
+
+            return rCode && rCode === code ? {email} : new Error(ctx.__(Locale.codeExpired));
+
+        } else return new Error(ctx.__(Locale.needPasswordOrCode));
 
 
     }
 
+    async queryByPhone(payload: { phone: string, password?: string, code?: string }): Promise<Error | { phone: string }> {
+
+        const {app, ctx} = this;
+        const model = user(ctx);
+        const {phone, password, code} = payload;
+
+        if (password) {
+            const passHash = ctx.helper.md5(password);
+            const [res] = await model.queryByPhoneAndPass({phone, password: passHash});
+            return res.length === 0 ? new Error(ctx.__(Locale.errorOfPhoneOrPassword)) : res[0];
+
+        } else if (code) {
+
+            const {redis} = app;
+
+            const rCode = await redis.get(phone);
+
+            return rCode && rCode === code ? {phone} : new Error(ctx.__(Locale.codeExpired));
+
+        } else return new Error(ctx.__(Locale.needPasswordOrCode));
+
+
+    }
 }

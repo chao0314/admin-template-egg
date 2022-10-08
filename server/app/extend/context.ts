@@ -1,4 +1,5 @@
 import {Context} from "egg";
+import {Descriptor} from "../../lib/plugin/egg-validator";
 
 export default {
 
@@ -16,7 +17,7 @@ export default {
 
         this.status = 200;
         this.body = {
-            error: 'failure',
+            error: 'Failure',
             data
 
         }
@@ -58,6 +59,13 @@ export default {
         this.body = {
             error: 'Forbidden!'
         }
+
+    },
+    async validate(this: Context, data: Record<string, any>, descriptors: Descriptor[]) {
+        const {app} = this;
+        const des = Object.assign({}, ...descriptors);
+        const validator = app.validator(des);
+        await validator.validate(data);
 
     }
 

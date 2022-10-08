@@ -111,14 +111,7 @@ export default class HomeController extends Controller {
 
         const {app, ctx, service} = this;
         const {phone, password, code} = ctx.request.body;
-        const des = Object.assign({}, phoneDes, passwordDes);
-        const validator = app.validator(des);
 
-        try {
-            await validator.validate({phone, password});
-        } catch (e) {
-            return ctx.badRequest(`${phone} ${password}`);
-        }
 
         const rCode = await app.redis.get(phone);
 
@@ -152,12 +145,68 @@ export default class HomeController extends Controller {
 
     }
 
-    async singIn(){
+    async singIn() {
 
-        const {app,ctx,service} = this;
+        const {ctx, service} = this;
 
-        const {username,password} =  ctx.request.body;
+        const {username, password} = ctx.request.body;
+        try {
+            await ctx.validate({username, password}, [usernameDes, passwordDes]);
+        } catch (e: unknown) {
+            return ctx.badRequest(`${username} ${password}`);
+        }
+        const res = await service.home.queryByNameAndPass(username, password);
 
-        const
+        if (res instanceof Error) ctx.failure(res.message);
+        else {
+
+            const token = ctx.helper.signToken({username});
+            ctx.success({token});
+        }
+    }
+
+    async singInByEmail() {
+
+        const {ctx, service} = this;
+        const {email, password, code} = ctx.request.body;
+
+        try {
+            await ctx.validate({email}, [emailDes]);
+        } catch (e) {
+
+            return ctx.badRequest(email);
+        }
+
+        const res = await service.home.queryByEmail({email, password, code});
+
+        if (res instanceof Error) ctx.failure(res.message);
+        else {
+
+            const token = ctx.helper.signToken({email});
+            ctx.success({token});
+        }
+
+
+    }
+
+    async singInByPhone() {
+
+        const {ctx, service} = this;
+
+        const {phone, password, code} = ctx.request.body;
+        try {
+            await ctx.validate({phone}, [phoneDes]);
+        } catch (e) {
+            return ctx.badRequest(phone);
+        }
+
+        const res = await service.home.queryByPhone({phone, password, code});
+
+        if (res instanceof Error) ctx.failure(res.message);
+        else {
+            const token = ctx.helper.signToken({phone});
+            ctx.success(token);
+        }
+
     }
 }

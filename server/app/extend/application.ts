@@ -3,7 +3,7 @@ import {Application} from "egg";
 const svgCaptcha = require('svg-captcha');
 const nodemailer = require("nodemailer");
 
-import { MailBody, SvgCaptchaOptions} from "./index";
+import {MailBody, SvgCaptchaOptions} from "./index";
 
 export default {
 
@@ -11,10 +11,13 @@ export default {
 
         return svgCaptcha.create(options ?? this.config.svgCaptcha);
 
-
     },
 
-    async sendMail(this: Application, to: string | string[], {subject='', text='', html=''}: MailBody, form?: string) {
+    async sendMail(this: Application, to: string | string[], {
+        subject = '',
+        text = '',
+        html = ''
+    }: MailBody, form?: string) {
 
         const config = this.config.mailer;
 
@@ -31,7 +34,6 @@ export default {
 
 
     },
-
 
 
 

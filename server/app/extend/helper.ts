@@ -1,8 +1,9 @@
 import {v4 as uuidv4} from 'uuid';
 import {createHash} from "crypto";
 import jwt from 'jsonwebtoken';
+import {readFileSync} from 'fs';
 
-const secret = fs.readFileSync('private.key')
+const secret = readFileSync('secret.key');
 
 export default {
 
@@ -30,6 +31,17 @@ export default {
 
     },
 
+    signToken(data: string | Buffer | Record<string, any>, options?: Record<string, any>): string {
+
+        options = options ?? {expiresIn: '2h'};
+        return jwt.sign(data, secret, options);
+    },
+
+    verifyToken(token: string): Record<string, any> | never {
+
+        return jwt.verify(token, secret);
+
+    }
 
 }
 

@@ -1,4 +1,4 @@
-import {Descriptor,} from "../../lib/plugin/egg-validator";
+import {Descriptor} from "../../lib/plugin/egg-validator";
 
 export {ValidateError} from "../../lib/plugin/egg-validator";
 export const emailDes: Descriptor = {
@@ -34,4 +34,10 @@ export const passwordDes: Descriptor = {
         required: true,
         pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)\w{6,10}$/g
     }
+}
+
+export const mergeDes = (des: Descriptor, merged: Descriptor): Descriptor => {
+
+    return Object.assign({}, des, merged)
+
 }
