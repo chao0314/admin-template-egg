@@ -97,11 +97,27 @@ export default function (ctx: Context) {
 
             const andFragments: string[] = [];
             const orFragments: string[] = [];
-            if (state) andFragments.push(`u.user_state = ?`);
-            if (origin) andFragments.push(`u.origin = ?`);
-            if (username) orFragments.push(`u.username LIKE %?%`);
-            if (email) orFragments.push(`u.email LIKE %?%`);
-            if (phone) orFragments.push(`u.phone LIKE %?%`);
+            const values: (number | string)[] = [];
+            if (state) {
+                andFragments.push(`u.user_state = ?`);
+                values.push(state);
+            }
+            if (origin) {
+                andFragments.push(`u.origin = ?`);
+                values.push(origin);
+            }
+            if (username) {
+                orFragments.push(`u.username LIKE %?%`);
+                values.push(username);
+            }
+            if (email) {
+                orFragments.push(`u.email LIKE %?%`);
+                values.push(email);
+            }
+            if (phone) {
+                orFragments.push(`u.phone LIKE %?%`);
+                values.push(phone);
+            }
 
             let sqlFragment = '';
 
@@ -125,9 +141,15 @@ export default function (ctx: Context) {
                         GROUP BY u.id
                         LIMIT ? OFFSET ?;`
             type Row = { id: string, username: string, email: string, phone: string, state: number, roles: number[] };
-            const [res] = await pool.execute<Rows<Row>>(sql, [state, origin, username, email, phone, pageSize, pageSize * (page - 1)]);
+            const [res] = await pool.execute<Rows<Row>>(sql, [...values, pageSize, pageSize * (page - 1)]);
 
             return role ? res.filter((item => item.roles.includes(role))) : res;
+        },
+
+        async updateUserRoles(payload:{id:number,role:number}){
+
+
+
         }
     }
 

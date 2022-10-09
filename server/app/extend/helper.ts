@@ -26,8 +26,32 @@ export default {
 
         const keys = Object.keys(row);
         const values = Object.values(row);
-        const sql = `INSERT INTO ${table} (${keys.join(',')}) values (${keys.map(()=>'?').join(',')});`;
+        const sql = `INSERT INTO ${table} (${keys.join(',')}) VALUES (${keys.map(()=>'?').join(',')});`;
         return [sql, values];
+    },
+
+    genCreateListExecution(table: string, rows: Record<string, any>[]): [string, any[]] {
+
+        const keys = Object.keys(rows[0]);
+        const placeholder = `(${keys.map(() => '?').join(',')})`;
+        const placeholders = rows.map(() => placeholder);
+        const values = rows.map(row => Object.values(row));
+        const sql = `INSERT INTO ${table} (${keys.join(',')}) VALUES ${placeholders.join(',')}`;
+
+        return [sql, values.flat(1)];
+
+    },
+
+    genUpdateExecution(table: string, row: { id: number } & Record<string, any>): [string, any[]] {
+
+        const {id} = row;
+        const temp: Record<string, any> = Object.assign({}, row);
+        delete temp.id;
+        const keys = Object.keys(temp);
+        const values = Object.values(temp);
+        const sql = `UPDATE ${table} SET ${keys.join(' = ?,')} = ? WHERE id = ?;`;
+
+        return [sql, [...values, id]];
 
     },
 

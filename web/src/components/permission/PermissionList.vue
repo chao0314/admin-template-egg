@@ -246,6 +246,7 @@ const handleCreatePermission = () => {
 const handleEditPermission = (index: number, row: any) => {
 
   console.log('handle edit permission', index, row)
+  permissionCreateDialogRef.value.showDialog(row)
 }
 </script>
 
