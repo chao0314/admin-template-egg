@@ -14,9 +14,44 @@ class MySql2BootHook {
 
     private createMysqlPool(config: MysqlConfig) {
 
-
         const pool = mysql2.createPool(config);
-        return pool.promise();
+        const promisePool = pool.promise();
+
+        // beginTransaction
+        // commit
+        // rollback
+
+        promisePool.executeTransaction = async (executions: [sql: string, values: any[]][]): Promise<void> | never => {
+
+            const connection = await promisePool.getConnection();
+
+            await connection.beginTransaction();
+
+            try {
+
+                for (const execution of executions) {
+
+                    const [sql, values] = execution;
+                    await connection.execute(sql, values);
+                }
+
+                await connection.commit();
+
+            } catch (e: unknown) {
+
+                this.app.coreLogger.error(e);
+
+                await connection.rollback();
+
+                throw e;
+
+            }
+
+
+        }
+
+
+        return promisePool;
 
     }
 

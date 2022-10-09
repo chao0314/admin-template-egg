@@ -4,7 +4,7 @@ import {Locale} from "../../config/locale";
 
 export default class Home extends Service {
 
-    async createUser(username: string, password: string): Promise<Error | undefined> {
+    async createUser(username: string, password: string): Promise<Error | void> {
 
         const {ctx} = this;
         const model = user(ctx);
@@ -15,7 +15,7 @@ export default class Home extends Service {
 
     }
 
-    async createUserByPhone(phone: string, password: string): Promise<Error | undefined> {
+    async createUserByPhone(phone: string, password: string): Promise<Error | void> {
 
         const {ctx} = this;
         const model = user(ctx);
@@ -26,7 +26,7 @@ export default class Home extends Service {
 
     }
 
-    async creatUserByEmail(email: string, password: string): Promise<Error | undefined> {
+    async creatUserByEmail(email: string, password: string): Promise<Error | void> {
 
         const {ctx} = this;
         const model = user(ctx);

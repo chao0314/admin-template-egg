@@ -138,7 +138,7 @@ export default class HomeController extends Controller {
 
         const error = await service.home.createUser(username, password);
 
-        if (error) ctx.failure(error.message)
+        if (error instanceof Error) ctx.failure(error.message)
 
         else ctx.success();
 

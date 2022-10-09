@@ -10,7 +10,7 @@ export default function (ctx: Context) {
     const updateRoleStateSql = `UPDATE roles SET role_state = ? WHERE id = ?;`;
     const delRoleSql = `DELETE FROM roles WHERE id = ?;`;
     const queryFoundRows = `SELECT FOUND_ROWS() AS total;`;
-    const delRolePermissions = ``
+    // const delRolePermissions = ``
     return {
 
         async createRole(payload: { name: string, des: string }) {
@@ -78,12 +78,14 @@ export default function (ctx: Context) {
 
             const rows = permissIdList.map(permiss_id => ({role_id, permiss_id}));
 
-            // delete all permissions of role
+            // first: delete all permissions of role
+            const delExecution: [string, any[]] = [`DELETE FROM roles_permissions WHERE role_id = ?;`, [role_id]];
 
-            // create new permission
-            const execution = helper.genCreateListExecution('roles_permissions', rows);
+            // second: create new permission
+            const creExecution = helper.genCreateListExecution('roles_permissions', rows);
 
-            return pool.execute(...execution);
+            return pool.executeTransaction([delExecution, creExecution])
+
         }
 
 
