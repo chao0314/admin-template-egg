@@ -105,6 +105,31 @@ export default function (ctx: Context) {
 
         async queryUserList(filter: FilterInfo) {
 
+            /*
+            * SELECT
+                    u.id,
+                    u.username,
+                    u.email,
+                    u.phone,
+                    u.user_state AS state,
+                    JSON_ARRAYAGG(JSON_OBJECT('roleId', r.id, 'roleName', r.role_name)) AS roles
+                FROM
+                    users AS u
+                        LEFT JOIN
+                    users_roles AS ur ON u.id = ur.user_id
+                        LEFT JOIN
+                    roles AS r ON ur.role_id = r.id
+                WHERE
+                    u.user_state = 1 AND u.origin = 'github'
+                        AND (u.username LIKE '%z%'
+                        OR u.email LIKE '%chao%'
+                        OR u.phone LIKE '%42%')
+                GROUP BY u.id
+                HAVING JSON_CONTAINS(roles, JSON_OBJECT('roleId', 2))
+                LIMIT 1 OFFSET 0;
+            *
+            * */
+            type Row = { id: string, username: string, email: string, phone: string, state: number, roles: number[] };
             const {role, origin, state, username, email, phone, page = 1, pageSize = 10} = filter;
 
             const andFragments: string[] = [];
@@ -139,7 +164,7 @@ export default function (ctx: Context) {
 
             let havingSqlFragment = '';
             if (role) {
-                havingSqlFragment = `HAVING JSON_CONTAINS(roles, JSON_ARRAY(?))`;
+                havingSqlFragment = `HAVING JSON_CONTAINS(roles, JSON_OBJECT('roleId', ?))`;
                 values.push(role);
             }
 
@@ -149,16 +174,18 @@ export default function (ctx: Context) {
                             u.email,
                             u.phone,
                             u.user_state AS state,
-                            JSON_ARRAYAGG(ur.role_id) AS roles
-                        FROM
-                            users AS u
-                                LEFT JOIN
-                            users_roles AS ur ON u.id = ur.user_id
+                            JSON_ARRAYAGG(JSON_OBJECT('roleId', r.id, 'roleName', r.role_name)) AS roles
+                           FROM
+                                users AS u
+                                    LEFT JOIN
+                                users_roles AS ur ON u.id = ur.user_id
+                                    LEFT JOIN
+                                roles AS r ON ur.role_id = r.id
                         ${sqlFragment}
                         GROUP BY u.id
                         ${havingSqlFragment}
                         LIMIT ? OFFSET ?;`
-            type Row = { id: string, username: string, email: string, phone: string, state: number, roles: number[] };
+
             const [list] = await pool.execute<Rows<Row>>(sql, [...values, pageSize, pageSize * (page - 1)]);
             const [[{total}]] = await pool.execute<Rows<{ total: number }>>(queryFoundRows);
             return {
