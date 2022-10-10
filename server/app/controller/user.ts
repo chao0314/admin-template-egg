@@ -1,35 +1,109 @@
 import {Controller} from "egg";
 import {usernameDes, emailDes, phoneDes, passwordDes, mergeDes, ValidateError} from "../descriptor";
 
-export default class HomeController extends Controller {
+type UserInfo = { username: string, email: string, phone: string, password: string, id?: number };
+export default class UserController extends Controller {
 
-    async createUser() {
-        const {ctx, service} = this;
-        const {username, email, phone, password,} = ctx.request.body;
+    private async validateUserInfo(user: UserInfo): Promise<boolean | void> {
 
+
+        const {ctx} = this;
         const emailDesTemp = mergeDes(emailDes, {email: {required: false}});
         const phoneDesTemp = mergeDes(phoneDes, {phone: {required: false}});
 
         try {
 
-            await ctx.validate({
-                username,
-                email,
-                phone,
-                password
-            }, [usernameDes, emailDesTemp, phoneDesTemp, passwordDes]);
+            await ctx.validate(user, [usernameDes, emailDesTemp, phoneDesTemp, passwordDes]);
 
+            return true;
         } catch (e: unknown) {
 
-            return ctx.badRequest((e as ValidateError).errors[0].fieldValue);
+            ctx.badRequest((e as ValidateError).errors[0].fieldValue);
+        }
+    }
+
+    async createUser() {
+        const {ctx, service} = this;
+        const {username, email, phone, password,} = ctx.request.body;
+        const user = {username, email, phone, password};
+        const pass = await this.validateUserInfo(user);
+
+        if (pass) {
+            const error = await service.user.createUser(user);
+            if (error instanceof Error) ctx.failure(error.message);
+            else ctx.success();
         }
 
-        const error = await service.user.createUser({username, email, phone, password});
+    }
 
-        if (error instanceof Error) ctx.failure(error.message);
-        else ctx.success();
+    async updateUser() {
+
+        const {ctx, service} = this;
+        const {id, username, email, phone, password} = ctx.request.body;
+        const user = {id, username, email, phone, password};
+        const pass = await this.validateUserInfo(user);
+        if (pass) {
+            const error = await service.user.updateUser(user);
+            if (error instanceof Error) ctx.failure(error.message);
+            else ctx.success();
+        }
+
+    }
+
+    async deleteUser() {
+
+        const {ctx, service} = this;
+        const {id} = ctx.request.body;
+        if (!id) ctx.badRequest(`id ${id}`);
+        else {
+            await service.user.delUser(id);
+            ctx.success();
+        }
 
 
     }
 
+    async updateUserState() {
+
+        const {ctx, service} = this;
+        const {id, state} = ctx.request.body;
+        if (id! || !state) ctx.badRequest(`id ${id} state ${state}`);
+        else {
+            await service.user.updateUserState({id, state});
+            ctx.success();
+        }
+
+    }
+
+    async createUserRole() {
+
+        const {ctx, service} = this;
+        const {id, roleId} = ctx.request.body;
+        if (!id || !roleId) ctx.badRequest(`id ${id} roleId ${roleId}`);
+        else {
+            await service.user.createUserRole({id, roleId});
+            ctx.success();
+        }
+
+    }
+
+    async delUserRole() {
+
+        const {ctx, service} = this;
+        const {id, roleId} = ctx.request.body;
+        if (!id || !roleId) ctx.badRequest(`id ${id} roleId ${roleId}`);
+        else {
+            await service.user.delUserRole({id, roleId});
+        }
+
+    }
+
+    async queryUserList() {
+
+        const {ctx, service} = this;
+        const {filter: {role, origin, state, keyword, pageSize = 10, page = 1}} = ctx.request.body;
+
+        return await service.user.queryUserList({role, origin, state, keyword, page, pageSize});
+
+    }
 }

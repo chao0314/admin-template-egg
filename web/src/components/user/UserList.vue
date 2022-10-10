@@ -131,15 +131,10 @@
 
 <script setup lang="ts">
 import TablePagination from '../common/TablePagination.vue';
-import type {TableData} from "@/components/common/TablePagination.vue";
-//@ts-ignore
+import {TableData, FormData, Types} from "@/components/common/index";
 import UploadFileDialog from '../common/UploadFileDialog.vue';
-//@ts-ignore
 import FormDialog from '../common/FormDialog.vue';
-import type {FormData} from "@/components/common/FormDialog.vue";
-import {Types} from "@/components/common";
 import {inject, reactive, ref} from 'vue';
-// @ts-ignore
 import {Delete, Edit, Lock, Message, Phone, Setting, User} from '@element-plus/icons-vue';
 import type {Locale} from "@/locale/zh-cn";
 import useRules from "@/rules";
@@ -372,6 +367,8 @@ interface User {
 
 const handleEdit = (index: number, row: User) => {
   console.log(index, row)
+  createUserDialogRef.value?.showDialog(row);
+
 }
 const handleDelete = (index: number, row: User) => {
   console.log(index, row)

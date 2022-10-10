@@ -8,9 +8,10 @@ export const enum Locale {
     usernameAlreadyExists = 'usernameAlreadyExists',
     development = 'development',
     phoneAlreadyExists = 'phoneAlreadyExists',
-    emailAlreadyExists='emailAlreadyExists',
-    errorOfUsernameOrPassword ='errorOfUsernameOrPassword',
-    needPasswordOrCode='needPasswordOrCode',
+    emailAlreadyExists = 'emailAlreadyExists',
+    errorOfUsernameOrPassword = 'errorOfUsernameOrPassword',
+    needPasswordOrCode = 'needPasswordOrCode',
     errorOfEmailOrPassword = 'errorOfEmailOrPassword',
-    errorOfPhoneOrPassword='errorOfPhoneOrPassword'
+    errorOfPhoneOrPassword = 'errorOfPhoneOrPassword',
+    roleAlreadyExists = 'roleAlreadyExists'
 }

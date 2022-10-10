@@ -10,5 +10,6 @@
   "emailAlreadyExists": "邮箱已经存在",
   "errorOfUsernameOrPassword": "用户名或密码错误",
   "needPasswordOrCode": "需要密码或者动态验证码",
-  "errorOfEmailOrPassword":"邮箱或密码错误"
+  "errorOfEmailOrPassword": "邮箱或密码错误",
+  "roleAlreadyExists": "角色已经存在"
 }

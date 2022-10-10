@@ -22,9 +22,10 @@ export const usernameDes: Descriptor = {
     username: {
         type: 'string',
         required: true,
-        pattern: /^\w+$/g,
+        pattern: /^\w{1,16}$/g,
     }
 }
+
 
 
 export const passwordDes: Descriptor = {

@@ -10,6 +10,8 @@ export default function (ctx: Context) {
     const updateRoleStateSql = `UPDATE roles SET role_state = ? WHERE id = ?;`;
     const delRoleSql = `DELETE FROM roles WHERE id = ?;`;
     const queryFoundRows = `SELECT FOUND_ROWS() AS total;`;
+    const queryRoleByNameSql = `SELECT role_name as name,role_des as des FROM roles WHERE role_name = ?;`;
+    // const queryRolePermissions = ``;
     // const delRolePermissions = ``
     return {
 
@@ -17,8 +19,19 @@ export default function (ctx: Context) {
 
             const {name, des} = payload;
             const row = {'role_name': name, 'role_des': des};
+
             const execution = helper.genCreateExecution('roles', row);
             return pool.execute(...execution);
+
+        },
+
+        async queryRoleByName(payload: { name: string }) {
+
+            const {name} = payload;
+
+            const [res] = await pool.execute<Rows<{ name: string, des: string }>>(queryRoleByNameSql, [name]);
+
+            return res;
 
         },
 
@@ -72,9 +85,9 @@ export default function (ctx: Context) {
 
         },
 
-        async updateRolePermission(payload: { roleId: number, permissIdList: number[] }) {
+        async updateRolePermission(payload: { id: number, permissIdList: number[] }) {
 
-            const {roleId: role_id, permissIdList} = payload;
+            const {id: role_id, permissIdList} = payload;
 
             const rows = permissIdList.map(permiss_id => ({role_id, permiss_id}));
 
@@ -85,6 +98,14 @@ export default function (ctx: Context) {
             const creExecution = helper.genCreateListExecution('roles_permissions', rows);
 
             return pool.executeTransaction([delExecution, creExecution])
+
+        },
+
+        async queryRolePermission(payload: { id: number }) {
+
+            //todo...
+            console.log(payload)
+
 
         }
 

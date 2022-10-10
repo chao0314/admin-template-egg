@@ -9,6 +9,27 @@ type UserModel = ReturnType<typeof user>;
 export default class User extends Service {
 
 
+    private async checkUserInfo(model: UserModel, payload: UserInfo): Promise<Error | undefined> {
+
+        const {ctx} = this;
+        if (payload.username) {
+
+            const [res] = await model.queryByName(payload.username);
+
+            if (res.length > 0) return new Error(ctx.__(Locale.usernameAlreadyExists));
+        }
+
+        if (payload.email) {
+            const [res] = await model.queryByEmail(payload.email);
+            if (res.length > 0) return new Error(ctx.__(Locale.emailAlreadyExists));
+        }
+        if (payload.phone) {
+            const [res] = await model.queryByPhone(payload.phone);
+            if (res.length > 0) return new Error(ctx.__(Locale.phoneAlreadyExists));
+        }
+
+    }
+
     async createUser(payload: UserInfo): Promise<Error | undefined> {
 
         const {ctx} = this;
@@ -45,10 +66,31 @@ export default class User extends Service {
 
     async updateUserState(payload: { id: number, state: 0 | 1 }) {
 
-
         const {ctx} = this;
         const model = user(ctx);
         await model.updateUserState(payload);
+    }
+
+    async createUserRole(payload: { id: number, roleId: number }) {
+
+        const {ctx} = this;
+        const model = user(ctx);
+        const {id, roleId} = payload;
+        const roles = await model.queryUserRoleList({id});
+        if (roles.find(role => Number(role.roleId) === Number(roleId)) === undefined) {
+
+            await model.createUserRole(payload);
+        }
+
+    }
+
+    async delUserRole(payload: { id: number, roleId: number }) {
+
+        const {ctx} = this;
+        const model = user(ctx);
+        const {id, roleId} = payload;
+        await model.delUserRole({id, roleId});
+
     }
 
     async queryUserList(payload: FilterInfo) {
@@ -77,26 +119,7 @@ export default class User extends Service {
 
     }
 
-    private async checkUserInfo(model: UserModel, payload: UserInfo): Promise<Error | undefined> {
 
-        const {ctx} = this;
-        if (payload.username) {
-
-            const [res] = await model.queryByName(payload.username);
-
-            if (res.length > 0) return new Error(ctx.__(Locale.usernameAlreadyExists));
-        }
-
-        if (payload.email) {
-            const [res] = await model.queryByEmail(payload.email);
-            if (res.length > 0) return new Error(ctx.__(Locale.emailAlreadyExists));
-        }
-        if (payload.phone) {
-            const [res] = await model.queryByPhone(payload.phone);
-            if (res.length > 0) return new Error(ctx.__(Locale.phoneAlreadyExists));
-        }
-
-    }
 }
 
 

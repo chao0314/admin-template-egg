@@ -10,6 +10,7 @@ export default function (ctx: Context) {
     const {app, helper} = ctx;
     const pool = app.mysql2;
 
+    const queryFoundRows = `SELECT FOUND_ROWS() AS total;`;
     const queryByNameSql = `SELECT username FROM user WHERE username = ?;`;
     const queryByPhoneSql = `SELECT phone FROM template_db.user WHERE phone = ?;`;
     const queryByEmailSql = `SELECT email FROM template_db.user WHERE email = ?;`;
@@ -19,6 +20,16 @@ export default function (ctx: Context) {
     const delByIdSql = `DELETE FROM user WHERE id = ?;`;
     const updateByIdSql = `UPDATE user SET username= ?,email= ?,phone= ?,password= ? WHERE id= ?;`;
     const updateUserStateByIdSql = `UPDATE user SET user_state = ? WHERE id= ?;`;
+    const createUserRoleSql = `INSERT INTO users_roles (user_id,role_id) VALUES (?,?);`;
+    const delUserRoleSql = `DELETE FROM users_roles WHERE user_id = ? AND role_id = ?;`;
+    const queryUserRoleList = `SELECT  JSON_ARRAYAGG(JSON_OBJECT('roleId',
+                                                    r.id,
+                                                    'name',
+                                                    r.role_name,
+                                                    'des',
+                                                    r.role_des)) AS roles
+                                FROM users_roles AS ur LEFT JOIN  roles AS r ON ur.role_id = r.id
+                                WHERE ur.user_id = ? GROUP BY ur.user_id;`
     return {
 
         async createUser(row: Record<string, any>) {
@@ -93,6 +104,7 @@ export default function (ctx: Context) {
         },
 
         async queryUserList(filter: FilterInfo) {
+
             const {role, origin, state, username, email, phone, page = 1, pageSize = 10} = filter;
 
             const andFragments: string[] = [];
@@ -125,8 +137,13 @@ export default function (ctx: Context) {
 
             if (orFragments.length > 0) sqlFragment += `AND (${orFragments.join('OR')})`;
 
+            let havingSqlFragment = '';
+            if (role) {
+                havingSqlFragment = `HAVING JSON_CONTAINS(roles, JSON_ARRAY(?))`;
+                values.push(role);
+            }
 
-            const sql = `SELECT 
+            const sql = `SELECT SQL_CALC_FOUND_ROWS
                             u.id,
                             u.username,
                             u.email,
@@ -139,16 +156,43 @@ export default function (ctx: Context) {
                             users_roles AS ur ON u.id = ur.user_id
                         ${sqlFragment}
                         GROUP BY u.id
+                        ${havingSqlFragment}
                         LIMIT ? OFFSET ?;`
             type Row = { id: string, username: string, email: string, phone: string, state: number, roles: number[] };
-            const [res] = await pool.execute<Rows<Row>>(sql, [...values, pageSize, pageSize * (page - 1)]);
-
-            return role ? res.filter((item => item.roles.includes(role))) : res;
+            const [list] = await pool.execute<Rows<Row>>(sql, [...values, pageSize, pageSize * (page - 1)]);
+            const [[{total}]] = await pool.execute<Rows<{ total: number }>>(queryFoundRows);
+            return {
+                total,
+                list
+            }
         },
 
-        async updateUserRoles(payload:{id:number,role:number}){
+        async createUserRole(payload: { id: number, roleId: number }) {
 
+            const {id: user_id, roleId: role_id} = payload;
 
+            return pool.execute(createUserRoleSql, [user_id, role_id]);
+
+        },
+
+        async queryUserRoleList(payload: { id: number }) {
+
+            const {id: user_id} = payload;
+            const [roles] = await pool.execute<Rows<{ roleId: number, roleName: string, roleDes: string }>>(queryUserRoleList, [user_id]);
+            return roles;
+        },
+
+        async delUserRole(payload: { id: number, roleId: number }) {
+
+            const {id: user_id, roleId: role_id} = payload;
+
+            return pool.execute(delUserRoleSql, [user_id, role_id]);
+
+        },
+
+        async queryUserPermissions(payload: { id: number }) {
+            //todo...
+            console.log(payload);
 
         }
     }
