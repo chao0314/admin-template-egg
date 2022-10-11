@@ -3,15 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="8d274c5b-0fea-4388-887a-12074aeced64" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/controller/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/controller/home.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/controller/role.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/controller/role.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/controller/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/controller/user.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/model/permissions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/model/permission.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/app/model/role.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/model/role.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/app/model/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/model/user.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/router.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/router.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/service/Test.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/service/role.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/service/role.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +47,7 @@
     "node.js.selected.package.standard": "",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "preferences.keymap",
-    "ts.external.directory.path": "E:\\workspace\\admin-template-egg\\server\\node_modules\\typescript\\lib",
+    "ts.external.directory.path": "E:\\workspace\\admin-template-egg\\web\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>

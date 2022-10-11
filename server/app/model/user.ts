@@ -222,6 +222,32 @@ export default function (ctx: Context) {
             //todo...
             console.log(payload);
 
+            /*
+            *
+            * SELECT
+    p.id,
+    p.permiss_name,
+    p.permiss_type,
+    p.permiss_level,
+    p.permiss_pid
+FROM
+    users AS u
+        LEFT JOIN
+    users_roles AS ur ON u.id = ur.user_id
+        LEFT JOIN
+    roles AS r ON ur.role_id = r.id
+        LEFT JOIN
+    roles_permissions AS rp ON ur.role_id = rp.role_id
+        LEFT JOIN
+    permissions AS p ON rp.role_id = p.id
+WHERE
+    u.id = 12 AND r.role_state = 1
+        AND p.permiss_state = 1
+GROUP BY p.id;
+            *
+            *
+            * */
+
         }
     }
 
