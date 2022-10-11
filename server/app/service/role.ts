@@ -37,4 +37,20 @@ export default class Role extends Service {
         await model.delRoleById(payload);
     }
 
+    async queryRoleList(payload: { page: number, pageSize: number, keyword?: string }) {
+
+        const {ctx} = this;
+        const model = role(ctx);
+        return model.queryRoleList(payload);
+
+    }
+
+    async updateRolePermission(payload:{ id: number, permissIdList: number[] }){
+
+        const {ctx} =  this;
+        const model =  role(ctx);
+        return model.updateRolePermission(payload);
+
+    }
+
 }

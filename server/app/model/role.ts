@@ -1,6 +1,7 @@
 import {Context} from "egg";
 import {Rows} from "../../lib/plugin/egg-mysql2/typings";
 
+export  type RoleRow = { id: number, name: string, des: string };
 
 export default function (ctx: Context) {
     const {app, helper} = ctx;
@@ -69,19 +70,16 @@ export default function (ctx: Context) {
                             id, role_name AS name, role_des AS des
                         FROM
                             roles
-                       
+                            
                         ${sqlFragment}
                        
                         LIMIT ? OFFSET ?;`;
 
-            const [list] = await pool.execute<Rows<{ id: number, name: string, des: string }>>(sql, values);
+            const [list] = await pool.execute<Rows<RoleRow>>(sql, values);
 
             const [[{total}]] = await pool.execute<Rows<{ total: number }>>(queryFoundRows);
 
-            return {
-                total,
-                list
-            }
+            return {total, list};
 
         },
 

@@ -1,10 +1,11 @@
 import {Context} from "egg";
 import {Rows} from "../../lib/plugin/egg-mysql2/typings";
 
-type Permission = { pid: number, name: string, des: string, type: string, level: number, path?: string, method?: string };
-type Filter = { type?: string, keyword?: string, page: number, pageSize: number };
+export type PermissionType = { pid: number, name: string, des: string, type: string, level: number, path?: string, method?: string };
+export type Filter = { type?: string, keyword?: string, page: number, pageSize: number };
+export type PermissionRow = PermissionType & { id: number };
 
-function mapColumnKey(payload: Permission & { id?: number }) {
+function mapColumnKey(payload: PermissionType & { id?: number }) {
 
     return Object.keys(payload).reduce((preObj, curKey) => {
 
@@ -19,15 +20,17 @@ function mapColumnKey(payload: Permission & { id?: number }) {
 export default function (ctx: Context) {
     const {app, helper} = ctx;
     const pool = app.mysql2;
+    const queryFoundRows = `SELECT FOUND_ROWS() AS total;`;
     const delPermissionSql = `DELETE FROM permissions WHERE id = ?;`;
-    const queryPermissionSqlFragment = `SELECT id, permiss_pid AS pid, permiss_name AS name,permiss_des AS des,
+    const queryPermissionSqlFragment = `SELECT SQL_CALC_FOUND_ROWS
+                                           id, permiss_pid AS pid, permiss_name AS name,permiss_des AS des,
                                            permiss_type AS type,permiss_level AS level,
                                            permiss_path AS path, permiss_method AS method FROM  permissions`;
 
 
     return {
 
-        async createPermission(payload: Permission) {
+        async createPermission(payload: PermissionType) {
 
             const row = mapColumnKey(payload);
             const execution = helper.genCreateExecution('permissions', row);
@@ -36,7 +39,7 @@ export default function (ctx: Context) {
 
         },
 
-        async updatePermission(payload: Permission & { id: number }) {
+        async updatePermission(payload: PermissionType & { id: number }) {
 
             const row = mapColumnKey(payload);
 
@@ -46,7 +49,7 @@ export default function (ctx: Context) {
 
         },
 
-        async updatePermissionState(payload: { id: number, state: number }) {
+        async updatePermissionState(payload: { id: number, state: 0 | 1 }) {
 
             const {id, state} = payload;
             const execution = helper.genUpdateExecution('permissions', {id, permiss_state: state});
@@ -80,8 +83,10 @@ export default function (ctx: Context) {
             }
             const sql = `${queryPermissionSqlFragment} ${sqlFragments.length > 0 ? 'WHERE' : ''} ${sqlFragments.join('AND')} LIMIT ? OFFSET ?;`;
 
-            return pool.execute<Rows<Permission & { id: number }>>(sql, [...values, pageSize, (page - 1) * pageSize]);
+            const [list] = await pool.execute<Rows<PermissionRow>>(sql, [...values, pageSize, (page - 1) * pageSize]);
+            const [[{total}]] = await pool.execute<Rows<{ total: number }>>(queryFoundRows);
 
+            return {total, list};
         }
 
 

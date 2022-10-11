@@ -1,8 +1,9 @@
 import {Controller} from "egg";
 import {usernameDes, emailDes, phoneDes, passwordDes, mergeDes, ValidateError} from "../descriptor";
+import {UserRow} from "../model/user";
 
 type UserInfo = { username: string, email: string, phone: string, password: string, id?: number };
-export default class UserController extends Controller {
+export default class User extends Controller {
 
     private async validateUserInfo(user: UserInfo): Promise<boolean | void> {
 
@@ -94,6 +95,7 @@ export default class UserController extends Controller {
         if (!id || !roleId) ctx.badRequest(`id ${id} roleId ${roleId}`);
         else {
             await service.user.delUserRole({id, roleId});
+            ctx.success();
         }
 
     }
@@ -103,7 +105,16 @@ export default class UserController extends Controller {
         const {ctx, service} = this;
         const {filter: {role, origin, state, keyword, pageSize = 10, page = 1}} = ctx.request.body;
 
-        return await service.user.queryUserList({role, origin, state, keyword, page, pageSize});
+        const data: { total: number, list: UserRow[] } = await service.user.queryUserList({
+            role,
+            origin,
+            state,
+            keyword,
+            page,
+            pageSize
+        });
+
+        ctx.success(data);
 
     }
 }

@@ -1,8 +1,9 @@
 import {Controller} from 'egg';
 // import {emailDes, phoneDes, usernameDes, passwordDes, ValidateError} from "../descriptor";
 // import {Locale} from "../../config/locale";
+import {RoleRow} from "../model/role";
 
-export default class RoleController extends Controller {
+export default class Role extends Controller {
 
     async createRole() {
 
@@ -22,7 +23,7 @@ export default class RoleController extends Controller {
         const {ctx, service} = this;
         const {id, name, des} = ctx.request.body;
         if (!id) return ctx.badRequest(`id ${id}`);
-        //todo...validate
+        //todo...validate params
 
         await service.role.updateRole({id, name, des});
         ctx.success();
@@ -50,5 +51,33 @@ export default class RoleController extends Controller {
 
     }
 
+    async queryRoleList() {
+
+        const {ctx, service} = this;
+
+        const {keyword, page = 1, pageSize = 10} = ctx.request.body;
+
+        const data: { total: number, list: RoleRow[] } = await service.role.queryRoleList({keyword, page, pageSize});
+
+        ctx.success(data);
+    }
+
+    async updateRolePermission() {
+
+        const {ctx, service} = this;
+
+        const {id, permissIdList} = ctx.request.body;
+
+        if (!id || !Array.isArray(permissIdList) || permissIdList.length === 0) ctx.badRequest(`id ${id} permissIdList ${permissIdList}`);
+        else {
+
+            service.role.updateRolePermission({id, permissIdList});
+
+            ctx.success();
+
+        }
+
+
+    }
 
 }

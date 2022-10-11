@@ -6,6 +6,7 @@ export type FilterInfo = Partial<{
     role: number, origin: string, state: string | number, keyword: string,
     username: string, email: string, phone: string, pageSize: number, page: number
 }>;
+export type UserRow = { id: string, username: string, email: string, phone: string, state: number, roles: { roleId: number, roleName }[] };
 export default function (ctx: Context) {
     const {app, helper} = ctx;
     const pool = app.mysql2;
@@ -129,7 +130,7 @@ export default function (ctx: Context) {
                 LIMIT 1 OFFSET 0;
             *
             * */
-            type Row = { id: string, username: string, email: string, phone: string, state: number, roles: number[] };
+
             const {role, origin, state, username, email, phone, page = 1, pageSize = 10} = filter;
 
             const andFragments: string[] = [];
@@ -186,7 +187,7 @@ export default function (ctx: Context) {
                         ${havingSqlFragment}
                         LIMIT ? OFFSET ?;`
 
-            const [list] = await pool.execute<Rows<Row>>(sql, [...values, pageSize, pageSize * (page - 1)]);
+            const [list] = await pool.execute<Rows<UserRow>>(sql, [...values, pageSize, pageSize * (page - 1)]);
             const [[{total}]] = await pool.execute<Rows<{ total: number }>>(queryFoundRows);
             return {
                 total,

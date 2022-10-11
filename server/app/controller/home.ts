@@ -2,7 +2,7 @@ import {Controller} from 'egg';
 import {emailDes, phoneDes, usernameDes, passwordDes, ValidateError} from "../descriptor";
 import {Locale} from "../../config/locale";
 
-export default class HomeController extends Controller {
+export default class Home extends Controller {
     public async index() {
         const {ctx} = this;
 
