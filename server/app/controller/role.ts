@@ -1,7 +1,7 @@
 import {Controller} from 'egg';
 // import {emailDes, phoneDes, usernameDes, passwordDes, ValidateError} from "../descriptor";
 // import {Locale} from "../../config/locale";
-import {RoleRow} from "../model/role";
+import {RoleRow, PermissionRow} from "../model/role";
 
 export default class Role extends Controller {
 
@@ -34,7 +34,7 @@ export default class Role extends Controller {
         const {ctx, service} = this;
         const {id, state} = ctx.request.body;
 
-        if (!id || !state) return ctx.badRequest(`id ${id} state ${state}`);
+        if (!id || state === undefined) return ctx.badRequest(`id ${id} state ${state}`);
         await service.role.updateRoleState({id, state});
         ctx.success();
 
@@ -71,7 +71,7 @@ export default class Role extends Controller {
         if (!id || !Array.isArray(permissIdList) || permissIdList.length === 0) ctx.badRequest(`id ${id} permissIdList ${permissIdList}`);
         else {
 
-            service.role.updateRolePermission({id, permissIdList});
+            await service.role.updateRolePermission({id, permissIdList});
 
             ctx.success();
 
@@ -80,4 +80,17 @@ export default class Role extends Controller {
 
     }
 
+    async queryRolePermissionList() {
+
+        const {ctx, service} = this;
+
+        const {id} = ctx.request.body;
+
+        if (!id) return ctx.badRequest(`id ${id}`);
+
+        const permissionList: PermissionRow[] = await service.role.queryRolePermissionList({id});
+
+        ctx.success(permissionList);
+
+    }
 }

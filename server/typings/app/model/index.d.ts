@@ -2,14 +2,14 @@
 // Do not modify this file!!!!!!!!!
 
 import 'egg';
-import ExportPermissions from '../../../app/model/permissions';
-import ExportRoles from '../../../app/model/roles';
+import ExportPermission from '../../../app/model/permission';
+import ExportRole from '../../../app/model/role';
 import ExportUser from '../../../app/model/user';
 
 declare module 'egg' {
   interface IModel {
-    Permissions: ReturnType<typeof ExportPermissions>;
-    Roles: ReturnType<typeof ExportRoles>;
+    Permission: ReturnType<typeof ExportPermission>;
+    Role: ReturnType<typeof ExportRole>;
     User: ReturnType<typeof ExportUser>;
   }
 }

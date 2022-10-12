@@ -3,8 +3,20 @@
   <component name="ChangeListManager">
     <list default="true" id="8d274c5b-0fea-4388-887a-12074aeced64" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/app/controller/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/controller/home.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/app/controller/permission.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/controller/permission.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/app/controller/role.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/controller/role.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/app/controller/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/controller/user.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/app/extend/helper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/extend/helper.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/app/model/permission.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/model/permission.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/app/model/role.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/model/role.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/app/model/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/model/user.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/app/router.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/router.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/app/service/role.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/service/role.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/app/service/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/service/user.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/typings/app/controller/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/typings/app/controller/index.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/typings/app/model/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/typings/app/model/index.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/typings/app/service/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/typings/app/service/index.d.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,6 +29,7 @@
         <option value=" Vue TS Component" />
         <option value=" Vue TS Setup" />
         <option value="TypeScript File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -101,7 +114,8 @@
       <workItem from="1665195182685" duration="45000" />
       <workItem from="1665195236244" duration="10142000" />
       <workItem from="1665315100221" duration="7230000" />
-      <workItem from="1665449506437" duration="16282000" />
+      <workItem from="1665449506437" duration="16353000" />
+      <workItem from="1665536044406" duration="19032000" />
     </task>
     <servers />
   </component>

@@ -83,7 +83,7 @@ export default function (ctx: Context) {
             }
             const sql = `${queryPermissionSqlFragment} ${sqlFragments.length > 0 ? 'WHERE' : ''} ${sqlFragments.join('AND')} LIMIT ? OFFSET ?;`;
 
-            const [list] = await pool.execute<Rows<PermissionRow>>(sql, [...values, pageSize, (page - 1) * pageSize]);
+            const [list] = await pool.execute<Rows<PermissionRow>>(sql, [...values, `${pageSize}`, `${(page - 1) * pageSize}`]);
             const [[{total}]] = await pool.execute<Rows<{ total: number }>>(queryFoundRows);
 
             return {total, list};

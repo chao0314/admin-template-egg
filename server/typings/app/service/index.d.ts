@@ -7,13 +7,15 @@ type AnyFunc<T = any> = (...args: any[]) => T;
 type CanExportFunc = AnyFunc<Promise<any>> | AnyFunc<IterableIterator<any>>;
 type AutoInstanceType<T, U = T extends CanExportFunc ? T : T extends AnyFunc ? ReturnType<T> : T> = U extends AnyClass ? InstanceType<U> : U;
 import ExportHome from '../../../app/service/home';
-import ExportTest from '../../../app/service/Test';
+import ExportPermission from '../../../app/service/permission';
+import ExportRole from '../../../app/service/role';
 import ExportUser from '../../../app/service/user';
 
 declare module 'egg' {
   interface IService {
     home: AutoInstanceType<typeof ExportHome>;
-    test: AutoInstanceType<typeof ExportTest>;
+    permission: AutoInstanceType<typeof ExportPermission>;
+    role: AutoInstanceType<typeof ExportRole>;
     user: AutoInstanceType<typeof ExportUser>;
   }
 }

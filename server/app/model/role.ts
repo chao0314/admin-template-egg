@@ -2,7 +2,7 @@ import {Context} from "egg";
 import {Rows} from "../../lib/plugin/egg-mysql2/typings";
 
 export  type RoleRow = { id: number, name: string, des: string };
-
+export type PermissionRow = { id: number, name: string, type: string, level: number, pid: number };
 export default function (ctx: Context) {
     const {app, helper} = ctx;
     const pool = app.mysql2;
@@ -12,8 +12,22 @@ export default function (ctx: Context) {
     const delRoleSql = `DELETE FROM roles WHERE id = ?;`;
     const queryFoundRows = `SELECT FOUND_ROWS() AS total;`;
     const queryRoleByNameSql = `SELECT role_name as name,role_des as des FROM roles WHERE role_name = ?;`;
-    // const queryRolePermissions = ``;
-    // const delRolePermissions = ``
+    const delRolePermissionSql = `DELETE FROM roles_permissions WHERE role_id = ?;`
+    const queryRolePermissionListSql = `SELECT 
+                                            p.id,
+                                            p.permiss_name AS name,
+                                            p.permiss_type AS type,
+                                            p.permiss_level AS level,
+                                            p.permiss_pid AS pid
+                                        FROM
+                                            roles AS r
+                                                LEFT JOIN
+                                            roles_permissions AS rp ON r.id = rp.role_id
+                                                LEFT JOIN
+                                            permissions AS p ON rp.permiss_id = p.id
+                                        WHERE
+                                            r.id = ?  AND p.permiss_state = 1
+                                        GROUP BY p.id;`;
     return {
 
         async createRole(payload: { name: string, des: string }) {
@@ -64,7 +78,7 @@ export default function (ctx: Context) {
             const {keyword, page = 1, pageSize = 10} = payload;
 
             const sqlFragment = keyword ? `WHERE role_name LIKE '%?%' OR role_des LIKE '%?%';` : '';
-            const values = keyword ? [keyword, keyword, pageSize, (page - 1) * pageSize] : [pageSize, (page - 1) * pageSize];
+            const values = keyword ? [keyword, keyword, `${pageSize}`, `${(page - 1) * pageSize}`] : [`${pageSize}`, `${(page - 1) * pageSize}`];
 
             let sql = `SELECT SQL_CALC_FOUND_ROWS
                             id, role_name AS name, role_des AS des
@@ -90,7 +104,7 @@ export default function (ctx: Context) {
             const rows = permissIdList.map(permiss_id => ({role_id, permiss_id}));
 
             // first: delete all permissions of role
-            const delExecution: [string, any[]] = [`DELETE FROM roles_permissions WHERE role_id = ?;`, [role_id]];
+            const delExecution: [string, any[]] = [delRolePermissionSql, [role_id]];
 
             // second: create new permission
             const creExecution = helper.genCreateListExecution('roles_permissions', rows);
@@ -99,17 +113,13 @@ export default function (ctx: Context) {
 
         },
 
-        async queryRolePermission(payload: { id: number }) {
+        async queryRolePermissionList(payload: { id: number }) {
 
-            //todo...
-            console.log(payload)
-            /*
-            *
-            *
-            *
-            * */
+            const {id: permissionId} = payload;
 
+            const [permissionList] = await pool.execute<Rows<PermissionRow>>(queryRolePermissionListSql, [permissionId]);
 
+            return permissionList;
         }
 
 

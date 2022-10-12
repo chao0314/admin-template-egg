@@ -18,8 +18,11 @@ export default {
     },
     md5(data: string) {
 
-        const hash = createHash('md5');
-        return hash.update(data).digest('hex');
+        if (data) {
+            const hash = createHash('md5');
+            return hash.update(data).digest('hex');
+        }
+
     },
 
     genCreateExecution(table: string, row: Record<string, any>): [string, any[]] {
@@ -45,7 +48,11 @@ export default {
     genUpdateExecution(table: string, row: { id: number } & Record<string, any>): [string, any[]] {
 
         const {id} = row;
-        const temp: Record<string, any> = Object.assign({}, row);
+        const temp: Record<string, any> = {};
+        Object.entries(row).forEach(([key, value]) => {
+            if (value !== undefined) temp[key] = value;
+        })
+
         delete temp.id;
         const keys = Object.keys(temp);
         const values = Object.values(temp);

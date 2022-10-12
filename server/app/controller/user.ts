@@ -1,6 +1,7 @@
 import {Controller} from "egg";
 import {usernameDes, emailDes, phoneDes, passwordDes, mergeDes, ValidateError} from "../descriptor";
 import {UserRow} from "../model/user";
+import {PermissionRow} from "../model/user";
 
 type UserInfo = { username: string, email: string, phone: string, password: string, id?: number };
 export default class User extends Controller {
@@ -14,12 +15,14 @@ export default class User extends Controller {
 
         try {
 
-            await ctx.validate(user, [usernameDes, emailDesTemp, phoneDesTemp, passwordDes]);
+            const des = [usernameDes, emailDesTemp, phoneDesTemp];
+            if (!user.id) des.push(passwordDes);
+            await ctx.validate(user, des);
 
             return true;
         } catch (e: unknown) {
 
-            ctx.badRequest((e as ValidateError).errors[0].fieldValue);
+            ctx.badRequest((e as ValidateError).errors[0].message);
         }
     }
 
@@ -35,6 +38,7 @@ export default class User extends Controller {
             else ctx.success();
         }
 
+
     }
 
     async updateUser() {
@@ -42,12 +46,13 @@ export default class User extends Controller {
         const {ctx, service} = this;
         const {id, username, email, phone, password} = ctx.request.body;
         const user = {id, username, email, phone, password};
-        const pass = await this.validateUserInfo(user);
-        if (pass) {
-            const error = await service.user.updateUser(user);
-            if (error instanceof Error) ctx.failure(error.message);
-            else ctx.success();
-        }
+        if (!id) return ctx.badRequest(`id ${id}`);
+        //todo...validate params
+
+        const error = await service.user.updateUser(user);
+        if (error instanceof Error) ctx.failure(error.message);
+        else ctx.success();
+
 
     }
 
@@ -68,7 +73,7 @@ export default class User extends Controller {
 
         const {ctx, service} = this;
         const {id, state} = ctx.request.body;
-        if (id! || !state) ctx.badRequest(`id ${id} state ${state}`);
+        if (!id || state === undefined) ctx.badRequest(`id ${id} state ${state}`);
         else {
             await service.user.updateUserState({id, state});
             ctx.success();
@@ -103,7 +108,7 @@ export default class User extends Controller {
     async queryUserList() {
 
         const {ctx, service} = this;
-        const {filter: {role, origin, state, keyword, pageSize = 10, page = 1}} = ctx.request.body;
+        const {role, origin, state, keyword, pageSize = 10, page = 1} = ctx.request.body;
 
         const data: { total: number, list: UserRow[] } = await service.user.queryUserList({
             role,
@@ -115,6 +120,20 @@ export default class User extends Controller {
         });
 
         ctx.success(data);
+
+    }
+
+    async queryUserPermissionList() {
+
+        const {ctx, service} = this;
+
+        const {id} = ctx.request.body;
+
+        if (!id) return ctx.badRequest(`id ${id}`);
+
+        const permissionList: PermissionRow[] = await service.user.queryUserPermissionList({id});
+
+        ctx.success(permissionList);
 
     }
 }

@@ -41,7 +41,7 @@ export default class Permission extends Controller {
 
         if (!id) return ctx.badRequest(`id ${id}`);
 
-        await service.permission.delPermission({id});
+        await service.permission.deletePermission({id});
 
         ctx.success();
 
@@ -53,11 +53,11 @@ export default class Permission extends Controller {
         const {ctx, service} = this;
         const {id, state} = ctx.request.body;
 
-        if (!id || !state) return ctx.badRequest(`id ${id} state ${state}`);
+        if (isNaN(id) || isNaN(state)) return ctx.badRequest(`id ${id} state ${state}`);
 
         // todo... validate params
 
-        await service.permission.updatePermission({id, state});
+        await service.permission.updatePermissionState({id, state});
 
     }
 

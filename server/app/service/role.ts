@@ -53,4 +53,13 @@ export default class Role extends Service {
 
     }
 
+
+    async queryRolePermissionList(payload:{id:number}){
+
+        const {ctx} = this;
+        const model =  role(ctx);
+        return model.queryRolePermissionList(payload);
+
+    }
+
 }

@@ -1,29 +1,31 @@
 import {Context} from "egg";
 import {Rows} from "../../lib/plugin/egg-mysql2/typings";
+
 // import {Rows} from "../../lib/plugin/egg-mysql2/typings";
-export type UserInfo = { id?: number, username?: string, email?: string, phone?: string, password: string };
+export type UserInfo = { username?: string, email?: string, phone?: string, password?: string };
 export type FilterInfo = Partial<{
     role: number, origin: string, state: string | number, keyword: string,
     username: string, email: string, phone: string, pageSize: number, page: number
 }>;
 export type UserRow = { id: string, username: string, email: string, phone: string, state: number, roles: { roleId: number, roleName }[] };
+export type PermissionRow = { id: number, name: string, type: string, level: number, pid: number };
 export default function (ctx: Context) {
     const {app, helper} = ctx;
     const pool = app.mysql2;
 
     const queryFoundRows = `SELECT FOUND_ROWS() AS total;`;
-    const queryByNameSql = `SELECT username FROM user WHERE username = ?;`;
-    const queryByPhoneSql = `SELECT phone FROM template_db.user WHERE phone = ?;`;
-    const queryByEmailSql = `SELECT email FROM template_db.user WHERE email = ?;`;
-    const queryByNameAndPassSql = `SELECT username FROM template_db.user WHERE username= ? AND password= ?;`;
-    const queryByEmailAndPassSql = `SELECT username FROM template_db.user WHERE email= ? AND password= ?;`;
-    const queryByPhoneAndPassSql = `SELECT username FROM template_db.user WHERE phone= ? AND password= ?;`;
-    const delByIdSql = `DELETE FROM user WHERE id = ?;`;
-    const updateByIdSql = `UPDATE user SET username= ?,email= ?,phone= ?,password= ? WHERE id= ?;`;
-    const updateUserStateByIdSql = `UPDATE user SET user_state = ? WHERE id= ?;`;
+    const queryByNameSql = `SELECT username FROM users WHERE username = ?;`;
+    const queryByPhoneSql = `SELECT phone FROM template_db.users WHERE phone = ?;`;
+    const queryByEmailSql = `SELECT email FROM template_db.users WHERE email = ?;`;
+    const queryByNameAndPassSql = `SELECT username FROM template_db.users WHERE username= ? AND password= ?;`;
+    const queryByEmailAndPassSql = `SELECT username FROM template_db.users WHERE email= ? AND password= ?;`;
+    const queryByPhoneAndPassSql = `SELECT username FROM template_db.users WHERE phone= ? AND password= ?;`;
+    const delByIdSql = `DELETE FROM users WHERE id = ?;`;
+    // const updateByIdSql = `UPDATE users SET username= ?,email= ?,phone= ?,password= ? WHERE id= ?;`;
+    const updateUserStateByIdSql = `UPDATE users SET user_state = ? WHERE id= ?;`;
     const createUserRoleSql = `INSERT INTO users_roles (user_id,role_id) VALUES (?,?);`;
     const delUserRoleSql = `DELETE FROM users_roles WHERE user_id = ? AND role_id = ?;`;
-    const queryUserRoleList = `SELECT  JSON_ARRAYAGG(JSON_OBJECT('roleId',
+    const queryUserRoleListSql = `SELECT  JSON_ARRAYAGG(JSON_OBJECT('roleId',
                                                     r.id,
                                                     'name',
                                                     r.role_name,
@@ -31,11 +33,33 @@ export default function (ctx: Context) {
                                                     r.role_des)) AS roles
                                 FROM users_roles AS ur LEFT JOIN  roles AS r ON ur.role_id = r.id
                                 WHERE ur.user_id = ? GROUP BY ur.user_id;`
+
+    const queryUserPermissionListSql = `SELECT 
+                                        p.id,
+                                        p.permiss_name as name,
+                                        p.permiss_type as type,
+                                        p.permiss_level as level,
+                                        p.permiss_pid as pid
+                                    FROM
+                                        users AS u
+                                            LEFT JOIN
+                                        users_roles AS ur ON u.id = ur.user_id
+                                            LEFT JOIN
+                                        roles AS r ON ur.role_id = r.id
+                                            LEFT JOIN
+                                        roles_permissions AS rp ON ur.role_id = rp.role_id
+                                            LEFT JOIN
+                                        permissions AS p ON rp.permiss_id = p.id
+                                    WHERE
+                                        u.id = ? AND r.role_state = 1
+                                            AND p.permiss_state = 1
+                                    GROUP BY p.id;`
+
     return {
 
         async createUser(row: Record<string, any>) {
 
-            const execution = helper.genCreateExecution('user', row);
+            const execution = helper.genCreateExecution('users', row);
 
             return pool.execute(...execution);
 
@@ -54,7 +78,7 @@ export default function (ctx: Context) {
 
         async createByPhone(row: { phone: string, password: string }) {
 
-            const execution = helper.genCreateExecution('user', row);
+            const execution = helper.genCreateExecution('users', row);
             return pool.execute(...execution);
         },
 
@@ -65,7 +89,7 @@ export default function (ctx: Context) {
 
         async createByEmail(row: { email: string, password: string }) {
 
-            const execution = helper.genCreateExecution('user', row);
+            const execution = helper.genCreateExecution('users', row);
             return pool.execute(...execution);
         },
 
@@ -92,9 +116,11 @@ export default function (ctx: Context) {
 
         },
 
-        async updateUserById(payload: UserInfo) {
-            const {username, email, phone, password, id} = payload;
-            return pool.execute(updateByIdSql, [username, email, phone, password, id]);
+        async updateUserById(payload: UserInfo & { id: number }) {
+
+            const execution = ctx.helper.genUpdateExecution('users', payload);
+
+            return pool.execute(...execution);
         },
 
         async updateUserState(payload: { id: number, state: 0 | 1 }) {
@@ -105,7 +131,7 @@ export default function (ctx: Context) {
         },
 
         async queryUserList(filter: FilterInfo) {
-
+            console.log(filter)
             /*
             * SELECT
                     u.id,
@@ -187,7 +213,7 @@ export default function (ctx: Context) {
                         ${havingSqlFragment}
                         LIMIT ? OFFSET ?;`
 
-            const [list] = await pool.execute<Rows<UserRow>>(sql, [...values, pageSize, pageSize * (page - 1)]);
+            const [list] = await pool.execute<Rows<UserRow>>(sql, [...values, `${pageSize}`, `${pageSize * (page - 1)}`]);
             const [[{total}]] = await pool.execute<Rows<{ total: number }>>(queryFoundRows);
             return {
                 total,
@@ -206,7 +232,7 @@ export default function (ctx: Context) {
         async queryUserRoleList(payload: { id: number }) {
 
             const {id: user_id} = payload;
-            const [roles] = await pool.execute<Rows<{ roleId: number, roleName: string, roleDes: string }>>(queryUserRoleList, [user_id]);
+            const [roles] = await pool.execute<Rows<{ roleId: number, roleName: string, roleDes: string }>>(queryUserRoleListSql, [user_id]);
             return roles;
         },
 
@@ -218,35 +244,13 @@ export default function (ctx: Context) {
 
         },
 
-        async queryUserPermissions(payload: { id: number }) {
+        async queryUserPermissionList(payload: { id: number }) {
             //todo...
-            console.log(payload);
 
-            /*
-            *
-            * SELECT
-    p.id,
-    p.permiss_name,
-    p.permiss_type,
-    p.permiss_level,
-    p.permiss_pid
-FROM
-    users AS u
-        LEFT JOIN
-    users_roles AS ur ON u.id = ur.user_id
-        LEFT JOIN
-    roles AS r ON ur.role_id = r.id
-        LEFT JOIN
-    roles_permissions AS rp ON ur.role_id = rp.role_id
-        LEFT JOIN
-    permissions AS p ON rp.role_id = p.id
-WHERE
-    u.id = 12 AND r.role_state = 1
-        AND p.permiss_state = 1
-GROUP BY p.id;
-            *
-            *
-            * */
+            const {id: userId} = payload;
+            const [permissionList] = await pool.execute<Rows<PermissionRow>>(queryUserPermissionListSql, [userId]);
+
+            return permissionList;
 
         }
     }

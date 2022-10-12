@@ -8,7 +8,6 @@ export default class Home extends Controller {
 
         ctx.body = await ctx.service.test.sayHi('egg');
     }
-
     async getCaptcha() {
 
         const {app, ctx} = this;

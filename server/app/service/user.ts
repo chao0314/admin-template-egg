@@ -34,7 +34,7 @@ export default class User extends Service {
 
         const {ctx} = this;
         const model = user(ctx);
-        payload.password = ctx.helper.md5(payload.password);
+        if (payload.password) payload.password = ctx.helper.md5(payload.password);
         const error = await this.checkUserInfo(model, payload);
         if (error) return error
         await model.createUser(payload);
@@ -51,11 +51,11 @@ export default class User extends Service {
     }
 
 
-    async updateUser(payload: UserInfo) {
+    async updateUser(payload: UserInfo & { id: number }) {
 
         const {ctx} = this;
         const model = user(ctx);
-        payload.password = ctx.helper.md5(payload.password);
+        if (payload.password) payload.password = ctx.helper.md5(payload.password);
         const error = await this.checkUserInfo(model, payload);
         if (error) return error;
 
@@ -116,6 +116,14 @@ export default class User extends Service {
 
         return await model.queryUserList(filter);
 
+
+    }
+
+    async queryUserPermissionList(payload: { id: number }) {
+
+        const {ctx} = this;
+        const model = user(ctx);
+        return model.queryUserPermissionList(payload);
 
     }
 
