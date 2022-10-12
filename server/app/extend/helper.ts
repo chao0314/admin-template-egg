@@ -20,25 +20,39 @@ export default {
 
         if (data) {
             const hash = createHash('md5');
-            return hash.update(data).digest('hex');
+            data = hash.update(data).digest('hex');
         }
 
+        return data;
     },
 
     genCreateExecution(table: string, row: Record<string, any>): [string, any[]] {
 
-        const keys = Object.keys(row);
-        const values = Object.values(row);
+        const temp: Record<string, any> = {};
+        Object.entries(row).forEach(([key, value]) => {
+            if (value !== undefined) temp[key] = value;
+        })
+        const keys = Object.keys(temp);
+        const values = Object.values(temp);
         const sql = `INSERT INTO ${table} (${keys.join(',')}) VALUES (${keys.map(()=>'?').join(',')});`;
         return [sql, values];
     },
 
     genCreateListExecution(table: string, rows: Record<string, any>[]): [string, any[]] {
 
-        const keys = Object.keys(rows[0]);
+        const temp: Record<string, any> = {};
+        Object.entries(rows[0]).forEach(([key, value]) => {
+            if (value !== undefined) temp[key] = value;
+        })
+
+        const keys = Object.keys(temp);
         const placeholder = `(${keys.map(() => '?').join(',')})`;
         const placeholders = rows.map(() => placeholder);
-        const values = rows.map(row => Object.values(row));
+        const values = rows.map(row => {
+            const tempRow = {}
+            keys.forEach(key => tempRow[key] = row[key]);
+            return Object.values(tempRow);
+        });
         const sql = `INSERT INTO ${table} (${keys.join(',')}) VALUES ${placeholders.join(',')}`;
 
         return [sql, values.flat(1)];

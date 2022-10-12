@@ -1,4 +1,5 @@
 import {Controller} from "egg";
+import {validateNumber,validateString} from "../descriptor/regexp";
 import {usernameDes, emailDes, phoneDes, passwordDes, mergeDes, ValidateError} from "../descriptor";
 import {UserRow} from "../model/user";
 import {PermissionRow} from "../model/user";
@@ -108,15 +109,21 @@ export default class User extends Controller {
     async queryUserList() {
 
         const {ctx, service} = this;
-        const {role, origin, state, keyword, pageSize = 10, page = 1} = ctx.request.body;
+        const {role, origin, state, keyword, pageSize = 10, page = 1} = ctx.request.query;
+        //todo... validate params
+
+        const res =  validateNumber([role,pageSize,page]);
+        if(res instanceof Error) return ctx.badRequest(res.message);
+
+
 
         const data: { total: number, list: UserRow[] } = await service.user.queryUserList({
             role,
             origin,
             state,
             keyword,
-            page,
-            pageSize
+            page: Number(page),
+            pageSize: Number(pageSize)
         });
 
         ctx.success(data);
@@ -126,12 +133,12 @@ export default class User extends Controller {
     async queryUserPermissionList() {
 
         const {ctx, service} = this;
+        const {id} = ctx.request.query;
+        const nid = Number(id)
 
-        const {id} = ctx.request.body;
+        if (!id || isNaN(nid)) return ctx.badRequest(`id ${id}`);
 
-        if (!id) return ctx.badRequest(`id ${id}`);
-
-        const permissionList: PermissionRow[] = await service.user.queryUserPermissionList({id});
+        const permissionList: PermissionRow[] = await service.user.queryUserPermissionList({id: nid});
 
         ctx.success(permissionList);
 

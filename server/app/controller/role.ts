@@ -55,9 +55,13 @@ export default class Role extends Controller {
 
         const {ctx, service} = this;
 
-        const {keyword, page = 1, pageSize = 10} = ctx.request.body;
+        const {keyword, page = 1, pageSize = 10} = ctx.request.query;
 
-        const data: { total: number, list: RoleRow[] } = await service.role.queryRoleList({keyword, page, pageSize});
+        const data: { total: number, list: RoleRow[] } = await service.role.queryRoleList({
+            keyword,
+            page: Number(page),
+            pageSize: Number(pageSize)
+        });
 
         ctx.success(data);
     }

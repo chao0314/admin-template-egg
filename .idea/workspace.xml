@@ -3,17 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="8d274c5b-0fea-4388-887a-12074aeced64" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/controller/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/controller/home.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/app/controller/permission.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/controller/permission.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/app/controller/role.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/controller/role.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/app/controller/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/controller/user.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/app/descriptor/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/descriptor/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/app/extend/helper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/extend/helper.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/model/permission.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/model/permission.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/model/role.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/model/role.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/model/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/model/user.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/app/router.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/router.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/service/role.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/service/role.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/service/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/service/user.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/typings/app/controller/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/typings/app/controller/index.d.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/typings/app/model/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/typings/app/model/index.d.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/typings/app/service/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/typings/app/service/index.d.ts" afterDir="false" />
@@ -28,8 +23,8 @@
       <list>
         <option value=" Vue TS Component" />
         <option value=" Vue TS Setup" />
-        <option value="TypeScript File" />
         <option value="JavaScript File" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
@@ -47,23 +42,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "E:/workspace/daily",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.keymap",
-    "ts.external.directory.path": "E:\\workspace\\admin-template-egg\\web\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/workspace/daily&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;E:\\workspace\\admin-template-egg\\web\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\workspace\admin-template-egg\server\app" />

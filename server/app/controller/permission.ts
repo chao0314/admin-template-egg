@@ -58,6 +58,7 @@ export default class Permission extends Controller {
         // todo... validate params
 
         await service.permission.updatePermissionState({id, state});
+        ctx.success();
 
     }
 

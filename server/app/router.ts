@@ -28,7 +28,6 @@ export default (app: Application) => {
     router.delete(`/${apiVersion}/role`, role.deleteRole);
     router.put(`/${apiVersion}/role-state`, role.updateRoleState);
     router.get(`/${apiVersion}/role-permiss`, role.queryRolePermissionList);
-    //test point
     router.put(`/${apiVersion}/role-permiss`, role.updateRolePermission);
 
     router.get(`/${apiVersion}/permissions`, permission.queryPermissionList);
