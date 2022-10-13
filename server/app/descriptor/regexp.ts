@@ -1,44 +1,40 @@
-import {loadFont} from "svg-captcha";
-
 export const numberReg = /^\d+$/g;
 
-export const stringReg = /^[a-zA-Z]+$/g;
+export const validateNumberObj = (obj: Record<string, any>) => {
 
-export const validateNumber = (list: (string | number)[]) => {
-
-    for (let i = 0; i < list.length; i++) {
-        const num = `${list[i]}`;
-        if (!numberReg.test(num)) return new Error(num);
-    }
-
-    return true;
-
-}
-
-
-export const validateNumberObj = (obj: Record<string, string | number>) => {
-
-    const temp: Record<string, number> = {}
+    const result: Record<string, number> = {}
     const entries = Object.entries(obj);
     for (const [key, value] of entries) {
 
-        if()
+        if (value !== undefined) {
 
+            if (numberReg.test(value)) result[key] = Number(value);
+            else return new Error(`${key} ${value}`);
+        }
     }
+
+    return result;
 
 }
 
 
-export const validateString = (list: string[]) => {
+export const validateStringObj = (obj: Record<string, any>) => {
 
-    for (let i = 0; i < list.length; i++) {
+    const result: Record<string, string> = {};
 
-        const str = list[i];
-        if (!stringReg.test(str)) return new Error(str);
+    const entries = Object.entries(obj);
+
+    for (const [key, value] of entries) {
+
+        if (value !== undefined)
+            result[key] = value.replace(/\</g, "&lt").replace(/\>/g, "&gt");
     }
 
-    return true;
+    return result;
 
 }
+
+
+
 
 

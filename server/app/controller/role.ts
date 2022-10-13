@@ -2,6 +2,7 @@ import {Controller} from 'egg';
 // import {emailDes, phoneDes, usernameDes, passwordDes, ValidateError} from "../descriptor";
 // import {Locale} from "../../config/locale";
 import {RoleRow, PermissionRow} from "../model/role";
+import {validateNumberObj, validateStringObj} from "../descriptor/regexp";
 
 export default class Role extends Controller {
 
@@ -57,11 +58,13 @@ export default class Role extends Controller {
 
         const {keyword, page = 1, pageSize = 10} = ctx.request.query;
 
+        const strObj = validateStringObj({keyword});
+        const numObj = validateNumberObj({page, pageSize});
+        if (numObj instanceof Error) return ctx.badRequest(numObj.message);
         const data: { total: number, list: RoleRow[] } = await service.role.queryRoleList({
-            keyword,
-            page: Number(page),
-            pageSize: Number(pageSize)
-        });
+            ...strObj,
+            ...numObj
+        } as { page: number, pageSize: number });
 
         ctx.success(data);
     }

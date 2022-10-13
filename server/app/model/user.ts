@@ -14,12 +14,12 @@ export default function (ctx: Context) {
     const pool = app.mysql2;
 
     const queryFoundRows = `SELECT FOUND_ROWS() AS total;`;
-    const queryByNameSql = `SELECT username FROM users WHERE username = ?;`;
-    const queryByPhoneSql = `SELECT phone FROM template_db.users WHERE phone = ?;`;
-    const queryByEmailSql = `SELECT email FROM template_db.users WHERE email = ?;`;
-    const queryByNameAndPassSql = `SELECT username FROM template_db.users WHERE username= ? AND password= ?;`;
-    const queryByEmailAndPassSql = `SELECT username FROM template_db.users WHERE email= ? AND password= ?;`;
-    const queryByPhoneAndPassSql = `SELECT username FROM template_db.users WHERE phone= ? AND password= ?;`;
+    const queryByNameSql = `SELECT id,username FROM users WHERE username = ?;`;
+    const queryByPhoneSql = `SELECT id,phone FROM template_db.users WHERE phone = ?;`;
+    const queryByEmailSql = `SELECT id,email FROM template_db.users WHERE email = ?;`;
+    const queryByNameAndPassSql = `SELECT id,username FROM template_db.users WHERE username= ? AND password= ?;`;
+    const queryByEmailAndPassSql = `SELECT id,username FROM template_db.users WHERE email= ? AND password= ?;`;
+    const queryByPhoneAndPassSql = `SELECT id,username FROM template_db.users WHERE phone= ? AND password= ?;`;
     const delByIdSql = `DELETE FROM users WHERE id = ?;`;
     // const updateByIdSql = `UPDATE users SET username= ?,email= ?,phone= ?,password= ? WHERE id= ?;`;
     const updateUserStateByIdSql = `UPDATE users SET user_state = ? WHERE id= ?;`;
@@ -66,13 +66,13 @@ export default function (ctx: Context) {
         },
         async queryByName(username: string) {
 
-            return pool.execute<Rows<{ username: string }>>(queryByNameSql, [username]);
+            return pool.execute<Rows<{ id: number, username: string }>>(queryByNameSql, [username]);
 
         },
 
         async queryByPhone(phone: string) {
 
-            return pool.execute<Rows<{ phone: string }>>(queryByPhoneSql, [phone]);
+            return pool.execute<Rows<{ id: number, phone: string }>>(queryByPhoneSql, [phone]);
 
         },
 
@@ -84,7 +84,7 @@ export default function (ctx: Context) {
 
         async queryByEmail(email: string) {
 
-            return pool.execute<Rows<{ email: string }>>(queryByEmailSql, [email]);
+            return pool.execute<Rows<{ id: number, email: string }>>(queryByEmailSql, [email]);
         },
 
         async createByEmail(row: { email: string, password: string }) {
@@ -95,19 +95,17 @@ export default function (ctx: Context) {
 
         async queryByNameAndPass({username, password}: { username: string, password: string }) {
 
-            return pool.execute<Rows<{ username: string }>>(queryByNameAndPassSql, [username, password]);
+            return pool.execute<Rows<{ id: number, username: string }>>(queryByNameAndPassSql, [username, password]);
         },
 
         async queryByEmailAndPass({email, password}: { email: string, password: string }) {
 
-            return pool.execute<Rows<{ email: string }>>(queryByEmailAndPassSql, [email, password]);
-
+            return pool.execute<Rows<{ id: number, email: string }>>(queryByEmailAndPassSql, [email, password]);
 
         },
         async queryByPhoneAndPass({phone, password}: { phone: string, password: string }) {
 
-            return pool.execute<Rows<{ phone: string }>>(queryByPhoneAndPassSql, [phone, password]);
-
+            return pool.execute<Rows<{ id: number, phone: string }>>(queryByPhoneAndPassSql, [phone, password]);
         },
 
         async delUserById(id: string | number) {
@@ -251,6 +249,14 @@ export default function (ctx: Context) {
             const [permissionList] = await pool.execute<Rows<PermissionRow>>(queryUserPermissionListSql, [userId]);
 
             return permissionList;
+
+        },
+
+        async queryUserApiPermissionList(payload: { id: number }) {
+
+            const permissions = await this.queryUserPermissionList(payload);
+
+            return permissions.filter(({type}) => type === 'api');
 
         }
     }

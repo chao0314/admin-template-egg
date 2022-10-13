@@ -1,8 +1,8 @@
 import {Controller} from "egg";
-import {validateNumber,validateString} from "../descriptor/regexp";
 import {usernameDes, emailDes, phoneDes, passwordDes, mergeDes, ValidateError} from "../descriptor";
 import {UserRow} from "../model/user";
 import {PermissionRow} from "../model/user";
+import {validateNumberObj, validateStringObj} from "../descriptor/regexp";
 
 type UserInfo = { username: string, email: string, phone: string, password: string, id?: number };
 export default class User extends Controller {
@@ -53,7 +53,6 @@ export default class User extends Controller {
         const error = await service.user.updateUser(user);
         if (error instanceof Error) ctx.failure(error.message);
         else ctx.success();
-
 
     }
 
@@ -110,21 +109,12 @@ export default class User extends Controller {
 
         const {ctx, service} = this;
         const {role, origin, state, keyword, pageSize = 10, page = 1} = ctx.request.query;
-        //todo... validate params
-
-        const res =  validateNumber([role,pageSize,page]);
-        if(res instanceof Error) return ctx.badRequest(res.message);
-
-
-
-        const data: { total: number, list: UserRow[] } = await service.user.queryUserList({
-            role,
-            origin,
-            state,
-            keyword,
-            page: Number(page),
-            pageSize: Number(pageSize)
-        });
+        const strObj = validateStringObj({origin, keyword})
+        const numObj = validateNumberObj({role, state, page, pageSize});
+        if (numObj instanceof Error) return ctx.badRequest(numObj.message);
+        const data: { total: number, list: UserRow[] } = await service.user.queryUserList(
+            {...strObj, ...numObj}
+        );
 
         ctx.success(data);
 

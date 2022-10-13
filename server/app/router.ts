@@ -3,6 +3,8 @@ import {Application} from 'egg';
 export default (app: Application) => {
     const {controller, router, config: {apiVersion}} = app;
     const {home, user, role, permission} = controller;
+
+    // router.use(app.middleware.permission);
     router.get('/', home.index);
 
     router.get('/captcha', home.getCaptcha);
@@ -12,6 +14,10 @@ export default (app: Application) => {
     router.post('/sing-up', home.singUp)
     router.post('/sing-up-email', home.singUpEmail);
     router.post('/sing-up-phone', home.singUpPhone);
+
+    router.post('/sing-in', home.singIn);
+    router.post('/sing-in-email', home.singInByEmail);
+    router.post('/sing-in-phone', home.singInByPhone);
 
     router.get(`/${apiVersion}/users`, user.queryUserList);
     router.post(`/${apiVersion}/user`, user.createUser);

@@ -82,8 +82,9 @@ export default {
         return jwt.sign(data, secret, options);
     },
 
-    verifyToken(token: string): Record<string, any> | never {
+    verifyToken(token: string | string[]): Record<string, any> | never {
 
+        if (Array.isArray(token)) token = token.join('');
         return jwt.verify(token, secret);
 
     }

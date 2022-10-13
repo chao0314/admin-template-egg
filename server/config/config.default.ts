@@ -9,7 +9,7 @@ export default (appInfo: EggAppInfo) => {
     config.keys = appInfo.name + '_admin_template_egg_123456';
 
     // add your egg config in here
-    config.middleware = [];
+    config.middleware = ['permission'];
 
     config.security = {
         csrf: {

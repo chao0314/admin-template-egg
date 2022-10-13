@@ -3,6 +3,7 @@ export const enum Locale {
     emailCode = "emailCode",
     emailText = "email %s Text %s",
     codeExpired = "codeExpired",
+    codeError = "codeError",
     checkUsername = "checkUsername",
     checkPassword = "checkPassword",
     usernameAlreadyExists = 'usernameAlreadyExists',

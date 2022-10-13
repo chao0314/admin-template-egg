@@ -1,5 +1,6 @@
 import {Controller} from 'egg';
 import {PermissionRow} from "../model/permission";
+import {validateNumberObj, validateStringObj} from "../descriptor/regexp";
 
 export default class Permission extends Controller {
 
@@ -68,14 +69,13 @@ export default class Permission extends Controller {
 
         const {type, keyword, page = 1, pageSize = 10} = ctx.request.body;
 
-        //  todo... validate params
+        const strObj = validateStringObj({type, keyword});
+        const numObj = validateNumberObj({page, pageSize});
+        if (numObj instanceof Error) return ctx.badRequest(numObj.message);
 
-        const data: { total: number, list: PermissionRow[] } = await service.permission.queryPermissionList({
-            type,
-            keyword,
-            page,
-            pageSize
-        });
+        const data: { total: number, list: PermissionRow[] } = await service.permission.queryPermissionList(
+            {...strObj, ...numObj} as { page: number, pageSize: number }
+        );
 
         ctx.success(data);
 

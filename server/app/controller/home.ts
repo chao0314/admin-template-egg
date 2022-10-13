@@ -2,19 +2,21 @@ import {Controller} from 'egg';
 import {emailDes, phoneDes, usernameDes, passwordDes, ValidateError} from "../descriptor";
 import {Locale} from "../../config/locale";
 
+
 export default class Home extends Controller {
     public async index() {
         const {ctx} = this;
 
         ctx.body = await ctx.service.test.sayHi('egg');
     }
+
     async getCaptcha() {
 
         const {app, ctx} = this;
         const {data, text} = this.app.createCaptcha();
         const uid = this.ctx.helper.uuid();
         app.redis.setex(uid, 60, text);
-        ctx.cookies.set('uid', uid, {maxAge: 60 * 1000 * 2});
+        ctx.cookies.set('uid', uid, {maxAge: 60 * 2});
         ctx.success(data);
 
     }
@@ -146,7 +148,7 @@ export default class Home extends Controller {
 
     async singIn() {
 
-        const {ctx, service} = this;
+        const {app, ctx, service} = this;
 
         const {username, password} = ctx.request.body;
         try {
@@ -159,14 +161,20 @@ export default class Home extends Controller {
         if (res instanceof Error) ctx.failure(res.message);
         else {
 
-            const token = ctx.helper.signToken({username});
+            const token = ctx.helper.signToken(res);
+
+            const {id} = res;
+            const apiPermissions = await service.user.queryUerApiPermissionList({id});
+            await app.redis.setex(`${id}`, 60 * 60 * 2, JSON.stringify(apiPermissions));
+
             ctx.success({token});
+
         }
     }
 
     async singInByEmail() {
 
-        const {ctx, service} = this;
+        const {app, ctx, service} = this;
         const {email, password, code} = ctx.request.body;
 
         try {
@@ -181,7 +189,10 @@ export default class Home extends Controller {
         if (res instanceof Error) ctx.failure(res.message);
         else {
 
-            const token = ctx.helper.signToken({email});
+            const token = ctx.helper.signToken(res);
+            const {id} = res;
+            const apiPermissions = await service.user.queryUerApiPermissionList({id});
+            await app.redis.setex(`${id}`, 60 * 60 * 2, JSON.stringify(apiPermissions));
             ctx.success({token});
         }
 
@@ -190,7 +201,7 @@ export default class Home extends Controller {
 
     async singInByPhone() {
 
-        const {ctx, service} = this;
+        const {app, ctx, service} = this;
 
         const {phone, password, code} = ctx.request.body;
         try {
@@ -203,9 +214,14 @@ export default class Home extends Controller {
 
         if (res instanceof Error) ctx.failure(res.message);
         else {
-            const token = ctx.helper.signToken({phone});
+            const token = ctx.helper.signToken(res);
+            const {id} = res;
+            const apiPermissions = await service.user.queryUerApiPermissionList({id});
+            await app.redis.setex(`${id}`, 60 * 60 * 2, JSON.stringify(apiPermissions));
             ctx.success(token);
         }
 
     }
+
+
 }

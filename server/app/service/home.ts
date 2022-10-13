@@ -36,7 +36,7 @@ export default class Home extends Service {
         await model.createByEmail({email, password: passHash});
     }
 
-    async queryByNameAndPass(username: string, password: string): Promise<Error | { username: string }> {
+    async queryByNameAndPass(username: string, password: string) {
 
         const {ctx} = this;
         const model = user(ctx);
@@ -48,7 +48,7 @@ export default class Home extends Service {
 
     }
 
-    async queryByEmail(payload: { email: string, password?: string, code?: string }): Promise<Error | { email: string }> {
+    async queryByEmail(payload: { email: string, password?: string, code?: string }) {
 
         const {app, ctx} = this;
         const model = user(ctx);
@@ -65,14 +65,20 @@ export default class Home extends Service {
 
             const rCode = await redis.get(email);
 
-            return rCode && rCode === code ? {email} : new Error(ctx.__(Locale.codeExpired));
+            if (!rCode) return new Error(ctx.__(Locale.codeExpired));
+
+            if (code !== rCode) return new Error(ctx.__(Locale.codeError));
+
+            const [res] = await model.queryByEmail(email);
+
+            return res[0];
 
         } else return new Error(ctx.__(Locale.needPasswordOrCode));
 
 
     }
 
-    async queryByPhone(payload: { phone: string, password?: string, code?: string }): Promise<Error | { phone: string }> {
+    async queryByPhone(payload: { phone: string, password?: string, code?: string }) {
 
         const {app, ctx} = this;
         const model = user(ctx);
@@ -89,7 +95,13 @@ export default class Home extends Service {
 
             const rCode = await redis.get(phone);
 
-            return rCode && rCode === code ? {phone} : new Error(ctx.__(Locale.codeExpired));
+            if (!rCode) return new Error(ctx.__(Locale.codeExpired));
+
+            if (code !== rCode) return new Error(ctx.__(Locale.codeError));
+
+            const [res] = await model.queryByPhone(phone);
+
+            return res[0];
 
         } else return new Error(ctx.__(Locale.needPasswordOrCode));
 
