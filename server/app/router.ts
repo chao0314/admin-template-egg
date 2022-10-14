@@ -8,6 +8,7 @@ export default (app: Application) => {
     router.get('/', home.index);
 
     router.get('/captcha', home.getCaptcha);
+    router.post('/captcha', home.verifyCaptcha);
     router.get('/mail', home.sendMail);
     router.get('/sms', home.sendSms);
 

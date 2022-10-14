@@ -8,7 +8,7 @@ export type FilterInfo = Partial<{
     username: string, email: string, phone: string, pageSize: number, page: number
 }>;
 export type UserRow = { id: string, username: string, email: string, phone: string, state: number, roles: { roleId: number, roleName }[] };
-export type PermissionRow = { id: number, name: string, type: string, level: number, pid: number };
+export type PermissionRow = { id: number, name: string, type: string, level: number, path: string, method: string, pid: number };
 export default function (ctx: Context) {
     const {app, helper} = ctx;
     const pool = app.mysql2;
@@ -39,6 +39,8 @@ export default function (ctx: Context) {
                                         p.permiss_name as name,
                                         p.permiss_type as type,
                                         p.permiss_level as level,
+                                        p.permiss_path as path,
+                                        p.permiss_method as method,
                                         p.permiss_pid as pid
                                     FROM
                                         users AS u

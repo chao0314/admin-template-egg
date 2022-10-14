@@ -53,6 +53,7 @@ export const locale = {
     permissionType: '权限类型',
     requestMethod: '请求方法',
     permissionParent: '上级权限',
+    requestError: '请求失败！',
     routeMap: {
         index: '首页',
         user: '用户管理',

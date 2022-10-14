@@ -78,4 +78,15 @@ const router = createRouter({
         }]
 })
 
-export default router
+
+router.beforeEach((to, form) => {
+
+    const {path} = to;
+    if (path.includes('sing')) return true;
+    else return {name: 'singIn'}
+
+
+})
+
+
+export default router;

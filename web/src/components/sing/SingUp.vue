@@ -77,10 +77,11 @@
     </el-tab-pane>
   </el-tabs>
   <div class="sing-in__button">
-    <el-button type="primary">
+    <el-button type="primary" @click="handleSingUp">
       {{ locale.singUp }}
     </el-button>
   </div>
+
 </template>
 
 <script setup lang="ts">
@@ -89,6 +90,9 @@ import {inject, reactive, ref} from "vue";
 import type {Locale} from "@/locale/zh-cn";
 import useRules from "@/rules";
 
+import {useHomeStore} from "@/stores/home";
+
+const homeStore = useHomeStore();
 const rules = useRules();
 const locale = inject<Locale>('locale');
 const activeName = 'username';
@@ -108,6 +112,14 @@ const otherFormData = reactive({
 })
 
 const handleClick = () => {
+
+}
+
+
+const handleSingUp = () => {
+  console.log('sing up');
+
+  homeStore.getCaptchaAction()
 
 }
 

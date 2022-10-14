@@ -24,7 +24,7 @@ export default {
 
     },
 
-    error(this: Context, error: Error) {
+    error(this: Context, error?: Error) {
 
         this.status = 500;
         console.error('Server Internal Error!', error);
@@ -39,7 +39,7 @@ export default {
         this.status = 400;
         this.body = {
             error: 'Bad Request!',
-            msg: params
+            message: params
         }
 
     },
