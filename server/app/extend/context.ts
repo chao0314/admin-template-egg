@@ -1,5 +1,6 @@
 import {Context} from "egg";
 import {Descriptor} from "../../lib/plugin/egg-validator";
+import {Locale} from '../../config/locale';
 
 export default {
 
@@ -17,7 +18,7 @@ export default {
 
         this.status = 200;
         this.body = {
-            error: 'Failure',
+            error: this.__(Locale.failure),
             data
 
         }
@@ -29,7 +30,7 @@ export default {
         this.status = 500;
         console.error('Server Internal Error!', error);
         this.body = {
-            error: 'Server Internal Error!'
+            error: this.__(Locale.serverInternalError)
         }
 
     },
@@ -38,7 +39,7 @@ export default {
 
         this.status = 400;
         this.body = {
-            error: 'Bad Request!',
+            error: this.__(Locale.badRequest),
             message: params
         }
 
@@ -48,7 +49,7 @@ export default {
 
         this.status = 401;
         this.body = {
-            error: 'Unauthorized!'
+            error: this.__(Locale.unauthorized)
         }
 
     },
@@ -57,7 +58,7 @@ export default {
 
         this.status = 403;
         this.body = {
-            error: 'Forbidden!'
+            error: this.__(Locale.forbidden)
         }
 
     },

@@ -1,15 +1,17 @@
-export const numberReg = /^\d+$/g;
+export const numberReg = /^\d+$/;
 
 export const validateNumberObj = (obj: Record<string, any>) => {
 
     const result: Record<string, number> = {}
     const entries = Object.entries(obj);
+
     for (const [key, value] of entries) {
 
         if (value !== undefined) {
 
             if (numberReg.test(value)) result[key] = Number(value);
             else return new Error(`${key} ${value}`);
+
         }
     }
 

@@ -14,5 +14,11 @@ export const enum Locale {
     needPasswordOrCode = 'needPasswordOrCode',
     errorOfEmailOrPassword = 'errorOfEmailOrPassword',
     errorOfPhoneOrPassword = 'errorOfPhoneOrPassword',
-    roleAlreadyExists = 'roleAlreadyExists'
+    roleAlreadyExists = 'roleAlreadyExists',
+    failure = 'failure',
+    serverInternalError = 'serverInternalError',
+    badRequest = 'badRequest',
+    unauthorized = 'unauthorized',
+    forbidden = 'Forbidden'
+
 }

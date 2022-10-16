@@ -18,11 +18,11 @@
         </el-form-item>
         <el-form-item :label="locale.verificationCode" prop="verificationCode">
           <el-row :gutter="4">
-            <el-col :span="14">
+            <el-col :span="10">
               <el-input v-model="formData.verificationCode"/>
             </el-col>
-            <el-col :span="6">
-              <img src="../../assets/logo.svg" alt="123" height="24">
+            <el-col :span="10">
+              <captcha :src="captchaRef" @captcha="handleCaptcha"></captcha>
             </el-col>
           </el-row>
         </el-form-item>
@@ -36,7 +36,7 @@
                style="max-width: 460px"
       >
         <el-form-item :label="locale.account" prop="account">
-          <el-input v-model="otherFormData.account"/>
+          <el-input v-model="emailOrPhoneFromData.account"/>
         </el-form-item>
         <el-form-item>
           <el-radio-group v-model="mode" label="model control">
@@ -47,10 +47,10 @@
 
         <template v-if="mode==='password'">
           <el-form-item :label="locale.password" prop="password">
-            <el-input type="password" v-model="otherFormData.password"/>
+            <el-input type="password" v-model="emailOrPhoneFromData.password"/>
           </el-form-item>
           <el-form-item :label="locale.password2" prop="password">
-            <el-input type="password" v-model="otherFormData.password2"/>
+            <el-input type="password" v-model="emailOrPhoneFromData.password2"/>
           </el-form-item>
           <el-form-item :label="locale.verificationCode" prop="verificationCode">
             <el-row :gutter="4">
@@ -66,7 +66,7 @@
         <el-form-item v-else :label="locale.dynamicCode" prop="dynamicCode">
           <el-row :gutter="4">
             <el-col :span="14">
-              <el-input v-model="otherFormData.dynamicCode"/>
+              <el-input v-model="emailOrPhoneFromData.dynamicCode"/>
             </el-col>
             <el-col :span="6">
               <el-button type="primary" plain>发送/60</el-button>
@@ -86,11 +86,12 @@
 
 <script setup lang="ts">
 // const props = withDefaults(defineProps<{}>(), {})
-import {inject, reactive, ref} from "vue";
+import {inject, onMounted, reactive, ref} from "vue";
 import type {Locale} from "@/locale/zh-cn";
 import useRules from "@/rules";
 
 import {useHomeStore} from "@/stores/home";
+import Captcha from '../common/Captcha.vue';
 
 const homeStore = useHomeStore();
 const rules = useRules();
@@ -104,7 +105,7 @@ const formData = reactive({
   verificationCode: ''
 })
 
-const otherFormData = reactive({
+const emailOrPhoneFromData = reactive({
   account: '',
   password: '',
   password2: '',
@@ -118,10 +119,14 @@ const handleClick = () => {
 
 const handleSingUp = () => {
   console.log('sing up');
-
-  homeStore.getCaptchaAction()
+  //
+  // homeStore.getCaptchaAction().then(data=>console.log(data))
 
 }
+
+const captchaRef = ref('');
+
+const handleCaptcha = () => homeStore.getCaptchaAction().then(({data}) => captchaRef.value = data);
 
 
 </script>

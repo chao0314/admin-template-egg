@@ -4,7 +4,6 @@ export default (app: Application) => {
     const {controller, router, config: {apiVersion}} = app;
     const {home, user, role, permission} = controller;
 
-    // router.use(app.middleware.permission);
     router.get('/', home.index);
 
     router.get('/captcha', home.getCaptcha);

@@ -29,10 +29,10 @@ export default function () {
         //
         //     for (const permission of permissionList) {
         //
-        //         let {path, method: permissMethod} = permission;
+        //         let {path, method: permissMethod = ""} = permission;
         //
         //         path = `/${apiVersion}${path.startsWith('/') ? '' : '/'}${path}`;
-        //         if (url === path && method === permissMethod) return await next();
+        //         if ((url && url === path) && (method && method.toLowerCase() === permissMethod.toLowerCase())) return await next();
         //
         //
         //     }
@@ -46,7 +46,7 @@ export default function () {
         //
         //
         // }
-
+        //
 
     }
 
