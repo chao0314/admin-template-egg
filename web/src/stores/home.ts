@@ -1,28 +1,30 @@
 import {defineStore} from "pinia";
 import instance from "@/stores/network";
-import {locale} from "@/locale/zh-cn";
 
 
 export const useHomeStore = defineStore('home', () => {
 
-    const getCaptchaAction = async ()=> {
+    const getCaptchaAction = async () => {
 
-        return await instance.get('/captcha');
-
-    }
-
-    const verifyCaptchaAction = async () => {
-
+        return await instance.get('/captcha', {withCredentials: true});
 
     }
 
-    const singUpAction = async () => {
+    const verifyCaptchaAction = async (payload: { captcha: string }) => {
 
+        return await instance.post('/captcha', payload, {withCredentials: true});
+    }
+
+    const singUpAction = async (payload: { username: string, password: string }) => {
+
+        return await instance.post('/sing-up', payload);
     }
 
 
     return {
-        getCaptchaAction
+        getCaptchaAction,
+        verifyCaptchaAction,
+        singUpAction
     }
 
 })

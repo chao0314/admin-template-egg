@@ -1,7 +1,7 @@
 <template>
-  <el-tabs v-model="activeName" @tab-click="handleClick">
+  <el-tabs v-model="activeName" @tab-click="handleTabClick">
     <el-tab-pane :label="locale.username" name="username">
-      <el-form :rules="rules"
+      <el-form :rules="rules" ref="formRef"
                label-position="left"
                label-width="100px"
                :model="formData"
@@ -29,7 +29,7 @@
       </el-form>
     </el-tab-pane>
     <el-tab-pane :label="locale.emailOrPhone" name="emailOrPhone">
-      <el-form :rules="rules"
+      <el-form :rules="rules" ref="emailOrPhoneFromRef"
                label-position="left"
                label-width="100px"
                :model="formData"
@@ -55,10 +55,10 @@
           <el-form-item :label="locale.verificationCode" prop="verificationCode">
             <el-row :gutter="4">
               <el-col :span="14">
-                <el-input v-model="formData.verificationCode"/>
+                <el-input v-model="emailOrPhoneFromData.verificationCode"/>
               </el-col>
               <el-col :span="6">
-                <img src="../../assets/logo.svg" alt="123" height="24">
+                <captcha :src="captchaRef" @captcha="handleCaptcha"></captcha>
               </el-col>
             </el-row>
           </el-form-item>
@@ -89,15 +89,20 @@
 import {inject, onMounted, reactive, ref} from "vue";
 import type {Locale} from "@/locale/zh-cn";
 import useRules from "@/rules";
+import type {FormInstance} from "element-plus";
 
 import {useHomeStore} from "@/stores/home";
 import Captcha from '../common/Captcha.vue';
+import {ElMessage} from "element-plus";
+import router from "@/router";
 
 const homeStore = useHomeStore();
 const rules = useRules();
 const locale = inject<Locale>('locale');
 const activeName = 'username';
 const mode = ref('password');
+const formRef = ref<FormInstance>();
+const emailOrPhoneFromRef = ref<FormInstance>();
 const formData = reactive({
   username: '',
   password: '',
@@ -109,18 +114,100 @@ const emailOrPhoneFromData = reactive({
   account: '',
   password: '',
   password2: '',
+  verificationCode: '',
   dynamicCode: ''
 })
 
-const handleClick = () => {
+let tabIndex = 0;
+const handleTabClick = ({index = 0}) => {
+
+  console.log('handle tab click', index)
+
+  captchaRef.value = '';
+
+  tabIndex = index;
 
 }
 
 
-const handleSingUp = () => {
-  console.log('sing up');
-  //
-  // homeStore.getCaptchaAction().then(data=>console.log(data))
+const handleSingUp = async () => {
+
+  if (tabIndex === 0) {
+
+    formRef.value?.validate(async (isValid: boolean) => {
+
+      const {username, password, password2, verificationCode} = formData;
+
+      if (isValid) {
+
+        if (password !== password2) return ElMessage({
+          type: 'error',
+          message: locale?.passwordConfirm,
+          offset: 100
+        })
+        const {data} = await homeStore.verifyCaptchaAction({captcha: verificationCode});
+
+        if (data) {
+
+          homeStore.singUpAction({username, password}).then(() => router.push('/sing/in'))
+
+        } else ElMessage({
+          type: 'error',
+          message: locale?.captchaError,
+          offset: 100
+        })
+
+
+      }
+
+    })
+
+
+  } else {
+
+    const {account, password, password2, verificationCode, dynamicCode} = emailOrPhoneFromData;
+
+    const isPhone = /^(\+86|86)?\d{11}$/.test(account);
+
+    emailOrPhoneFromRef.value?.validate(async isValid => {
+
+      if (isValid) {
+
+        if (mode.value === 'password') {
+
+          if (password !== password2) return ElMessage({
+            type: 'error',
+            message: locale?.passwordConfirm,
+            offset: 100
+          });
+
+          const {data} = await homeStore.verifyCaptchaAction({captcha: verificationCode});
+
+          if (data) {
+
+
+            homeStore.singUpAction({username, password}).then(() => router.push('/sing/in'))
+
+
+          } else ElMessage({
+            type: 'error',
+            message: locale?.captchaError,
+            offset: 100
+          })
+
+        } else {
+
+
+        }
+
+
+      }
+
+    })
+
+
+  }
+
 
 }
 

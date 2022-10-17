@@ -6,6 +6,9 @@ export default function () {
     return async function permission(ctx: Context, next: () => Promise<any>) {
 
         console.log('--middleware--', ctx.request);
+
+
+
         await next();
 
         // const {method, url, header: {Authorization: token}} = ctx.request;

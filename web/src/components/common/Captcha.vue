@@ -1,18 +1,17 @@
 <template>
   <div class="captcha">
-    <p v-if="src">
+    <p v-if="shouldShow" @click="handleRefreshCaptcha">
       <span v-html="src"></span>
-      <span>{{ timer }}秒</span>
+      <span>{{ countdown }}秒</span>
     </p>
     <el-button v-else type="primary" @click="handleCaptcha">{{ locale.getCaptcha }}</el-button>
-
   </div>
 
 </template>
 
 <script setup lang="ts">
 
-import {inject, ref} from "vue";
+import {inject, ref, watch} from "vue";
 import type {Locale} from "@/locale/zh-cn";
 
 const props = withDefaults(defineProps<{
@@ -27,11 +26,38 @@ const emits = defineEmits<{
 
 }>()
 
+const shouldShow = ref(false);
 const locale = inject<Locale>('locale');
 
-const timer = ref(60);
+const countdown = ref(60);
+
 
 const handleCaptcha = () => emits('captcha');
+
+const handleRefreshCaptcha = () => emits('captcha');
+
+
+let timer: any;
+watch(() => props.src, (newVal) => {
+
+  if (newVal) {
+    shouldShow.value = true;
+    countdown.value = 60;
+    timer && clearInterval(timer);
+    timer = setInterval(() => {
+
+      if (countdown.value > 1) countdown.value--;
+      else {
+        shouldShow.value = false;
+
+        clearInterval(timer);
+      }
+
+    }, 1000)
+  } else shouldShow.value = false;
+
+
+})
 
 
 </script>
@@ -61,7 +87,6 @@ const handleCaptcha = () => emits('captcha');
 
 <style>
 
-
 .captcha > p > span:first-child > svg {
 
   display: inline-block;
@@ -69,6 +94,5 @@ const handleCaptcha = () => emits('captcha');
   height: 40px;
 
 }
-
 
 </style>

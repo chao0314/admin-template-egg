@@ -20,17 +20,17 @@ instance.interceptors.response.use(function (response) {
 
     const {data: rData} = response;
 
-    const {error} = rData;
+    const {error, data} = rData;
 
     if (error) {
 
         ElMessage({
             type: 'error',
-            message: error,
+            message: data,
             offset: 100
         })
 
-        return {};
+        throw new Error(data);
     }
 
     return rData;

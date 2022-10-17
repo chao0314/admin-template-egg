@@ -7,16 +7,15 @@ export default class Home extends Controller {
     public async index() {
         const {ctx} = this;
 
-        ctx.body = await ctx.service.test.sayHi('egg');
+        ctx.body = 'hi egg !';
     }
 
     async getCaptcha() {
-
         const {app, ctx} = this;
         const {data, text} = this.app.createCaptcha();
         const uid = this.ctx.helper.uuid();
         app.redis.setex(uid, 60, text);
-        ctx.cookies.set('uid', uid, {maxAge: 60 * 2});
+        ctx.cookies.set('uid', uid, {maxAge: 1000 * 60 * 2,});
         ctx.success(data);
 
     }
@@ -27,7 +26,7 @@ export default class Home extends Controller {
         const captcha = ctx.request.body.captcha;
         const uid = ctx.cookies.get('uid');
         const rCaptcha = await app.redis.get(uid);
-        ctx.success(captcha && rCaptcha && rCaptcha === captcha);
+        ctx.success(captcha && rCaptcha && rCaptcha.toLowerCase() === captcha.toLowerCase());
 
     }
 

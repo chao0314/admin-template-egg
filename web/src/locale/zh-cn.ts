@@ -54,7 +54,8 @@ export const locale = {
     requestMethod: '请求方法',
     permissionParent: '上级权限',
     requestError: '请求失败！',
-    getCaptcha:'获取验证码',
+    getCaptcha: '获取验证码',
+    captchaError: '验证码错误',
 
     routeMap: {
         index: '首页',

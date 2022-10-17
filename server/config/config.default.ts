@@ -18,9 +18,18 @@ export default (appInfo: EggAppInfo) => {
     }
 
     config.cors = {
-        origin: '*',
+        origin: (ctx: Context) => {
+
+            return ctx.request.header.origin as string;
+        },
+        credentials: true,
         allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS'
     };
+
+    config.cookies = {
+        httpOnly: true,
+        sameSite: 'lax'
+    }
 
     config.i18n = {
         defaultLocale: 'zh-CN'
