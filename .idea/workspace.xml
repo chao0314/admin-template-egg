@@ -3,17 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="8d274c5b-0fea-4388-887a-12074aeced64" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/controller/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/controller/home.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/middleware/permission.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/middleware/permission.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/config/config.default.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/config/config.default.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/components.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/components.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/components/common/Captcha.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/common/Captcha.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/src/components/sing/SingUp.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/sing/SingUp.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/locale/zh-cn.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/locale/zh-cn.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/src/rules/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/rules/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/src/stores/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/stores/home.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/stores/network.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/stores/network.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/vite.config.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +45,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "E:/workspace/daily",
+    "last_opened_file_path": "E:/workspace/admin-template-egg/server",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -65,6 +58,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\workspace\admin-template-egg\server" />
       <recent name="E:\workspace\admin-template-egg\server\app" />
       <recent name="E:\workspace\admin-template-egg\server\app\model" />
       <recent name="E:\workspace\admin-template-egg\web\src\assets" />

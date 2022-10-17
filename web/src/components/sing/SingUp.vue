@@ -32,7 +32,7 @@
       <el-form :rules="rules" ref="emailOrPhoneFromRef"
                label-position="left"
                label-width="100px"
-               :model="formData"
+               :model="emailOrPhoneFromData"
                style="max-width: 460px"
       >
         <el-form-item :label="locale.account" prop="account">
@@ -185,9 +185,15 @@ const handleSingUp = async () => {
 
           if (data) {
 
+            if (isPhone) {
 
-            homeStore.singUpAction({username, password}).then(() => router.push('/sing/in'))
+              homeStore.singUpPhoneAction({phone: account, password}).then(() => router.push('/sing/in'));
 
+            } else {
+
+              homeStore.singUpEmailAction({email: account, password}).then(() => router.push('/sing/in'));
+
+            }
 
           } else ElMessage({
             type: 'error',
@@ -196,6 +202,8 @@ const handleSingUp = async () => {
           })
 
         } else {
+
+          // dynamic code todo...
 
 
         }

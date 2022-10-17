@@ -7,7 +7,6 @@ export const useHomeStore = defineStore('home', () => {
     const getCaptchaAction = async () => {
 
         return await instance.get('/captcha', {withCredentials: true});
-
     }
 
     const verifyCaptchaAction = async (payload: { captcha: string }) => {
@@ -20,11 +19,24 @@ export const useHomeStore = defineStore('home', () => {
         return await instance.post('/sing-up', payload);
     }
 
+    const singUpPhoneAction = async (payload: { phone: string, password: string }) => {
+
+        return await instance.post('/sing-up-phone', payload);
+    }
+
+    const singUpEmailAction = async (payload: { email: string, password: string }) => {
+
+        return await instance.post('/sing-up-email', payload);
+    }
+
 
     return {
         getCaptchaAction,
         verifyCaptchaAction,
-        singUpAction
+        singUpAction,
+        singUpPhoneAction,
+        singUpEmailAction
+
     }
 
 })

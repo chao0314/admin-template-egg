@@ -29,9 +29,9 @@ const rules: FormRules = {
         type: "string",
         required: true,
         message: () => locale?.checkAccount,
-        validator(rule,vale){
+        validator(rule, value) {
 
-          return  /^(\+86|86)?\d{11}$/.test(vale) || //
+            return /^(\+86|86)?\d{11}$/.test(value) || /^\w+@\w+\.\w+$/.test(value);
         }
     },
     dynamicCode: {
