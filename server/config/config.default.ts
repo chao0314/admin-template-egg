@@ -70,7 +70,7 @@ export default (appInfo: EggAppInfo) => {
         secure: true,
         auth: {
             user: "125301689@qq.com", // generated ethereal user
-            pass: "yuexpioyxjvkbicj", // generated ethereal password
+            pass: "ooaahmzrgyjocage", // generated ethereal password
         }
     }
     config.cloud = {

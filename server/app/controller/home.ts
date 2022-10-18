@@ -73,12 +73,11 @@ export default class Home extends Controller {
 
         const code = await app.redis.get(phoneNum);
         if (!code) {
-            const code = ctx.helper.randomHex(4);
-
+            const code = ctx.helper.randomHex(4, 10);
             await app.sendSms(phoneNum, [code, '5']);
-
             app.redis.setex(phoneNum, 60 * 5, code);
         }
+
 
         ctx.success();
 
@@ -111,7 +110,6 @@ export default class Home extends Controller {
 
         const {app, ctx, service} = this;
         const {phone, password, code} = ctx.request.body;
-
 
         const rCode = await app.redis.get(phone);
 
@@ -217,8 +215,14 @@ export default class Home extends Controller {
             const {id} = res;
             const apiPermissions = await service.user.queryUerApiPermissionList({id});
             await app.redis.setex(`${id}`, 60 * 60 * 2, JSON.stringify(apiPermissions));
-            ctx.success(token);
+            ctx.success({token});
         }
+
+    }
+
+
+    private async checkSingUpResult(){
+
 
     }
 

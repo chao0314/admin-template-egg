@@ -38,38 +38,16 @@
         <el-form-item :label="locale.account" prop="account">
           <el-input v-model="emailOrPhoneFromData.account"/>
         </el-form-item>
-        <el-form-item>
-          <el-radio-group v-model="mode" label="model control">
-            <el-radio-button label="password">{{ locale?.password }}</el-radio-button>
-            <el-radio-button label="dynamicCode">{{ locale?.dynamicCode }}</el-radio-button>
-          </el-radio-group>
+        <el-form-item :label="locale.password" prop="password">
+          <el-input type="password" v-model="emailOrPhoneFromData.password"/>
         </el-form-item>
-
-        <template v-if="mode==='password'">
-          <el-form-item :label="locale.password" prop="password">
-            <el-input type="password" v-model="emailOrPhoneFromData.password"/>
-          </el-form-item>
-          <el-form-item :label="locale.password2" prop="password">
-            <el-input type="password" v-model="emailOrPhoneFromData.password2"/>
-          </el-form-item>
-          <el-form-item :label="locale.verificationCode" prop="verificationCode">
-            <el-row :gutter="4">
-              <el-col :span="14">
-                <el-input v-model="emailOrPhoneFromData.verificationCode"/>
-              </el-col>
-              <el-col :span="6">
-                <captcha :src="captchaRef" @captcha="handleCaptcha"></captcha>
-              </el-col>
-            </el-row>
-          </el-form-item>
-        </template>
-        <el-form-item v-else :label="locale.dynamicCode" prop="dynamicCode">
+        <el-form-item :label="locale.dynamicCode" prop="dynamicCode">
           <el-row :gutter="4">
             <el-col :span="14">
               <el-input v-model="emailOrPhoneFromData.dynamicCode"/>
             </el-col>
             <el-col :span="6">
-              <el-button type="primary" plain>发送/60</el-button>
+              <dynamic-code :countdown="300" @send-code="handleSendCode"></dynamic-code>
             </el-col>
           </el-row>
         </el-form-item>
@@ -80,7 +58,9 @@
     <el-button type="primary" @click="handleSingUp">
       {{ locale.singUp }}
     </el-button>
+
   </div>
+  <p class="sing-in" @click="handleToSingIn">去登录</p>
 
 </template>
 
@@ -93,16 +73,19 @@ import type {FormInstance} from "element-plus";
 
 import {useHomeStore} from "@/stores/home";
 import Captcha from '../common/Captcha.vue';
+import DynamicCode from '../common/DynamicCode.vue';
 import {ElMessage} from "element-plus";
 import router from "@/router";
 
 const homeStore = useHomeStore();
 const rules = useRules();
 const locale = inject<Locale>('locale');
-const activeName = 'username';
-const mode = ref('password');
+const activeName = ref('username');
 const formRef = ref<FormInstance>();
 const emailOrPhoneFromRef = ref<FormInstance>();
+const captchaRef = ref('');
+let tabIndex = 0;
+
 const formData = reactive({
   username: '',
   password: '',
@@ -113,22 +96,29 @@ const formData = reactive({
 const emailOrPhoneFromData = reactive({
   account: '',
   password: '',
-  password2: '',
   verificationCode: '',
   dynamicCode: ''
 })
 
-let tabIndex = 0;
+
 const handleTabClick = ({index = 0}) => {
-
-  console.log('handle tab click', index)
-
   captchaRef.value = '';
-
   tabIndex = index;
-
 }
 
+const handleSendCode = () => {
+
+  const {account} = emailOrPhoneFromData;
+
+  if (account) {
+    const isPhone = /^(\+86|86)?\d{11}$/.test(account);
+    if (isPhone) homeStore.sendSmsAction({phone: account});
+    else homeStore.sendMailAction({to: account});
+
+
+  }
+
+}
 
 const handleSingUp = async () => {
 
@@ -165,53 +155,29 @@ const handleSingUp = async () => {
 
   } else {
 
-    const {account, password, password2, verificationCode, dynamicCode} = emailOrPhoneFromData;
+    const {account, password, dynamicCode: code} = emailOrPhoneFromData;
 
     const isPhone = /^(\+86|86)?\d{11}$/.test(account);
 
     emailOrPhoneFromRef.value?.validate(async isValid => {
 
-      if (isValid) {
-
-        if (mode.value === 'password') {
-
-          if (password !== password2) return ElMessage({
-            type: 'error',
-            message: locale?.passwordConfirm,
-            offset: 100
-          });
-
-          const {data} = await homeStore.verifyCaptchaAction({captcha: verificationCode});
-
-          if (data) {
+          if (isValid) {
 
             if (isPhone) {
 
-              homeStore.singUpPhoneAction({phone: account, password}).then(() => router.push('/sing/in'));
+              homeStore.singUpPhoneAction({phone: account, password, code}).then(() => router.push('/sing/in'));
 
             } else {
 
-              homeStore.singUpEmailAction({email: account, password}).then(() => router.push('/sing/in'));
+              homeStore.singUpEmailAction({email: account, password, code}).then(() => router.push('/sing/in'));
 
             }
 
-          } else ElMessage({
-            type: 'error',
-            message: locale?.captchaError,
-            offset: 100
-          })
-
-        } else {
-
-          // dynamic code todo...
+          }
 
 
         }
-
-
-      }
-
-    })
+    )
 
 
   }
@@ -219,10 +185,14 @@ const handleSingUp = async () => {
 
 }
 
-const captchaRef = ref('');
 
 const handleCaptcha = () => homeStore.getCaptchaAction().then(({data}) => captchaRef.value = data);
 
+
+const handleToSingIn = () => {
+
+  router.push('/sing/in');
+}
 
 </script>
 
@@ -232,6 +202,15 @@ const handleCaptcha = () => homeStore.getCaptchaAction().then(({data}) => captch
   margin-top: 14px;
   display: flex;
   justify-content: center;
+}
+
+.sing-in {
+
+  margin: 2px 0 0;
+  text-align: center;
+  font-size: 12px;
+  cursor: pointer;
+
 }
 
 </style>

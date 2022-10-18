@@ -21,7 +21,7 @@ class CloudBootHook {
         if (typeof config.tencentCloud === 'object') {
 
             const {client, sms, secretPath} = config.tencentCloud;
-
+            let smsClient;
             // secret path 配置的 参数 替换掉 硬编码(不安全)
             if (secretPath) {
                 const rl = createInterface({
@@ -38,14 +38,13 @@ class CloudBootHook {
 
                 })
 
-                // rl.on('close', () => {
-                //
-                //
-                // })
+                rl.on('close', () => {
+
+                    smsClient = new SmsClient(client);
+                })
 
             }
 
-            const smsClient = new SmsClient(client);
 
             this.app.sendSms = function (phoneNum: string | string[], value?: string | string[]) {
 

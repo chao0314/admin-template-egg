@@ -4,7 +4,7 @@
       <span v-html="src"></span>
       <span>{{ countdown }}秒</span>
     </p>
-    <el-button v-else type="primary" @click="handleCaptcha">{{ locale.getCaptcha }}</el-button>
+    <el-button v-else type="primary" plain @click="handleCaptcha">{{ locale.getCaptcha }}</el-button>
   </div>
 
 </template>

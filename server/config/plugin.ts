@@ -22,7 +22,7 @@ const plugin: EggPlugin = {
         path: path.join(__dirname, '../lib/plugin/egg-redis')
     },
     cloud: {
-        enable: false,
+        enable: true,
         path: path.join(__dirname, '../lib/plugin/egg-cloud')
     },
     validator: {

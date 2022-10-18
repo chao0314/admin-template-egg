@@ -19,6 +19,13 @@ const rules: FormRules = {
         message: () => locale?.checkPassword
 
     },
+    password2: {
+        type: "string",
+        required: true,
+        pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)\w{6,10}$/g,
+        message: () => locale?.checkPassword
+
+    },
     verificationCode: {
         type: "string",
         required: true,

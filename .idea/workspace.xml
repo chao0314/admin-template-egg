@@ -3,8 +3,15 @@
   <component name="ChangeListManager">
     <list default="true" id="8d274c5b-0fea-4388-887a-12074aeced64" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/app/controller/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/controller/home.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/config/config.default.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/config/config.default.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/config/plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/config/plugin.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/lib/plugin/egg-cloud/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/lib/plugin/egg-cloud/app.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/components.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/components.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/components/common/Captcha.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/common/Captcha.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/components/sing/SingIn.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/sing/SingIn.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/src/components/sing/SingUp.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/sing/SingUp.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/router/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/router/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/src/rules/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/rules/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/src/stores/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/stores/home.ts" afterDir="false" />
     </list>
@@ -19,8 +26,8 @@
         <option value=" Vue TS Component" />
         <option value="JavaScript File" />
         <option value="TypeScript File" />
-        <option value=" Vue TS Setup" />
         <option value="HTML File" />
+        <option value=" Vue TS Setup" />
       </list>
     </option>
   </component>
@@ -52,7 +59,7 @@
     "node.js.selected.package.standard": "",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "editor.preferences.completion",
-    "ts.external.directory.path": "E:\\workspace\\admin-template-egg\\web\\node_modules\\typescript\\lib",
+    "ts.external.directory.path": "E:\\workspace\\admin-template-egg\\server\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -113,6 +120,7 @@
       <workItem from="1665710738653" duration="16821000" />
       <workItem from="1665798660182" duration="13913000" />
       <workItem from="1665888318641" duration="6052000" />
+      <workItem from="1666054196333" duration="19157000" />
     </task>
     <servers />
   </component>

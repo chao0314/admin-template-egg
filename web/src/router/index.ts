@@ -83,7 +83,13 @@ router.beforeEach((to, form) => {
 
     const {path} = to;
     if (path.includes('sing')) return true;
-    else return {name: 'singIn'}
+    else {
+
+        // todo... check route permission
+
+        return  true;
+
+    }
 
 
 })
