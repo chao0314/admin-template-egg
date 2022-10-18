@@ -254,13 +254,13 @@ export default function (ctx: Context) {
 
         },
 
-        async queryUserApiPermissionList(payload: { id: number }) {
-
-            const permissions = await this.queryUserPermissionList(payload);
-
-            return permissions.filter(({type}) => type === 'api');
-
-        }
+        // async queryUserApiPermissionList(payload: { id: number }) {
+        //
+        //     const permissions = await this.queryUserPermissionList(payload);
+        //
+        //     return permissions.filter(({type}) => type === 'api');
+        //
+        // }
     }
 
 

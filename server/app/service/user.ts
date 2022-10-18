@@ -127,12 +127,12 @@ export default class User extends Service {
 
     }
 
-    async queryUerApiPermissionList(payload: { id: number }) {
-
-        const {ctx} = this;
-        const model = user(ctx);
-        return model.queryUserApiPermissionList(payload);
-    }
+    // async queryUserApiPermissionList(payload: { id: number }) {
+    //
+    //     const {ctx} = this;
+    //     const model = user(ctx);
+    //     return model.queryUserApiPermissionList(payload);
+    // }
 
 
 }

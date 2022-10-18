@@ -1,6 +1,8 @@
 import {Controller} from 'egg';
 import {emailDes, phoneDes, usernameDes, passwordDes, ValidateError} from "../descriptor";
 import {Locale} from "../../config/locale";
+import {Row} from "../../lib/plugin/egg-mysql2/typings";
+import {PermissionRow} from "../model/user";
 
 
 export default class Home extends Controller {
@@ -145,7 +147,7 @@ export default class Home extends Controller {
 
     async singIn() {
 
-        const {app, ctx, service} = this;
+        const {ctx, service} = this;
 
         const {username, password} = ctx.request.body;
         try {
@@ -155,23 +157,12 @@ export default class Home extends Controller {
         }
         const res = await service.home.queryByNameAndPass(username, password);
 
-        if (res instanceof Error) ctx.failure(res.message);
-        else {
-
-            const token = ctx.helper.signToken(res);
-
-            const {id} = res;
-            const apiPermissions = await service.user.queryUerApiPermissionList({id});
-            await app.redis.setex(`${id}`, 60 * 60 * 2, JSON.stringify(apiPermissions));
-
-            ctx.success({token});
-
-        }
+        await this.checkSingUpResult(res);
     }
 
     async singInByEmail() {
 
-        const {app, ctx, service} = this;
+        const {ctx, service} = this;
         const {email, password, code} = ctx.request.body;
 
         try {
@@ -183,22 +174,14 @@ export default class Home extends Controller {
 
         const res = await service.home.queryByEmail({email, password, code});
 
-        if (res instanceof Error) ctx.failure(res.message);
-        else {
-
-            const token = ctx.helper.signToken(res);
-            const {id} = res;
-            const apiPermissions = await service.user.queryUerApiPermissionList({id});
-            await app.redis.setex(`${id}`, 60 * 60 * 2, JSON.stringify(apiPermissions));
-            ctx.success({token});
-        }
+        await this.checkSingUpResult(res);
 
 
     }
 
     async singInByPhone() {
 
-        const {app, ctx, service} = this;
+        const {ctx, service} = this;
 
         const {phone, password, code} = ctx.request.body;
         try {
@@ -209,21 +192,36 @@ export default class Home extends Controller {
 
         const res = await service.home.queryByPhone({phone, password, code});
 
-        if (res instanceof Error) ctx.failure(res.message);
-        else {
-            const token = ctx.helper.signToken(res);
-            const {id} = res;
-            const apiPermissions = await service.user.queryUerApiPermissionList({id});
-            await app.redis.setex(`${id}`, 60 * 60 * 2, JSON.stringify(apiPermissions));
-            ctx.success({token});
-        }
+        await this.checkSingUpResult(res);
 
     }
 
 
-    private async checkSingUpResult(){
+    private async checkSingUpResult(res: Error | Row<{ id: number, username?: string, email?: string, phone?: string }>) {
 
+        const {app, ctx, service} = this;
 
+        if (res instanceof Error) ctx.failure(res.message);
+        else {
+            const token = ctx.helper.signToken(res);
+            const {id} = res;
+
+            const permissions = await service.user.queryUserPermissionList({id});
+
+            const apiPermissions: PermissionRow[] = [];
+            const menuPermissions: PermissionRow[] = [];
+            const routePermissions: PermissionRow[] = [];
+
+            permissions.forEach((permission) => {
+                const {type} = permission;
+                if (type === 'api') apiPermissions.push(permission);
+                else if (type === 'menu') menuPermissions.push(permission);
+                else routePermissions.push(permission);
+            })
+
+            await app.redis.setex(`${id}`, 60 * 60 * 2, JSON.stringify(apiPermissions));
+            ctx.success({token, permissions: {menu: menuPermissions, route: routePermissions}});
+        }
     }
 
 
