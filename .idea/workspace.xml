@@ -4,11 +4,7 @@
     <list default="true" id="8d274c5b-0fea-4388-887a-12074aeced64" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/app/model/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/model/user.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/components.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/components.d.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/src/components/user/UserList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/user/UserList.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/locale/zh-cn.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/locale/zh-cn.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/stores/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/stores/home.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/stores/network.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/stores/network.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +50,7 @@
     "node.js.selected.package.standard": "",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "editor.preferences.completion",
-    "ts.external.directory.path": "E:\\workspace\\admin-template-egg\\web\\node_modules\\typescript\\lib",
+    "ts.external.directory.path": "E:\\workspace\\admin-template-egg\\server\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -116,6 +112,7 @@
       <workItem from="1665798660182" duration="13913000" />
       <workItem from="1665888318641" duration="6052000" />
       <workItem from="1666054196333" duration="19157000" />
+      <workItem from="1666182871907" duration="4204000" />
     </task>
     <servers />
   </component>

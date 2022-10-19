@@ -213,7 +213,10 @@ export default function (ctx: Context) {
             const [[{total}]] = await pool.execute<Rows<{ total: number }>>(queryFoundRows);
             return {
                 total,
-                list
+                list: list.map(item => {
+                    const {roles} = item;
+                    return {...item, roles: roles.filter(role => role.roleId !== null)}
+                })
             }
         },
 

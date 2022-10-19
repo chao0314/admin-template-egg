@@ -1,6 +1,6 @@
 <template>
   <table-pagination :table-data="tableData"
-                    :total="100"
+                    :total="userTotalRef"
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
   >
@@ -60,7 +60,7 @@
       </el-row>
     </template>
     <template #roles={row}>
-      <el-tag class="user-list__tag"
+      <el-tag class="user-list__tag" v-if="row.roles.length >0"
               v-for="role in row.roles"
               :key="role.roleId"
               closable
@@ -69,10 +69,13 @@
       >
         {{ role.roleName }}
       </el-tag>
+      <span v-else></span>
     </template>
     <template #state="{row}">
       <el-switch
           v-model="row.state"
+          :active-value="1"
+          :inactive-value="0"
           style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
       />
     </template>
@@ -134,7 +137,7 @@ import TablePagination from '../common/TablePagination.vue';
 import {TableData, FormData, Types} from "../common/index";
 import UploadFileDialog from '../common/UploadFileDialog.vue';
 import FormDialog from '../common/FormDialog.vue';
-import {inject, onMounted, reactive, ref, toRaw} from 'vue';
+import {inject, onMounted, reactive, ref, shallowReactive, shallowRef, toRaw} from 'vue';
 import {Edit, Lock, Message, Phone, Setting, User} from '@element-plus/icons-vue';
 import type {Locale} from "@/locale/zh-cn";
 import useRules from "@/rules";
@@ -147,6 +150,8 @@ interface User {
   name: string
   address: string
 }
+
+type UserWithOperation = UserRow & { operation: ['edit', 'del', 'setting'] };
 
 
 const userStore = useUser();
@@ -226,8 +231,8 @@ const rolesData: FormData = {
 }
 const createUserDialogRef = ref<InstanceType<typeof FormDialog> | null>(null);
 const setRoleDialogRef = ref<InstanceType<typeof FormDialog> | null>(null);
-const userList = reactive<UserRow[]>([])
-const tableData: TableData = {
+const userTotalRef = ref(0);
+const tableData: TableData = shallowReactive({
   showIndex: true,
   columns: [
     {prop: 'username', label: locale?.username, width: '100'},
@@ -237,20 +242,9 @@ const tableData: TableData = {
     {prop: 'state', label: locale?.state, width: '100', slotName: 'state'},
     {prop: 'operation', label: locale?.operation, slotName: 'operation'}
   ],
-  data: [
-    {
-      username: 'it666',
-      email: 'zhichao0314@126.comzhichao0314@126.com',
-      phone: '18258414234',
-      roles: [{roleId: 1, roleName: 'admin'}],
-      state: true,
-      operation: ['edit', 'del', 'setting']
-    }
+  data: []
 
-  ]
-
-}
-const background = ref(false)
+})
 
 const filter: Filter = reactive({});
 
@@ -274,6 +268,8 @@ onMounted(() => {
 
   })
 
+  handleQueryUsers();
+
 
 })
 
@@ -283,10 +279,14 @@ const handleQueryUsers = () => {
   userStore.getUsersAction(toRaw(filter)).then((data) => {
 
     const {total, list} = data;
-    const users: (UserRow & { operation: ['edit', 'del', 'setting'] })[] = list.map(item => {
+    const users: UserWithOperation[] = list.map(item => ({
+          ...item,
+          operation: ['edit', 'del', 'setting']
+        })
+    )
 
-      return {...item, operation: ['edit', 'del', 'setting']}
-    })
+    userTotalRef.value = total;
+    tableData.data = users;
 
   })
 
