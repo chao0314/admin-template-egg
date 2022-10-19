@@ -1,7 +1,6 @@
 import {defineStore} from "pinia";
 import instance from "@/stores/network";
 import {ref} from "vue";
-import {dayjs} from "element-plus";
 
 
 export const useHomeStore = defineStore('home', () => {

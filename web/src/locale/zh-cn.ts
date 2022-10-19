@@ -26,6 +26,7 @@ export const locale = {
     importUser: '导入用户',
     role: '角色',
     state: '状态',
+    origin: '来源',
     operation: '操作',
     email: '邮箱',
     phone: '电话',
@@ -56,6 +57,7 @@ export const locale = {
     requestError: '请求失败！',
     getCaptcha: '获取验证码',
     captchaError: '验证码错误',
+
 
     routeMap: {
         index: '首页',

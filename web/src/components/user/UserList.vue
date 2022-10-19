@@ -7,9 +7,9 @@
     <template #header>
       <el-row :gutter="4" class="user-list__header">
         <el-col :span="3">
-          <el-select v-model="value" :placeholder="locale.select">
+          <el-select v-model="filter.state" :placeholder="locale.state" clearable>
             <el-option
-                v-for="item in options"
+                v-for="item in stateOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -17,9 +17,9 @@
           </el-select>
         </el-col>
         <el-col :span="3">
-          <el-select v-model="value" :placeholder="locale.select">
+          <el-select v-model="filter.origin" :placeholder="locale.origin" clearable>
             <el-option
-                v-for="item in options"
+                v-for="item in originOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -27,9 +27,9 @@
           </el-select>
         </el-col>
         <el-col :span="3">
-          <el-select v-model="value" :placeholder="locale.select">
+          <el-select v-model="filter.role" :placeholder="locale.role" clearable>
             <el-option
-                v-for="item in options"
+                v-for="item in roleOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -37,9 +37,9 @@
           </el-select>
         </el-col>
         <el-col :span="4">
-          <el-input v-model="input" :placeholder="locale.select" clearable/>
+          <el-input v-model="filter.keyword" :placeholder="locale.keyword" clearable/>
         </el-col>
-        <el-col :span="2">
+        <el-col :span="2" @click="handleQueryUsers">
           <el-button type="primary">{{ locale.query }}</el-button>
         </el-col>
         <el-col :span="3">
@@ -59,15 +59,15 @@
         </el-col>
       </el-row>
     </template>
-    <template #role={row}>
+    <template #roles={row}>
       <el-tag class="user-list__tag"
-              v-for="tag in row.role"
-              :key="tag"
+              v-for="role in row.roles"
+              :key="role.roleId"
               closable
               type="success"
-              @close="handleDelRole(row,tag)"
+              @close="handleDelRole(row,role)"
       >
-        {{ tag }}
+        {{ role.roleName }}
       </el-tag>
     </template>
     <template #state="{row}">
@@ -131,14 +131,25 @@
 
 <script setup lang="ts">
 import TablePagination from '../common/TablePagination.vue';
-import {TableData, FormData, Types} from "@/components/common/index";
+import {TableData, FormData, Types} from "../common/index";
 import UploadFileDialog from '../common/UploadFileDialog.vue';
 import FormDialog from '../common/FormDialog.vue';
-import {inject, reactive, ref} from 'vue';
-import {Delete, Edit, Lock, Message, Phone, Setting, User} from '@element-plus/icons-vue';
+import {inject, onMounted, reactive, ref, toRaw} from 'vue';
+import {Edit, Lock, Message, Phone, Setting, User} from '@element-plus/icons-vue';
 import type {Locale} from "@/locale/zh-cn";
 import useRules from "@/rules";
+import {useUser, UserRow} from "@/stores/user";
 
+type Filter = Partial<{ state: number, origin: string, role: number, keyword: string }>;
+
+interface User {
+  date: string
+  name: string
+  address: string
+}
+
+
+const userStore = useUser();
 const {username, password, email, phone} = useRules();
 const rules = {
   username, password, email: {
@@ -215,41 +226,14 @@ const rolesData: FormData = {
 }
 const createUserDialogRef = ref<InstanceType<typeof FormDialog> | null>(null);
 const setRoleDialogRef = ref<InstanceType<typeof FormDialog> | null>(null);
-const handleCreateUser = () => {
-  createUserDialogRef.value?.showDialog();
-
-}
-const value = ref('');
-const input = ref('')
-const options = [
-  {
-    value: 'Option1',
-    label: 'Option1',
-  },
-  {
-    value: 'Option2',
-    label: 'Option2',
-  },
-  {
-    value: 'Option3',
-    label: 'Option3',
-  },
-  {
-    value: 'Option4',
-    label: 'Option4',
-  },
-  {
-    value: 'Option5',
-    label: 'Option5',
-  },
-];
+const userList = reactive<UserRow[]>([])
 const tableData: TableData = {
   showIndex: true,
   columns: [
     {prop: 'username', label: locale?.username, width: '100'},
     {prop: 'email', label: locale?.email, width: '280'},
     {prop: 'phone', label: locale?.phone},
-    {prop: 'role', label: locale?.role, slotName: 'role'},
+    {prop: 'roles', label: locale?.role, slotName: 'roles'},
     {prop: 'state', label: locale?.state, width: '100', slotName: 'state'},
     {prop: 'operation', label: locale?.operation, slotName: 'operation'}
   ],
@@ -258,100 +242,61 @@ const tableData: TableData = {
       username: 'it666',
       email: 'zhichao0314@126.comzhichao0314@126.com',
       phone: '18258414234',
-      role: ['admin'],
+      roles: [{roleId: 1, roleName: 'admin'}],
       state: true,
-      operation: ['edit', 'del', 'setting']
-    },
-    {
-      username: 'it888',
-      email: 'zhichao0314@126.com',
-      phone: '18258414234',
-      role: ['admin'],
-      state: false,
-      operation: ['edit', 'del', 'setting']
-    },
-    {
-      username: 'it666',
-      email: 'zhichao0314@126.com',
-      phone: '18258414234',
-      role: ['admin'],
-      state: true,
-      operation: ['edit', 'del', 'setting']
-    },
-    {
-      username: 'it888',
-      email: 'zhichao0314@126.com',
-      phone: '18258414234',
-      role: ['admin'],
-      state: false,
-      operation: ['edit', 'del', 'setting']
-    },
-    {
-      username: 'it666',
-      email: 'zhichao0314@126.com',
-      phone: '18258414234',
-      role: ['admin'],
-      state: true,
-      operation: ['edit', 'del', 'setting']
-    },
-    {
-      username: 'it888',
-      email: 'zhichao0314@126.com',
-      phone: '18258414234',
-      role: ['admin', 'user'],
-      state: false,
-      operation: ['edit', 'del', 'setting']
-    },
-    {
-      username: 'it666',
-      email: 'zhichao0314@126.com',
-      phone: '18258414234',
-      role: ['admin'],
-      state: true,
-      operation: ['edit', 'del', 'setting']
-    },
-    {
-      username: 'it888',
-      email: 'zhichao0314@126.com',
-      phone: '18258414234',
-      role: ['admin'],
-      state: false,
-      operation: ['edit', 'del', 'setting']
-    },
-    {
-      username: 'it666',
-      email: 'zhichao0314@126.com',
-      phone: '18258414234',
-      role: ['admin'],
-      state: true,
-      operation: ['edit', 'del', 'setting']
-    },
-    {
-      username: 'it888',
-      email: 'zhichao0314@126.com',
-      phone: '18258414234',
-      role: ['admin'],
-      state: false,
-      operation: ['edit', 'del', 'setting']
-    },
-    {
-      username: 'it888',
-      email: 'zhichao0314@126.com',
-      phone: '18258414234',
-      role: ['admin'],
-      state: false,
       operation: ['edit', 'del', 'setting']
     }
 
   ]
 
 }
-
-
-const small = ref(false)
 const background = ref(false)
-const disabled = ref(false)
 
+const filter: Filter = reactive({});
+
+const stateOptions = [
+  {value: '1', label: '启用'},
+  {value: '0', label: '禁用'}
+]
+
+const originOptions = [
+  {value: 'local', label: '本地'},
+  {value: 'github', label: 'github'}
+]
+
+const roleOptions = ref<{ value: string, label: string }[]>();
+
+onMounted(() => {
+
+  userStore.getRoles().then(roles => {
+
+    roleOptions.value = roles.map(({id, name}) => ({value: id, label: name}));
+
+  })
+
+
+})
+
+const handleQueryUsers = () => {
+
+
+  userStore.getUsersAction(toRaw(filter)).then((data) => {
+
+    const {total, list} = data;
+    const users: (UserRow & { operation: ['edit', 'del', 'setting'] })[] = list.map(item => {
+
+      return {...item, operation: ['edit', 'del', 'setting']}
+    })
+
+  })
+
+}
+
+
+const handleCreateUser = () => {
+  createUserDialogRef.value?.showDialog();
+
+}
 const handleSizeChange = (val: number) => {
   console.log(`${val} items per page`)
 }
@@ -359,11 +304,6 @@ const handleCurrentChange = (val: number) => {
   console.log(`current page: ${val}`)
 }
 
-interface User {
-  date: string
-  name: string
-  address: string
-}
 
 const handleEdit = (index: number, row: User) => {
   console.log(index, row)

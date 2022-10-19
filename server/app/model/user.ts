@@ -131,56 +131,53 @@ export default function (ctx: Context) {
         },
 
         async queryUserList(filter: FilterInfo) {
-            console.log(filter)
-            /*
-            * SELECT
-                    u.id,
-                    u.username,
-                    u.email,
-                    u.phone,
-                    u.user_state AS state,
-                    JSON_ARRAYAGG(JSON_OBJECT('roleId', r.id, 'roleName', r.role_name)) AS roles
-                FROM
-                    users AS u
-                        LEFT JOIN
-                    users_roles AS ur ON u.id = ur.user_id
-                        LEFT JOIN
-                    roles AS r ON ur.role_id = r.id
-                WHERE
-                    u.user_state = 1 AND u.origin = 'github'
-                        AND (u.username LIKE '%z%'
-                        OR u.email LIKE '%chao%'
-                        OR u.phone LIKE '%42%')
-                GROUP BY u.id
-                HAVING JSON_CONTAINS(roles, JSON_OBJECT('roleId', 2))
-                LIMIT 1 OFFSET 0;
-            *
-            * */
+
+            // const sql2 =`SELECT
+            //          u.id,
+            //          u.username,
+            //          u.email,
+            //          u.phone,
+            //          u.user_state AS state,
+            //          JSON_ARRAYAGG(JSON_OBJECT('roleId', r.id, 'roleName', r.role_name)) AS roles
+            //      FROM
+            //          users AS u
+            //              LEFT JOIN
+            //          users_roles AS ur ON u.id = ur.user_id
+            //              LEFT JOIN
+            //          roles AS r ON ur.role_id = r.id
+            //      WHERE
+            //          u.user_state = 1 AND u.origin = 'github'
+            //              AND (u.username LIKE '%zhi%'
+            //              OR u.email LIKE '%zhi%'
+            //              OR u.phone LIKE '%zhi%')
+            //      GROUP BY u.id
+            //      HAVING JSON_CONTAINS(roles, JSON_OBJECT('roleId', 2))
+            //      LIMIT 1 OFFSET 0;`
+
 
             const {role, origin, state, username, email, phone, page = 1, pageSize = 10} = filter;
-
             const andFragments: string[] = [];
             const orFragments: string[] = [];
             const values: (number | string)[] = [];
-            if (state) {
-                andFragments.push(`u.user_state = ?`);
+            if (state !== undefined) {
+                andFragments.push(` u.user_state = ? `);
                 values.push(state);
             }
-            if (origin) {
-                andFragments.push(`u.origin = ?`);
+            if (origin !== undefined) {
+                andFragments.push(` u.origin = ? `);
                 values.push(origin);
             }
-            if (username) {
-                orFragments.push(`u.username LIKE %?%`);
-                values.push(username);
+            if (username !== undefined) {
+                orFragments.push(` u.username LIKE ? `);
+                values.push(`%${username}%`);
             }
-            if (email) {
-                orFragments.push(`u.email LIKE %?%`);
-                values.push(email);
+            if (email !== undefined) {
+                orFragments.push(` u.email LIKE ? `);
+                values.push(`%${email}%`);
             }
-            if (phone) {
-                orFragments.push(`u.phone LIKE %?%`);
-                values.push(phone);
+            if (phone !== undefined) {
+                orFragments.push(` u.phone LIKE ? `);
+                values.push(`%${phone}%`);
             }
 
             let sqlFragment = '';
@@ -212,7 +209,6 @@ export default function (ctx: Context) {
                         GROUP BY u.id
                         ${havingSqlFragment}
                         LIMIT ? OFFSET ?;`
-
             const [list] = await pool.execute<Rows<UserRow>>(sql, [...values, `${pageSize}`, `${pageSize * (page - 1)}`]);
             const [[{total}]] = await pool.execute<Rows<{ total: number }>>(queryFoundRows);
             return {

@@ -2,6 +2,8 @@ import axios from 'axios';
 import {ElMessage} from 'element-plus';
 import {locale} from "@/locale/zh-cn";
 
+export const version = 'v1';
+
 const baseURL = 'http://127.0.0.1:7001';
 
 const instance = axios.create({baseURL});
@@ -52,3 +54,21 @@ instance.interceptors.response.use(function (response) {
 });
 
 export default instance;
+
+
+export const createQuery = (obj: Record<string, any>) => {
+
+    let query = ``;
+
+    Object.keys(obj).forEach(key => {
+
+        const value = obj[key];
+
+        if (value !== undefined && value !== '') query += `&${key}=${value}`;
+
+    })
+
+    return query.slice(1);
+
+
+}
