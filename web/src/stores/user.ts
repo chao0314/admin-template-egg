@@ -1,7 +1,6 @@
 import {defineStore} from "pinia";
 import instance, {version, createQuery} from "@/stores/network";
 
-export type Role = { id: string, name: string, des: string };
 export type UserInfo = { id?: number, username: string, password: string, email: string, phone: string };
 
 export interface UserRow {

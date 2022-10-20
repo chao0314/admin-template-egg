@@ -50,7 +50,7 @@ export type FormItem = {
     prop: string,
     label?: string,
     options?: {
-        value: string,
+        value: string | number | boolean,
         label: string
     } [],
     props?: Record<string, any>

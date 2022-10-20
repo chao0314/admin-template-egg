@@ -170,7 +170,7 @@ const originOptions = [
   {value: 'local', label: '本地'},
   {value: 'github', label: 'github'}
 ]
-const roleOptions = ref<{ value: string, label: string }[]>();
+const roleOptions = ref<{ value: number, label: string }[]>();
 
 const filter: UserFilter = reactive({});
 const tableData: TableData = shallowReactive({
@@ -367,11 +367,23 @@ const handleSettings = (index: number, row: UserRow) => {
 const handleConfirmRole = (form: { role: number }) => {
 
   const {id} = currentUser || {};
-  if (id) {
+  const {role: roleId} = form;
+  if (id && roleId) userStore.createUserRoleAction({id, roleId}).then(() => {
 
-    userStore.createUserRoleAction({id, roleId: form.role})
+    const oRole = roleOptions.value?.find(({value}) => value === roleId);
 
-  }
+    if (oRole) {
+
+      const users = tableData.data;
+      const userIndex = users.findIndex(user => user.id === id);
+
+      users[userIndex].roles.push({roleId: oRole.value, roleName: oRole.label});
+
+      tableData.data = [...users];
+
+    }
+
+  })
 
 
 }

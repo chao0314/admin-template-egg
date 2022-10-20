@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import instance, {version} from "@/stores/network";
-import type {Role} from "@/stores/user";
+
+export type Role = { id: number, name: string, des: string };
 
 export const useRole = defineStore('role', () => {
 

@@ -3,11 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="8d274c5b-0fea-4388-887a-12074aeced64" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/controller/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/controller/user.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/model/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/model/user.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/components/common/FormDialog.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/common/FormDialog.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/components/common/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/common/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/src/components/user/UserList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/user/UserList.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/locale/zh-cn.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/locale/zh-cn.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/stores/role.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/stores/role.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/src/stores/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/stores/user.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
