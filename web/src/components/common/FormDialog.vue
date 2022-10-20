@@ -1,5 +1,5 @@
 <template>
-  <el-dialog width="35%" top="10vh"
+  <el-dialog width="35%" top="10vh" destroy-on-close
              v-model="dialogVisibleRef"
              :title="mode === Mode.create?locale.create:locale.edit">
     <el-form :model="form"
@@ -42,7 +42,7 @@
 
 <script setup lang="ts">
 import type {Locale} from "@/locale/zh-cn";
-import {Types, Mode,FormData} from "@/components/common/index";
+import {Types, Mode, FormData} from "@/components/common/index";
 import {inject, reactive, ref, toRaw} from 'vue'
 
 const props = withDefaults(defineProps<{
@@ -64,7 +64,6 @@ const form = reactive<Record<string, any>>({});
 const handleConfirm = () => {
 
   dialogVisibleRef.value = false;
-  console.log(toRaw(form));
   emits('confirm', toRaw(form));
 }
 
@@ -80,9 +79,11 @@ defineExpose<{
 
     props.formData.items.forEach(item => {
       //todo...初始化 checkbox可能有数组等,还需完善
-      form[item.prop] = initData === void 0 ? '' : initData[item.prop]
-    });
 
+      form[item.prop] = initData === void 0 ? '' : initData[item.prop]
+
+    });
+    if (initData && initData.id) form.id = initData.id;
     dialogVisibleRef.value = true;
 
   }

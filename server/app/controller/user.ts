@@ -59,7 +59,7 @@ export default class User extends Controller {
     async deleteUser() {
 
         const {ctx, service} = this;
-        const {id} = ctx.request.body;
+        const {id} = ctx.request.query;
         if (!id) ctx.badRequest(`id ${id}`);
         else {
             await service.user.delUser(id);
@@ -96,10 +96,10 @@ export default class User extends Controller {
     async delUserRole() {
 
         const {ctx, service} = this;
-        const {id, roleId} = ctx.request.body;
+        const {id, roleId} = ctx.request.query;
         if (!id || !roleId) ctx.badRequest(`id ${id} roleId ${roleId}`);
         else {
-            await service.user.delUserRole({id, roleId});
+            await service.user.delUserRole({id: Number(id), roleId: Number(roleId)});
             ctx.success();
         }
 

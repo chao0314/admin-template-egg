@@ -13,7 +13,8 @@ export default function (ctx: Context) {
     const {app, helper} = ctx;
     const pool = app.mysql2;
 
-    const queryFoundRows = `SELECT FOUND_ROWS() AS total;`;
+    // const queryFoundRows = `SELECT FOUND_ROWS() AS total;`;
+    const queryUserCount = `SELECT count(*) as total  FROM users;`;
     const queryByNameSql = `SELECT id,username FROM users WHERE username = ?;`;
     const queryByPhoneSql = `SELECT id,phone FROM template_db.users WHERE phone = ?;`;
     const queryByEmailSql = `SELECT id,email FROM template_db.users WHERE email = ?;`;
@@ -132,7 +133,7 @@ export default function (ctx: Context) {
 
         async queryUserList(filter: FilterInfo) {
 
-            // const sql2 =`SELECT
+            // const sql2 =`SELECT SQL_CALC_FOUND_ROWS
             //          u.id,
             //          u.username,
             //          u.email,
@@ -152,7 +153,8 @@ export default function (ctx: Context) {
             //              OR u.phone LIKE '%zhi%')
             //      GROUP BY u.id
             //      HAVING JSON_CONTAINS(roles, JSON_OBJECT('roleId', 2))
-            //      LIMIT 1 OFFSET 0;`
+            //      ORDER BY u.id DESC
+            //      LIMIT 10 OFFSET 0;`
 
 
             const {role, origin, state, username, email, phone, page = 1, pageSize = 10} = filter;
@@ -208,9 +210,12 @@ export default function (ctx: Context) {
                         ${sqlFragment}
                         GROUP BY u.id
                         ${havingSqlFragment}
+                        ORDER BY u.id DESC
                         LIMIT ? OFFSET ?;`
+
             const [list] = await pool.execute<Rows<UserRow>>(sql, [...values, `${pageSize}`, `${pageSize * (page - 1)}`]);
-            const [[{total}]] = await pool.execute<Rows<{ total: number }>>(queryFoundRows);
+            const [[{total}]] = await pool.execute<Rows<{ total: number }>>(queryUserCount);
+
             return {
                 total,
                 list: list.map(item => {

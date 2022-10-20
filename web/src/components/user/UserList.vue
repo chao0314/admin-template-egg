@@ -59,7 +59,7 @@
         </el-col>
       </el-row>
     </template>
-    <template #roles={row}>
+    <template #roles="{row}">
       <el-tag class="user-list__tag" v-if="row.roles.length >0"
               v-for="role in row.roles"
               :key="role.roleId"
@@ -76,6 +76,7 @@
           v-model="row.state"
           :active-value="1"
           :inactive-value="0"
+          @change="handleSwitchChange(row)"
           style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
       />
     </template>
@@ -127,9 +128,9 @@
       </el-tooltip>
     </template>
   </table-pagination>
-  <form-dialog :form-data="formData" ref="createUserDialogRef"></form-dialog>
+  <form-dialog :form-data="userData" ref="createUserDialogRef" @confirm="handleConfirmUser"></form-dialog>
   <upload-file-dialog ref="importDialogRef"></upload-file-dialog>
-  <form-dialog :form-data="rolesData" ref="setRoleDialogRef"></form-dialog>
+  <form-dialog :form-data="rolesData" ref="setRoleDialogRef" @confirm="handleConfirmRole"></form-dialog>
 </template>
 
 <script setup lang="ts">
@@ -137,24 +138,19 @@ import TablePagination from '../common/TablePagination.vue';
 import {TableData, FormData, Types} from "../common/index";
 import UploadFileDialog from '../common/UploadFileDialog.vue';
 import FormDialog from '../common/FormDialog.vue';
-import {inject, onMounted, reactive, ref, shallowReactive, shallowRef, toRaw} from 'vue';
+import {inject, onMounted, reactive, ref, shallowReactive, toRaw} from 'vue';
 import {Edit, Lock, Message, Phone, Setting, User} from '@element-plus/icons-vue';
 import type {Locale} from "@/locale/zh-cn";
 import useRules from "@/rules";
-import {useUser, UserRow} from "@/stores/user";
+import {useUser, UserRow, UserInfo, UserFilter} from "@/stores/user";
+import {exclude} from "@/utils";
+import {useRole} from "@/stores/role";
 
-type Filter = Partial<{ state: number, origin: string, role: number, keyword: string }>;
-
-interface User {
-  date: string
-  name: string
-  address: string
-}
 
 type UserWithOperation = UserRow & { operation: ['edit', 'del', 'setting'] };
-
-
+// const props = withDefaults(defineProps<{}>(), {})
 const userStore = useUser();
+const roleStore = useRole();
 const {username, password, email, phone} = useRules();
 const rules = {
   username, password, email: {
@@ -166,8 +162,36 @@ const rules = {
   }
 }
 const locale = inject<Locale>('locale');
-// const props = withDefaults(defineProps<{}>(), {})
-const formData: FormData = {
+const stateOptions = [
+  {value: '1', label: '启用'},
+  {value: '0', label: '禁用'}
+]
+const originOptions = [
+  {value: 'local', label: '本地'},
+  {value: 'github', label: 'github'}
+]
+const roleOptions = ref<{ value: string, label: string }[]>();
+
+const filter: UserFilter = reactive({});
+const tableData: TableData = shallowReactive({
+  showIndex: true,
+  columns: [
+    {prop: 'username', label: locale?.username, width: '100'},
+    {prop: 'email', label: locale?.email, width: '280'},
+    {prop: 'phone', label: locale?.phone},
+    {prop: 'roles', label: locale?.role, slotName: 'roles'},
+    {prop: 'state', label: locale?.state, width: '100', slotName: 'state'},
+    {prop: 'operation', label: locale?.operation, slotName: 'operation'}
+  ],
+  data: []
+
+})
+
+const userTotalRef = ref(0);
+const createUserDialogRef = ref<InstanceType<typeof FormDialog> | null>(null);
+const setRoleDialogRef = ref<InstanceType<typeof FormDialog> | null>(null);
+
+const userData: FormData = {
   rules,
   items: [
     {
@@ -205,66 +229,26 @@ const formData: FormData = {
 
   ]
 }
-
-const rolesData: FormData = {
-
+const rolesData: FormData = reactive({
   items: [
-
     {
       type: Types.select,
       prop: 'role',
       label: locale?.role,
-      options: [
-        {
-          value: 'role 1',
-          label: 'role 1'
-        },
-        {
-          value: 'role 2',
-          label: 'role 2'
-        }
-      ]
+      options: []
     }
-
   ]
-
-}
-const createUserDialogRef = ref<InstanceType<typeof FormDialog> | null>(null);
-const setRoleDialogRef = ref<InstanceType<typeof FormDialog> | null>(null);
-const userTotalRef = ref(0);
-const tableData: TableData = shallowReactive({
-  showIndex: true,
-  columns: [
-    {prop: 'username', label: locale?.username, width: '100'},
-    {prop: 'email', label: locale?.email, width: '280'},
-    {prop: 'phone', label: locale?.phone},
-    {prop: 'roles', label: locale?.role, slotName: 'roles'},
-    {prop: 'state', label: locale?.state, width: '100', slotName: 'state'},
-    {prop: 'operation', label: locale?.operation, slotName: 'operation'}
-  ],
-  data: []
 
 })
 
-const filter: Filter = reactive({});
-
-const stateOptions = [
-  {value: '1', label: '启用'},
-  {value: '0', label: '禁用'}
-]
-
-const originOptions = [
-  {value: 'local', label: '本地'},
-  {value: 'github', label: 'github'}
-]
-
-const roleOptions = ref<{ value: string, label: string }[]>();
-
+let currentUser: UserRow;
 onMounted(() => {
 
-  userStore.getRoles().then(roles => {
+  roleStore.getRoles().then(roles => {
 
     roleOptions.value = roles.map(({id, name}) => ({value: id, label: name}));
+
+    rolesData.items[0].options = roleOptions.value
 
   })
 
@@ -297,27 +281,98 @@ const handleCreateUser = () => {
   createUserDialogRef.value?.showDialog();
 
 }
+
+const handleConfirmUser = (form: UserInfo) => {
+
+  if (form.id) {
+    const oldValIndex = tableData.data.findIndex(item => item.id == form.id);
+
+    const payload = exclude(form, tableData.data[oldValIndex]);
+
+    userStore.updateUserAction(payload).then(() => {
+
+          const users = tableData.data;
+          users[oldValIndex] = Object.assign({}, users[oldValIndex], form);
+          tableData.data = [...users];
+
+        }
+    )
+  } else userStore.createUserAction(form).then(() => handleQueryUsers());
+
+}
+
+
+const handleSwitchChange = (row: UserRow) => {
+
+  const {id, state} = row;
+
+  if (id) userStore.updateUserStateAction({id, state});
+
+}
+
 const handleSizeChange = (val: number) => {
-  console.log(`${val} items per page`)
+
+  filter.pageSize = val;
+  handleQueryUsers();
+
 }
 const handleCurrentChange = (val: number) => {
-  console.log(`current page: ${val}`)
+
+  filter.page = val;
+  handleQueryUsers();
 }
 
 
-const handleEdit = (index: number, row: User) => {
-  console.log(index, row)
+const handleEdit = (index: number, row: UserInfo) => {
+  // console.log(index, row)
   createUserDialogRef.value?.showDialog(row);
 
 }
-const handleDelete = (index: number, row: User) => {
-  console.log(index, row)
+const handleDelete = (index: number, row: UserInfo) => {
+
+  const {id} = row;
+
+  // 最好设置为假删除
+  if (id) userStore.deleteUserAction({id}).then(() => handleQueryUsers());
 
 }
 
-const handleSettings = (index: number, row: User) => {
 
+const handleDelRole = (row: UserRow, tag: { roleId: number, roleName: string }) => {
+
+  const {id} = row;
+  const {roleId} = tag;
+
+  id && userStore.deleteUserRoleAction({id, roleId}).then(() => {
+
+    const users = tableData.data;
+    const index = users.findIndex((item) => item.id === id);
+    const roles: { roleId: number, roleName: string }[] = users[index].roles;
+    users[index].roles = roles.filter(role => role.roleId !== roleId)
+    tableData.data = [...users];
+
+  })
+
+
+}
+
+
+const handleSettings = (index: number, row: UserRow) => {
+
+  currentUser = row;
   setRoleDialogRef.value.showDialog()
+
+}
+
+const handleConfirmRole = (form: { role: number }) => {
+
+  const {id} = currentUser || {};
+  if (id) {
+
+    userStore.createUserRoleAction({id, roleId: form.role})
+
+  }
+
 
 }
 const importDialogRef = ref<InstanceType<typeof UploadFileDialog> | null>(null);
@@ -326,18 +381,6 @@ const handleImportUser = () => {
   importDialogRef.value?.showDialog()
 }
 
-const tags = ref([
-  {name: 'Tag 1', type: ''},
-  {name: 'Tag 2', type: 'success'},
-  {name: 'Tag 3', type: 'info'},
-  {name: 'Tag 4', type: 'warning'},
-  {name: 'Tag 5', type: 'danger'},
-])
-
-const handleDelRole = (row: any, tag: string) => {
-
-  console.log('handle del role', row, tag)
-}
 
 </script>
 

@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import instance, {version, createQuery} from "@/stores/network";
 
 export type Role = { id: string, name: string, des: string };
+export type UserInfo = { id?: number, username: string, password: string, email: string, phone: string };
 
 export interface UserRow {
     id: number
@@ -15,24 +16,6 @@ export interface UserRow {
 export type UserFilter = Partial<{ state: number, origin: string, role: number, keyword: string, page: number, pageSize: number }>
 export const useUser = defineStore('user', () => {
 
-    let roles: Role[];
-
-    const getRoles = async (): Promise<Role[]> => {
-
-        if (roles) return roles;
-        else {
-            const {data: {list}} = await getRolesAction();
-            roles = list;
-            return roles;
-
-        }
-    }
-
-    const getRolesAction = async () => {
-
-        return instance.get(`/${version}/roles`);
-
-    }
 
     const getUsersAction = async (payload: UserFilter): Promise<{ total: number, list: UserRow[] }> => {
 
@@ -40,14 +23,52 @@ export const useUser = defineStore('user', () => {
         const {data} = await instance.get(`/${version}/users?${query}`);
         return data;
 
+    }
+
+    const createUserAction = async (payload: UserInfo) => {
+
+        return instance.post(`/${version}/user`, payload);
+    }
+
+    const updateUserAction = async (payload: Partial<UserInfo>) => {
+
+        return instance.put(`/${version}/user`, payload);
 
     }
 
+    const deleteUserAction = async (payload: { id: number }) => {
+
+        return instance.delete(`/${version}/user?id=${payload.id}`)
+    }
+
+    const updateUserStateAction = async (payload: { id: number, state: number }) => {
+
+        return instance.put(`/${version}/user-state`, payload);
+    }
+
+    const deleteUserRoleAction = async (payload: { id: number, roleId: number }) => {
+
+        const query = createQuery(payload);
+        return instance.delete(`/${version}/user-role?${query}`);
+
+    }
+
+    const createUserRoleAction = async (payload: { id: number, roleId: number }) => {
+
+        return instance.post(`/${version}/user-role`, payload);
+
+    }
+
+
     return {
 
-        getRoles,
-        getRolesAction,
-        getUsersAction
+        getUsersAction,
+        createUserAction,
+        updateUserAction,
+        deleteUserAction,
+        updateUserStateAction,
+        deleteUserRoleAction,
+        createUserRoleAction
 
     }
 
