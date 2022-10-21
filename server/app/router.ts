@@ -41,6 +41,9 @@ export default (app: Application) => {
     router.put(`/${apiVersion}/permission`, permission.updatePermission);
     router.delete(`/${apiVersion}/permission`, permission.deletePermission);
     router.put(`/${apiVersion}/permission-state`, permission.updatePermissionState);
+    router.get(`/${apiVersion}/permission-type`, permission.queryPermissionTypeList);
+
+    router.get(`/${apiVersion}/permissions-all`, permission.queryAllPermissionList);
 
 
 };

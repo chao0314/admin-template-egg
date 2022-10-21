@@ -72,3 +72,5 @@ export const createQuery = (obj: Record<string, any>) => {
 
 
 }
+
+export const methods =['GET','POST','PUT','DELETE'];

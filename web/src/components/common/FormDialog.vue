@@ -2,7 +2,7 @@
   <el-dialog width="35%" top="10vh" destroy-on-close
              v-model="dialogVisibleRef"
              :title="mode === Mode.create?locale.create:locale.edit">
-    <el-form :model="form"
+    <el-form :model="form" ref="formRef"
              :rules="formData.rules"
              label-width="120px"
              label-position="top"
@@ -44,6 +44,7 @@
 import type {Locale} from "@/locale/zh-cn";
 import {Types, Mode, FormData} from "@/components/common/index";
 import {inject, reactive, ref, toRaw} from 'vue'
+import type {FormInstance} from "element-plus";
 
 const props = withDefaults(defineProps<{
   formData: FormData
@@ -56,15 +57,22 @@ const emits = defineEmits<{
 }>()
 const locale = inject<Locale>('locale');
 const dialogVisibleRef = ref(false);
-let mode = ref(Mode.create);
-
 const form = reactive<Record<string, any>>({});
+const formRef = ref<FormInstance>()
+let mode = ref(Mode.create);
 
 
 const handleConfirm = () => {
 
-  dialogVisibleRef.value = false;
-  emits('confirm', toRaw(form));
+  formRef.value?.validate(isValid => {
+
+    if (isValid) {
+      dialogVisibleRef.value = false;
+      emits('confirm', Object.assign({}, (form)));
+      Object.keys(form).forEach(key => form[key] = '');
+    }
+
+  })
 }
 
 defineExpose<{

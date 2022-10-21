@@ -57,9 +57,8 @@ export const locale = {
     requestError: '请求失败！',
     getCaptcha: '获取验证码',
     captchaError: '验证码错误',
-    success:'成功',
-
-
+    success: '成功',
+    required: '必填',
     routeMap: {
         index: '首页',
         user: '用户管理',

@@ -1,7 +1,7 @@
 import {Context} from "egg";
 import {Rows} from "../../lib/plugin/egg-mysql2/typings";
 
-export type PermissionType = { pid: number, name: string, des: string, type: string, level: number, path?: string, method?: string };
+export type PermissionType = { pid: number, name: string, des: string, type: string, state?: number, level: number, path?: string, method?: string };
 export type Filter = { type?: string, keyword?: string, page: number, pageSize: number };
 export type PermissionRow = PermissionType & { id: number };
 
@@ -24,8 +24,13 @@ export default function (ctx: Context) {
     const delPermissionSql = `DELETE FROM permissions WHERE id = ?;`;
     const queryPermissionSqlFragment = `SELECT SQL_CALC_FOUND_ROWS
                                            id, permiss_pid AS pid, permiss_name AS name,permiss_des AS des,
-                                           permiss_type AS type,permiss_level AS level,
+                                           permiss_type AS type,permiss_level AS level,permiss_state AS state,
                                            permiss_path AS path, permiss_method AS method FROM  permissions`;
+
+    const queryPermissionByLevelSql = `SELECT id, permiss_pid AS pid, permiss_name AS name,permiss_des AS des,
+                                           permiss_type AS type,permiss_level AS level,permiss_state AS state,
+                                           permiss_path AS path, permiss_method AS method FROM  permissions
+                                           WHERE permiss_level= ?`;
 
 
     return {
@@ -87,6 +92,25 @@ export default function (ctx: Context) {
             const [[{total}]] = await pool.execute<Rows<{ total: number }>>(queryFoundRows);
 
             return {total, list};
+        },
+
+        async queryPermissionTypeList(payload = {level: 0}) {
+
+            const {level} = payload;
+
+            const [list] = await pool.execute<Rows<PermissionRow>>(queryPermissionByLevelSql, [level]);
+
+            return {list};
+
+
+        },
+
+
+        async queryAllPermissionList() {
+
+            const [list] = await pool.execute<Rows<PermissionRow>>(queryPermissionSqlFragment);
+            return {list};
+
         }
 
 

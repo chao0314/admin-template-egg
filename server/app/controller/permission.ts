@@ -38,11 +38,11 @@ export default class Permission extends Controller {
 
         const {ctx, service} = this;
 
-        const {id} = ctx.request.body;
+        const {id} = ctx.request.query;
 
-        if (!id) return ctx.badRequest(`id ${id}`);
+        if (!id && !isNaN(Number(id))) return ctx.badRequest(`id ${id}`);
 
-        await service.permission.deletePermission({id});
+        await service.permission.deletePermission({id: Number(id)});
 
         ctx.success();
 
@@ -67,7 +67,7 @@ export default class Permission extends Controller {
 
         const {ctx, service} = this;
 
-        const {type, keyword, page = 1, pageSize = 10} = ctx.request.body;
+        const {type, keyword, page = 1, pageSize = 10} = ctx.request.query;
 
         const strObj = validateStringObj({type, keyword});
         const numObj = validateNumberObj({page, pageSize});
@@ -79,6 +79,26 @@ export default class Permission extends Controller {
 
         ctx.success(data);
 
+    }
+
+    async queryPermissionTypeList() {
+
+        const {ctx, service} = this;
+        const {level} = ctx.request.query;
+        // todo... validate params : level
+
+        const {list} = await service.permission.queryPermissionTypeList({level: Number(level)});
+
+        ctx.success(list);
+    }
+
+
+    async queryAllPermissionList() {
+
+        const {ctx, service} = this;
+        const {list} = await service.permission.queryAllPermissionList();
+
+        ctx.success(list);
     }
 
 

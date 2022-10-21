@@ -44,5 +44,22 @@ export default class Permission extends Service {
         return model.queryPermissionList(payload);
 
     }
+
+    async queryPermissionTypeList(payload: { level: number }) {
+
+        const {ctx} = this;
+        const model = permission(ctx);
+        return model.queryPermissionTypeList(payload)
+
+    }
+
+    async queryAllPermissionList(){
+
+        const {ctx} = this;
+        const model = permission(ctx);
+
+        return model.queryAllPermissionList();
+
+    }
 }
 
