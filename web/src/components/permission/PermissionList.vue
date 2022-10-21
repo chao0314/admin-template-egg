@@ -88,14 +88,6 @@
                      :value="option.value"/>
         </el-select>
       </el-form-item>
-      <el-form-item :label="locale.permissionParent">
-        <el-select v-model="form.pid" :disabled="form.level ===1">
-          <el-option v-for="option in options"
-                     :key="option.label"
-                     :label="option.label"
-                     :value="option.value"/>
-        </el-select>
-      </el-form-item>
     </template>
 
   </form-dialog>
@@ -118,7 +110,6 @@ const methodOptions: Option[] = methods.map(method => ({value: method, label: me
 const locale = inject<Locale>('locale');
 // const props = withDefaults(defineProps<{}>(), {})
 const permissionStore = userPermission();
-
 const filter: PermissionFilter = reactive({page: 1, pageSize: 10})
 const permTypeOptionsRef = ref<Option[]>([]);
 const totalRef = ref<number>(0);
@@ -203,7 +194,8 @@ const form: FormData = reactive({
   rules: {
     name: {required: true, message: locale?.required},
     type: {required: true, message: locale?.required},
-    level: {required: true, message: locale?.required}
+    level: {required: true, message: locale?.required},
+    pid: {required: true, message: locale?.required}
   },
   items: [
     {
@@ -230,6 +222,16 @@ const form: FormData = reactive({
       type: Types.select,
       prop: 'level',
       label: locale?.permissionLevel,
+      options: [
+        {label: '一级权限', value: 1},
+        {label: '二级权限', value: 2},
+        {label: '三级权限', value: 3}
+      ]
+    },
+    {
+      type: Types.select,
+      prop: 'pid',
+      label: locale?.permissionParent,
       options: [
         {label: '一级权限', value: 1},
         {label: '二级权限', value: 2},
