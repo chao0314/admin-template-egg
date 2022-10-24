@@ -197,7 +197,6 @@ const handleQueryPermissions = () => {
 
   permissionStore.getPermissionsAction(filter).then(({total, list}) => {
 
-    console.log('permissions', total, list);
     totalRef.value = total;
 
     const permissions = list.map(item => ({...item, operation: ['del', 'edit']}))
@@ -276,13 +275,16 @@ const form: FormData = reactive({
 
 
 const handleConfirmPermission = (form: PermissionRow) => {
-
+  console.log('--handle confirm permission--')
   console.log(form);
+  permissionStore.createPermissionAction(form);
+  handleQueryPermissions();
 }
 
-const handleEditPermission = (index: number, row: any) => {
+const handleEditPermission = (index: number, row: PermissionRow) => {
 
-  console.log('handle edit permission', index, row)
+  console.log(row);
+
   permissionCreateDialogRef.value.showDialog(row)
 }
 
@@ -290,11 +292,7 @@ const handleEditPermission = (index: number, row: any) => {
 const permissionCreateDialogRef = ref<InstanceType<typeof FormDialog> | null>(null);
 
 
-const handleCreatePermission = () => {
-
-  console.log('handle create permission')
-  permissionCreateDialogRef.value.showDialog()
-}
+const handleCreatePermission = () => permissionCreateDialogRef.value.showDialog()
 
 
 </script>

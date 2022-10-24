@@ -81,7 +81,7 @@ defineExpose<{
   form: Record<string, any>
 
 }>({
-  showDialog: (initData?: Record<string, any>) => {
+  showDialog: (initData?: Record<string, any>,slotPatch?:Record<string, any>) => {
 
 
     if (initData) mode.value = Mode.edit;

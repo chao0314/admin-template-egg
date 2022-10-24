@@ -6,7 +6,7 @@ export type PermissionFilter = Partial<{ type: string, keyword: string, page: nu
 export type PermissionType = { pid: number, name: string, des: string, type: string, level: number, state: number, path?: string, method?: string };
 export type PermissionRow = PermissionType & { id: number };
 export type PermissionNode = { id: number, label: string, children?: PermissionNode[], type?: string };
-
+export type Permission = { pid: number, name: string, des: string, type: string, level: number, path?: string, method?: string };
 export const userPermission = defineStore('permission', () => {
 
     let permissionTreeCache: PermissionNode[];
@@ -82,19 +82,22 @@ export const userPermission = defineStore('permission', () => {
                 } else {
 
                     const parentLevelNodes = levelPermissionMap.get(level - 1) as PermissionNode[];
-
+                    const levelNodes: PermissionNode[] = [];
                     parentLevelNodes && levelPermissions.forEach(perm => {
 
-                        const patentNode = parentLevelNodes.find(parent => parent.id === perm.pid);
-
-                        patentNode && patentNode.children?.push({
+                        const parentNode = parentLevelNodes.find(parent => parent.id === perm.pid);
+                        const node: PermissionNode = {
                             id: perm.id,
                             label: perm.name,
                             children: [],
                             type: perm.type
-                        });
+                        }
+                        parentNode && parentNode.children?.push(node);
+                        levelNodes.push(node);
 
                     })
+
+                    levelPermissionMap.set(level, levelNodes);
 
 
                 }
@@ -112,11 +115,18 @@ export const userPermission = defineStore('permission', () => {
     }
 
 
+    const createPermissionAction = async (payload: Permission) => {
+
+        return instance.post(`/${version}/permission`, payload);
+
+    }
+
     return {
         getPermissionTypesAction,
         getPermissionsAction,
         deletePermissionAction,
         updatePermissionStateAction,
-        getAllPermissionsAction
+        getAllPermissionsAction,
+        createPermissionAction
     }
 })

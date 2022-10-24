@@ -86,8 +86,9 @@ export default function (ctx: Context) {
                 sqlFragments.push(`(permiss_name LIKE '%${keyword}%' OR permiss_des LIKE '%${keyword}%')`);
                 values.push(keyword, keyword);
             }
-            const sql = `${queryPermissionSqlFragment} ${sqlFragments.length > 0 ? 'WHERE' : ''} ${sqlFragments.join('AND')} LIMIT ? OFFSET ?;`;
-
+            // const sql = `${queryPermissionSqlFragment} ${sqlFragments.length > 0 ? 'WHERE' : ''} ${sqlFragments.join('AND')} ORDER BY permissions.id DESC LIMIT ? OFFSET ?;`;
+            const sql = `${queryPermissionSqlFragment} ${sqlFragments.length > 0 ? 'WHERE' : ''} ${sqlFragments.join('AND')}  LIMIT ? OFFSET ?;`;
+            // console.log('queryPermissionList---sql---', sql);
             const [list] = await pool.execute<Rows<PermissionRow>>(sql, [...values, `${pageSize}`, `${(page - 1) * pageSize}`]);
             const [[{total}]] = await pool.execute<Rows<{ total: number }>>(queryFoundRows);
 

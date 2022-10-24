@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="8d274c5b-0fea-4388-887a-12074aeced64" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/components/common/FormDialog.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/common/FormDialog.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/app/model/permission.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/model/permission.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/src/components/permission/PermissionList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/permission/PermissionList.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/src/stores/permission.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/stores/permission.ts" afterDir="false" />
     </list>
@@ -51,7 +51,7 @@
     "node.js.selected.package.standard": "",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "editor.preferences.completion",
-    "ts.external.directory.path": "E:\\workspace\\admin-template-egg\\web\\node_modules\\typescript\\lib",
+    "ts.external.directory.path": "E:\\workspace\\admin-template-egg\\server\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -115,7 +115,8 @@
       <workItem from="1666054196333" duration="19157000" />
       <workItem from="1666182871907" duration="4204000" />
       <workItem from="1666316016307" duration="20473000" />
-      <workItem from="1666574322195" duration="14180000" />
+      <workItem from="1666574322195" duration="14357000" />
+      <workItem from="1666608971537" duration="5427000" />
     </task>
     <servers />
   </component>
