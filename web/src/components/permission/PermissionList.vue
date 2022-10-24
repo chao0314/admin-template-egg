@@ -80,7 +80,16 @@
                @confirm="handleConfirmPermission"
   >
     <template #default="{form}">
-      <el-form-item :label="locale.requestMethod">
+      <el-form-item :label="locale.permissionParent" prop="pid"
+                    :rules="[{required:true,message:locale.required}]">
+        <el-select v-model="form.pid">
+          <el-option v-for="option in parentOptionsRef"
+                     :key="option.label"
+                     :label="option.label"
+                     :value="option.value"/>
+        </el-select>
+      </el-form-item>
+      <el-form-item :label="locale.requestMethod" prop="method">
         <el-select v-model="form.method" :disabled="form.type !== 'api'">
           <el-option v-for="option in methodOptions"
                      :key="option.label"
@@ -97,14 +106,14 @@
 import TablePagination from '../common/TablePagination.vue';
 import {FormData, TableData} from "@/components/common";
 import FormDialog from '../common/FormDialog.vue';
-import {inject, onMounted, reactive, ref, shallowReactive} from "vue";
+import {inject, onMounted, reactive, ref, shallowReactive, watch} from "vue";
 import type {Locale} from "@/locale/zh-cn";
 import {Delete, Edit} from '@element-plus/icons-vue';
 import {Types} from "@/components/common";
-import {PermissionFilter, PermissionRow, userPermission} from "@/stores/permission";
+import {PermissionFilter, PermissionNode, PermissionRow, userPermission} from "@/stores/permission";
 import {methods} from "@/stores/network";
 
-type Option = { value: string, label: string };
+type Option = { value: string | number, label: string };
 const types = ['danger', 'warning', 'success'];
 const methodOptions: Option[] = methods.map(method => ({value: method, label: method}))
 const locale = inject<Locale>('locale');
@@ -112,19 +121,44 @@ const locale = inject<Locale>('locale');
 const permissionStore = userPermission();
 const filter: PermissionFilter = reactive({page: 1, pageSize: 10})
 const permTypeOptionsRef = ref<Option[]>([]);
+const parentOptionsRef = ref<Option[]>();
 const totalRef = ref<number>(0);
 const permissions = reactive({});
+
+let levelPermissionMap: Map<number, PermissionNode[]>;
+
 
 onMounted(() => {
 
   permissionStore.getPermissionTypesAction({level: 0}).then((data: PermissionRow[]) => {
 
     permTypeOptionsRef.value = data.map(({name, type}) => ({value: type, label: name}));
-    form.items[2].options = permTypeOptionsRef.value;
+    form.items[3].options = permTypeOptionsRef.value;
 
   })
 
   handleQueryPermissions();
+
+  permissionStore.getAllPermissionsAction().then(([, map]) => levelPermissionMap = map);
+
+  const dialogForm = permissionCreateDialogRef.value.form;
+  watch([() => dialogForm.type, () => dialogForm.level], (newVal) => {
+
+    const [type, level] = newVal;
+    const parentPermissions = levelPermissionMap.get(level - 1);
+
+    console.log('watch', type, parentPermissions)
+    if (parentPermissions)
+      parentOptionsRef.value = parentPermissions.filter(item => item.type === type).map(item => ({
+        label: item.label,
+        value: item.id
+
+      }))
+    else parentOptionsRef.value = [];
+
+
+  })
+
 
 })
 
@@ -190,12 +224,12 @@ const handleSwitchChange = (row: PermissionRow) => {
 
 }
 
+
 const form: FormData = reactive({
   rules: {
     name: {required: true, message: locale?.required},
     type: {required: true, message: locale?.required},
-    level: {required: true, message: locale?.required},
-    pid: {required: true, message: locale?.required}
+    level: {required: true, message: locale?.required}
   },
   items: [
     {
@@ -209,6 +243,12 @@ const form: FormData = reactive({
       prop: 'des',
       label: locale?.permissionDes
 
+    },
+    {
+
+      type: Types.input,
+      prop: 'path',
+      label: locale?.permissionPath
     },
     {
       type: Types.select,
@@ -227,28 +267,13 @@ const form: FormData = reactive({
         {label: '二级权限', value: 2},
         {label: '三级权限', value: 3}
       ]
-    },
-    {
-      type: Types.select,
-      prop: 'pid',
-      label: locale?.permissionParent,
-      options: [
-        {label: '一级权限', value: 1},
-        {label: '二级权限', value: 2},
-        {label: '三级权限', value: 3}
-      ]
-    },
-    {
-
-      type: Types.input,
-      prop: 'path',
-      label: locale?.permissionPath
     }
 
 
   ]
 
 })
+
 
 const handleConfirmPermission = (form: PermissionRow) => {
 
@@ -261,23 +286,10 @@ const handleEditPermission = (index: number, row: any) => {
   permissionCreateDialogRef.value.showDialog(row)
 }
 
-const options = [
-  {
-    value: 'Option1',
-    label: 'Option1',
-  },
-  {
-    value: 'Option2',
-    label: 'Option2',
-  },
-  {
-    value: 'Option3',
-    label: 'Option3',
-  }
-]
-
 
 const permissionCreateDialogRef = ref<InstanceType<typeof FormDialog> | null>(null);
+
+
 const handleCreatePermission = () => {
 
   console.log('handle create permission')

@@ -5,12 +5,12 @@ import {filterObj} from "@/utils";
 export type PermissionFilter = Partial<{ type: string, keyword: string, page: number, pageSize: number }>;
 export type PermissionType = { pid: number, name: string, des: string, type: string, level: number, state: number, path?: string, method?: string };
 export type PermissionRow = PermissionType & { id: number };
-export type PermissionNode = { id: number, label: string, children?: PermissionNode[] };
+export type PermissionNode = { id: number, label: string, children?: PermissionNode[], type?: string };
 
 export const userPermission = defineStore('permission', () => {
 
     let permissionTreeCache: PermissionNode[];
-    let permissionTypeDepthMapCache: Map<string, number>;
+    let levelPermissionMapCache: Map<number, PermissionNode[]>;
 
 
     const getPermissionTypesAction = async (payload: { level: number } = {level: 0}): Promise<PermissionRow[]> => {
@@ -43,26 +43,22 @@ export const userPermission = defineStore('permission', () => {
     }
 
 
-    const getAllPermissionsAction = async (lazy = true) => {
+    const getAllPermissionsAction = async (lazy = true): Promise<[PermissionNode[], Map<number, PermissionNode[]>]> => {
 
-        if (lazy && permissionTreeCache && permissionTypeDepthMapCache)
-            return [permissionTreeCache, permissionTypeDepthMapCache];
+        if (lazy && permissionTreeCache && levelPermissionMapCache)
+            return [permissionTreeCache, levelPermissionMapCache];
 
-        const permissions: PermissionRow[] = await instance.get(`/${version}/permissions-all`);
+        const permissions: PermissionRow[] = (await instance.get(`/${version}/permissions-all`)).data;
 
         const permissionTree: PermissionNode[] = [];
-        const levelPermissionMap = new Map<number, PermissionRow[] | PermissionNode[]>();
-        const permissionTypeDepthMap = new Map<string, number>();
+        const levelPermissionMap = new Map<number, (PermissionRow | PermissionNode)[]>();
+
         for (const perm of permissions) {
 
-            const {type, level} = perm;
+            const {level} = perm;
             const levelList = levelPermissionMap.get(level);
             if (levelList) (levelList as PermissionRow[]).push(perm);
             else levelPermissionMap.set(level, [perm]);
-
-            const curLevel = permissionTypeDepthMap.get(type);
-
-            if (!curLevel || (curLevel && curLevel < level)) permissionTypeDepthMap.set(type, level);
 
         }
 
@@ -78,7 +74,8 @@ export const userPermission = defineStore('permission', () => {
                     const nodes = levelPermissions.map((perm) => ({
                         id: perm.id,
                         label: perm.name,
-                        children: []
+                        children: [],
+                        type: perm.type
                     }));
                     levelPermissionMap.set(level, nodes);
                     permissionTree.push(...nodes);
@@ -90,8 +87,12 @@ export const userPermission = defineStore('permission', () => {
 
                         const patentNode = parentLevelNodes.find(parent => parent.id === perm.pid);
 
-                        patentNode && patentNode.children?.push({id: perm.id, label: perm.name, children: []});
-
+                        patentNode && patentNode.children?.push({
+                            id: perm.id,
+                            label: perm.name,
+                            children: [],
+                            type: perm.type
+                        });
 
                     })
 
@@ -104,8 +105,9 @@ export const userPermission = defineStore('permission', () => {
         }
 
         permissionTreeCache = permissionTree;
-        permissionTypeDepthMapCache = permissionTypeDepthMap;
-        return [permissionTree, permissionTypeDepthMap];
+        levelPermissionMapCache = levelPermissionMap as Map<number, PermissionNode[]>;
+
+        return [permissionTreeCache, levelPermissionMapCache];
 
     }
 

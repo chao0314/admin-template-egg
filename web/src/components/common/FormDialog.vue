@@ -31,9 +31,9 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisibleRef = false">{{ locale.cancel }}</el-button>
-        <el-button type="primary" @click="handleConfirm"
-        >{{ locale.confirm }}</el-button
-        >
+        <el-button type="primary" @click="handleConfirm">
+          {{ locale.confirm }}
+        </el-button>
       </span>
     </template>
   </el-dialog>
@@ -77,7 +77,8 @@ const handleConfirm = () => {
 
 defineExpose<{
 
-  showDialog(initData?: Record<string, any>): void
+  showDialog(initData?: Record<string, any>): void,
+  form: Record<string, any>
 
 }>({
   showDialog: (initData?: Record<string, any>) => {
@@ -94,7 +95,8 @@ defineExpose<{
     if (initData && initData.id) form.id = initData.id;
     dialogVisibleRef.value = true;
 
-  }
+  },
+  form
 })
 
 </script>
