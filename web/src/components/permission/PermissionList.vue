@@ -112,6 +112,7 @@ import {Delete, Edit} from '@element-plus/icons-vue';
 import {Types} from "@/components/common";
 import {PermissionFilter, PermissionNode, PermissionRow, userPermission} from "@/stores/permission";
 import {methods} from "@/stores/network";
+import {exclude} from "@/utils";
 
 type Option = { value: string | number, label: string };
 const types = ['danger', 'warning', 'success'];
@@ -123,7 +124,6 @@ const filter: PermissionFilter = reactive({page: 1, pageSize: 10})
 const permTypeOptionsRef = ref<Option[]>([]);
 const parentOptionsRef = ref<Option[]>();
 const totalRef = ref<number>(0);
-const permissions = reactive({});
 
 let levelPermissionMap: Map<number, PermissionNode[]>;
 
@@ -146,8 +146,8 @@ onMounted(() => {
 
     const [type, level] = newVal;
     const parentPermissions = levelPermissionMap.get(level - 1);
+    console.log('watch', type, parentPermissions);
 
-    console.log('watch', type, parentPermissions)
     if (parentPermissions)
       parentOptionsRef.value = parentPermissions.filter(item => item.type === type).map(item => ({
         label: item.label,
@@ -219,7 +219,13 @@ const handleDeletePermission = (index: number, row: PermissionRow) => {
 const handleSwitchChange = (row: PermissionRow) => {
 
   const {id, state} = row;
-  if (id) permissionStore.updatePermissionStateAction({id, state});
+  if (id) {
+    permissionStore.updatePermissionStateAction({
+      id,
+      state
+    }).then(() => permissionStore.getAllPermissionsAction(false).then(([, map]) => levelPermissionMap = map));
+
+  }
 
 }
 
@@ -275,17 +281,31 @@ const form: FormData = reactive({
 
 
 const handleConfirmPermission = (form: PermissionRow) => {
-  console.log('--handle confirm permission--')
-  console.log(form);
-  permissionStore.createPermissionAction(form);
-  handleQueryPermissions();
+
+  const {id} = form;
+
+  if (id) {
+
+    const permissions = tableData.data;
+    const findIndex = permissions.findIndex(perm => perm.id === id);
+    const temp = exclude(form, permissions[findIndex]);
+    permissions[findIndex] = Object.assign(permissions[findIndex], temp);
+    permissionStore.updatePermissionAction(temp);
+    tableData.data = [...permissions];
+
+  } else {
+
+    permissionStore.createPermissionAction(form);
+    handleQueryPermissions();
+
+  }
+
+
 }
 
 const handleEditPermission = (index: number, row: PermissionRow) => {
 
-  console.log(row);
-
-  permissionCreateDialogRef.value.showDialog(row)
+  permissionCreateDialogRef.value.showDialog(row, {pid: row.pid, method: row.method});
 }
 
 

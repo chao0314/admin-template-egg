@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8d274c5b-0fea-4388-887a-12074aeced64" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/model/permission.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/model/permission.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/components/permission/PermissionList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/permission/PermissionList.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/stores/permission.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/stores/permission.ts" afterDir="false" />
-    </list>
+    <list default="true" id="8d274c5b-0fea-4388-887a-12074aeced64" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,6 +15,7 @@
         <option value="HTML File" />
         <option value=" Vue TS Setup" />
         <option value="TypeScript File" />
+        <option value="Vue TS Setup" />
       </list>
     </option>
   </component>
@@ -39,19 +35,13 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "E:/workspace/admin-template-egg/server",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
+    "last_opened_file_path": "/Users/wzc/WebstormProjects/admin-template-egg",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "editor.preferences.completion",
-    "ts.external.directory.path": "E:\\workspace\\admin-template-egg\\server\\node_modules\\typescript\\lib",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "ts.external.directory.path": "/Users/wzc/WebstormProjects/admin-template-egg/web/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -117,6 +107,11 @@
       <workItem from="1666316016307" duration="20473000" />
       <workItem from="1666574322195" duration="14357000" />
       <workItem from="1666608971537" duration="5427000" />
+      <workItem from="1666666490711" duration="182000" />
+      <workItem from="1666667370831" duration="81000" />
+      <workItem from="1666667473151" duration="374000" />
+      <workItem from="1666667985839" duration="16000" />
+      <workItem from="1666668033694" duration="8830000" />
     </task>
     <servers />
   </component>

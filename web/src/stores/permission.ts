@@ -55,10 +55,14 @@ export const userPermission = defineStore('permission', () => {
 
         for (const perm of permissions) {
 
-            const {level} = perm;
-            const levelList = levelPermissionMap.get(level);
-            if (levelList) (levelList as PermissionRow[]).push(perm);
-            else levelPermissionMap.set(level, [perm]);
+            const {level, state} = perm;
+            // 过滤掉 禁用的权限
+            if (state !== 0) {
+                const levelList = levelPermissionMap.get(level);
+                if (levelList) (levelList as PermissionRow[]).push(perm);
+                else levelPermissionMap.set(level, [perm]);
+            }
+
 
         }
 
@@ -106,10 +110,9 @@ export const userPermission = defineStore('permission', () => {
 
 
         }
-
+        console.log(permissionTree)
         permissionTreeCache = permissionTree;
         levelPermissionMapCache = levelPermissionMap as Map<number, PermissionNode[]>;
-
         return [permissionTreeCache, levelPermissionMapCache];
 
     }
@@ -121,12 +124,19 @@ export const userPermission = defineStore('permission', () => {
 
     }
 
+    const updatePermissionAction = async (payload: Partial<PermissionRow>) => {
+
+        return instance.put(`/${version}/permission`, payload);
+
+    }
+
     return {
         getPermissionTypesAction,
         getPermissionsAction,
         deletePermissionAction,
         updatePermissionStateAction,
         getAllPermissionsAction,
-        createPermissionAction
+        createPermissionAction,
+        updatePermissionAction
     }
 })

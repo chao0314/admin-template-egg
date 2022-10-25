@@ -1,5 +1,5 @@
 // 把obj中的值与 obj2值比较，不同的保留，白名单中的保留
-import {componentSizeMap} from "element-plus";
+
 
 export const exclude = (obj: Record<string, any>, obj2: Record<string, any>, whiteKeys = ['id']) => {
 

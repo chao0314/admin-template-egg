@@ -84,7 +84,6 @@ export default function (ctx: Context) {
 
             if (keyword) {
                 sqlFragments.push(`(permiss_name LIKE '%${keyword}%' OR permiss_des LIKE '%${keyword}%')`);
-                values.push(keyword, keyword);
             }
             // const sql = `${queryPermissionSqlFragment} ${sqlFragments.length > 0 ? 'WHERE' : ''} ${sqlFragments.join('AND')} ORDER BY permissions.id DESC LIMIT ? OFFSET ?;`;
             const sql = `${queryPermissionSqlFragment} ${sqlFragments.length > 0 ? 'WHERE' : ''} ${sqlFragments.join('AND')}  LIMIT ? OFFSET ?;`;

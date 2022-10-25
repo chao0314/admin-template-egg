@@ -49,6 +49,7 @@ declare module '@vue/runtime-core' {
     IconEcosystem: typeof import('./src/components/icons/IconEcosystem.vue')['default']
     IconSupport: typeof import('./src/components/icons/IconSupport.vue')['default']
     IconTooling: typeof import('./src/components/icons/IconTooling.vue')['default']
+    Name: typeof import('./src/components/common/name.vue')['default']
     PermissionIndex: typeof import('./src/components/permission/PermissionIndex.vue')['default']
     PermissionList: typeof import('./src/components/permission/PermissionList.vue')['default']
     PermissionRole: typeof import('./src/components/permission/PermissionRole.vue')['default']

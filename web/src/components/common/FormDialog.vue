@@ -81,7 +81,7 @@ defineExpose<{
   form: Record<string, any>
 
 }>({
-  showDialog: (initData?: Record<string, any>,slotPatch?:Record<string, any>) => {
+  showDialog: (initData?: Record<string, any>, slotPatch?: Record<string, any>) => {
 
 
     if (initData) mode.value = Mode.edit;
@@ -93,6 +93,9 @@ defineExpose<{
 
     });
     if (initData && initData.id) form.id = initData.id;
+
+    if (slotPatch) Object.keys(slotPatch).forEach(key => form[key] = slotPatch[key]);
+
     dialogVisibleRef.value = true;
 
   },
