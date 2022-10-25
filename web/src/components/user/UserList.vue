@@ -244,7 +244,7 @@ const rolesData: FormData = reactive({
 let currentUser: UserRow;
 onMounted(() => {
 
-  roleStore.getRoles().then(roles => {
+  roleStore.getRolesAction().then(({list: roles}) => {
 
     roleOptions.value = roles.map(({id, name}) => ({value: id, label: name}));
 

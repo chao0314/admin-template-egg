@@ -44,10 +44,10 @@ export default class Role extends Controller {
     async deleteRole() {
 
         const {ctx, service} = this;
-        const {id} = ctx.request.body;
-
-        if (!id) return ctx.badRequest(`id ${id}`);
-        await service.role.deleteRole({id});
+        const {id} = ctx.request.query;
+        const numObj = validateNumberObj({id});
+        if (numObj instanceof Error) return ctx.badRequest(numObj.message);
+        await service.role.deleteRole({id: Number(id)});
         ctx.success();
 
     }
