@@ -246,7 +246,7 @@ onMounted(() => {
 
   roleStore.getRolesAction().then(({list: roles}) => {
 
-    roleOptions.value = roles.map(({id, name}) => ({value: id, label: name}));
+    roleOptions.value = roles.filter((role => role.state === 1)).map(({id, name}) => ({value: id, label: name}));
 
     rolesData.items[0].options = roleOptions.value
 

@@ -7,7 +7,7 @@ export default function (ctx: Context) {
     const {app, helper} = ctx;
     const pool = app.mysql2;
 
-    const updateRoleSql = `UPDATE roles SET role_name = ?,role_des = ? WHERE id = ?;`;
+    // const updateRoleSql = `UPDATE roles SET role_name = ?,role_des = ? WHERE id = ?;`;
     const updateRoleStateSql = `UPDATE roles SET role_state = ? WHERE id = ?;`;
     const delRoleSql = `DELETE FROM roles WHERE id = ?;`;
     const queryFoundRows = `SELECT FOUND_ROWS() AS total;`;
@@ -53,8 +53,9 @@ export default function (ctx: Context) {
         async updateRole(payload: { id: number, name: string, des: string }) {
 
             const {id, name, des} = payload;
+            const execution = helper.genUpdateExecution('roles', {id, role_name: name, role_des: des});
 
-            return pool.execute(updateRoleSql, [name, des, id]);
+            return pool.execute(...execution);
 
         },
 
@@ -77,11 +78,10 @@ export default function (ctx: Context) {
 
             const {keyword, page = 1, pageSize = 10} = payload;
 
-            const sqlFragment = keyword ? `WHERE role_name LIKE '%?%' OR role_des LIKE '%?%';` : '';
-            const values = keyword ? [keyword, keyword, `${pageSize}`, `${(page - 1) * pageSize}`] : [`${pageSize}`, `${(page - 1) * pageSize}`];
+            const sqlFragment = keyword ? `WHERE role_name LIKE '%${keyword}%' OR role_des LIKE '%${keyword}%'` : '';
 
             let sql = `SELECT SQL_CALC_FOUND_ROWS
-                            id, role_name AS name, role_des AS des
+                            id, role_name AS name, role_des AS des,role_state AS state
                         FROM
                             roles
                             
@@ -89,7 +89,7 @@ export default function (ctx: Context) {
                        
                         LIMIT ? OFFSET ?;`;
 
-            const [list] = await pool.execute<Rows<RoleRow>>(sql, values);
+            const [list] = await pool.execute<Rows<RoleRow>>(sql, [`${pageSize}`, `${(page - 1) * pageSize}`]);
 
             const [[{total}]] = await pool.execute<Rows<{ total: number }>>(queryFoundRows);
 

@@ -2,6 +2,7 @@ export const numberReg = /^\d+$/;
 
 export const validateNumberObj = (obj: Record<string, any>) => {
 
+
     const result: Record<string, number> = {}
     const entries = Object.entries(obj);
 
@@ -15,7 +16,7 @@ export const validateNumberObj = (obj: Record<string, any>) => {
         }
     }
 
-    return result;
+    return result
 
 }
 

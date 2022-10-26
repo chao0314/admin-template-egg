@@ -7,7 +7,7 @@ export type PermissionType = { pid: number, name: string, des: string, type: str
 export type PermissionRow = PermissionType & { id: number };
 export type PermissionNode = { id: number, label: string, children?: PermissionNode[], type?: string };
 export type Permission = { pid: number, name: string, des: string, type: string, level: number, path?: string, method?: string };
-export const userPermission = defineStore('permission', () => {
+export const usePermission = defineStore('permission', () => {
 
     let permissionTreeCache: PermissionNode[];
     let levelPermissionMapCache: Map<number, PermissionNode[]>;
@@ -78,7 +78,6 @@ export const userPermission = defineStore('permission', () => {
                     const nodes = levelPermissions.map((perm) => ({
                         id: perm.id,
                         label: perm.name,
-                        children: [],
                         type: perm.type
                     }));
                     levelPermissionMap.set(level, nodes);
@@ -93,10 +92,14 @@ export const userPermission = defineStore('permission', () => {
                         const node: PermissionNode = {
                             id: perm.id,
                             label: perm.name,
-                            children: [],
                             type: perm.type
                         }
-                        parentNode && parentNode.children?.push(node);
+                        if (parentNode) {
+
+                            if (parentNode.children === undefined) parentNode.children = [];
+                            parentNode.children.push(node);
+
+                        }
                         levelNodes.push(node);
 
                     })
@@ -110,7 +113,7 @@ export const userPermission = defineStore('permission', () => {
 
 
         }
-        console.log(permissionTree)
+        // console.log(permissionTree)
         permissionTreeCache = permissionTree;
         levelPermissionMapCache = levelPermissionMap as Map<number, PermissionNode[]>;
         return [permissionTreeCache, levelPermissionMapCache];

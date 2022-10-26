@@ -1,6 +1,6 @@
 <template>
   <table-pagination :table-data="tableData"
-                    :total="100"
+                    :total="totalRef"
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
   >
@@ -8,10 +8,10 @@
       <el-row :gutter="2"
               class="permission-role__header">
         <el-col :span="16">
-          <el-input v-model="input" :placeholder="locale.keyword" clearable/>
+          <el-input v-model="filter.keyword" :placeholder="locale.keyword" clearable/>
         </el-col>
         <el-col :span="1">
-          <el-button type="primary">{{ locale.query }}</el-button>
+          <el-button type="primary" @click="handleQueryRoles">{{ locale.query }}</el-button>
         </el-col>
         <el-col :span="1" :offset="6">
           <el-button type="primary" @click="handleCreateUser">{{ locale.create }}</el-button>
@@ -22,13 +22,16 @@
       <el-switch
           v-model="scope.row.state"
           style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+          :inactive-value="0"
+          :active-value="1"
+          @change="handleStateChange(scope.row)"
       />
     </template>
     <template #operation="scope">
-      <el-tooltip
-          effect="dark"
-          :content="locale.edit"
-          placement="top"
+      <el-tooltip v-if="scope.row.operation.includes('edit')"
+                  effect="dark"
+                  :content="locale.edit"
+                  placement="top"
       >
         <el-button type="primary"
                    @click="handleEdit(scope.$index,scope.row)"
@@ -38,26 +41,26 @@
           </el-icon>
         </el-button>
       </el-tooltip>
-      <el-tooltip
-          effect="dark"
-          :content="locale.del"
-          placement="top"
+      <el-tooltip v-if="scope.row.operation.includes('del')"
+                  effect="dark"
+                  :content="locale.del"
+                  placement="top"
       >
         <el-button type="danger"
-                   @click="handleDel"
+                   @click="handleDelete(scope.row)"
         >
           <el-icon>
             <Delete></Delete>
           </el-icon>
         </el-button>
       </el-tooltip>
-      <el-tooltip
-          effect="dark"
-          :content="locale.permissionRoleSetting"
-          placement="top"
+      <el-tooltip v-if="scope.row.operation.includes('setting')"
+                  effect="dark"
+                  :content="locale.permissionRoleSetting"
+                  placement="top"
       >
         <el-button type="warning"
-                   @click="handleSetting"
+                   @click="handleSetting(scope.row)"
         >
           <el-icon>
             <Setting></Setting>
@@ -66,8 +69,8 @@
       </el-tooltip>
     </template>
   </table-pagination>
-  <form-dialog :form-data="formData" ref="formDialogRef"></form-dialog>
-  <tree-dialog :data="data" ref="treeDialogRef" :title="locale.permissionRoleSetting"
+  <form-dialog :form-data="formData" ref="formDialogRef" @confirm="handleRoleConfirm"></form-dialog>
+  <tree-dialog :data="permissionTree" ref="treeDialogRef" :title="locale.permissionRoleSetting"
                @confirm="handlePermissionConfirm"
 
   ></tree-dialog>
@@ -78,20 +81,26 @@ import TablePagination from '../common/TablePagination.vue';
 import {FormData, TableData, CheckedNode} from "@/components/common";
 import TreeDialog from '../common/TreeDialog.vue';
 import FormDialog from '../common/FormDialog.vue';
-import {inject, ref} from "vue";
+import {inject, onMounted, reactive, ref} from "vue";
 import type {Locale} from "@/locale/zh-cn";
 import {Delete, Edit, Setting} from '@element-plus/icons-vue';
 import {Types} from "@/components/common";
+import type {RoleFilter, Role} from "@/stores/role";
+import {useRole} from "@/stores/role";
+import {exclude, filterObj} from "@/utils";
+import type {PermissionNode} from "@/stores/permission";
+import {usePermission} from "@/stores/permission";
 // const props = withDefaults(defineProps<{}>(), {})
 const locale = inject<Locale>('locale');
-const input = ref('');
-const tableData: TableData = {
+const roleStore = useRole();
+const permissionStore = usePermission();
+const tableData: TableData = reactive({
   showIndex: true,
   columns: [{
-    prop: 'roleName',
+    prop: 'name',
     label: locale?.roleName
   }, {
-    prop: 'roleDes',
+    prop: 'des',
     label: locale?.roleDes
   }, {
     prop: 'state',
@@ -102,41 +111,19 @@ const tableData: TableData = {
     label: locale?.operation,
     slotName: 'operation'
   }],
-  data: [
-    {
-      roleName: 'role name',
-      roleDes: 'role des',
-      state: 'sate',
-      operation: 'del edit'
+  data: []
 
-    },
-    {
-      roleName: 'role name',
-      roleDes: 'role des',
-      state: true,
-      operation: 'del edit'
-
-    },
-    {
-      roleName: 'role name',
-      roleDes: 'role des',
-      state: 'sate',
-      operation: 'del edit'
-
-    }
-  ]
-
-}
+})
 const formData: FormData = {
   items: [
     {
       type: Types.input,
-      prop: 'roleName',
+      prop: 'name',
       label: locale?.roleName
     }, {
 
       type: Types.input,
-      prop: 'roleDes',
+      prop: 'des',
       label: locale?.roleDes
     }
 
@@ -145,90 +132,125 @@ const formData: FormData = {
 
 const formDialogRef = ref<InstanceType<typeof FormDialog> | null>(null);
 const treeDialogRef = ref<InstanceType<typeof TreeDialog> | null>(null);
-const handleSizeChange = (size: number) => {
 
-  console.log('size change', size);
+const filter = reactive<RoleFilter>({});
+const totalRef = ref<number>(0);
+const permissionTree = ref<PermissionNode[]>([]);
+let permissionCheckedNodes: number[] = [];
+let currentRole: Role;
+onMounted(() => {
+
+  handleQueryRoles();
+
+  permissionStore.getAllPermissionsAction().then(([tree]) => permissionTree.value = tree);
+
+
+})
+
+const handleQueryRoles = () => {
+
+  roleStore.getRolesAction(filterObj(filter)).then(({total, list}) => {
+
+    totalRef.value = total;
+    tableData.data = list.map(item => ({
+      operation: ['edit', 'del', 'setting'],
+      ...item
+    }))
+
+  })
+
 }
+const handleSizeChange = (size: number) => filter.pageSize = size;
+
 const handleCurrentChange = (current: number) => {
-  console.log('current change', current);
+  filter.page = current;
+  handleQueryRoles();
 }
 
-const handleCreateUser = () => {
-  console.log('handle create user');
-  formDialogRef.value.showDialog();
+const handleCreateUser = () => formDialogRef.value.showDialog();
+
+
+const handleEdit = (index: number, row: Role) => {
+
+  formDialogRef.value.showDialog(row);
 }
 
-const handleEdit = (index: number, row: any) => {
+const handleRoleConfirm = (payload: { id?: number, name: string, des: string }) => {
 
-  formDialogRef.value.showDialog(row)
+  const {id} = payload;
+
+  if (id) {
+
+    const roles = tableData.data;
+
+    const index = roles.findIndex(role => role.id === id);
+
+    const temp = exclude(payload, roles[index]);
+
+    roleStore.updateRoleAction(temp).then(() => {
+
+      roles[index] = {...roles[index], ...temp};
+
+      tableData.data = [...roles];
+    })
+
+
+  } else {
+
+    roleStore.createRoleAction(payload).then(handleQueryRoles);
+
+  }
+
+
 }
-const handleDel = () => {
+
+const handleStateChange = (row: Role) => {
+
+  const {id, state} = row;
+
+  if (id && state !== undefined) roleStore.updateRoleStateAction({id, state});
 
 }
 
-const handleSetting = () => {
+const handleDelete = (row: Role) => {
 
+  const {id} = row;
 
-  treeDialogRef.value.showDialog(checkedNodes);
+  if (id) roleStore.deleteRoleAction({id}).then(handleQueryRoles);
+}
+
+const handleSetting = (row: Role) => {
+
+  const {id} = row;
+  if (id) {
+    currentRole = row;
+    roleStore.getRolePermissionsAction({id}).then(permissions => {
+      permissionCheckedNodes = [];
+      permissions.forEach(({id}) => {
+
+        permissionCheckedNodes.push(id)
+      });
+
+      treeDialogRef.value.showDialog(permissionCheckedNodes);
+    });
+
+  }
 
 }
 
 const handlePermissionConfirm = (permissions: CheckedNode[]) => {
 
-  console.log('permission', permissions)
+  const {id} = currentRole;
+  if (id) {
+
+    const permissIdList = permissions.map(({id}) => id);
+
+    roleStore.updateRolePermissionsAction({id, permissIdList});
+
+  }
 }
 
-const checkedNodes = [5, 9];
-const data = [
-  {
-    id: 1,
-    label: 'Level one 1',
-    children: [
-      {
-        id: 4,
-        label: 'Level two 1-1',
-        children: [
-          {
-            id: 9,
-            label: 'Level three 1-1-1',
-          },
-          {
-            id: 10,
-            label: 'Level three 1-1-2',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 2,
-    label: 'Level one 2',
-    children: [
-      {
-        id: 5,
-        label: 'Level two 2-1',
-      },
-      {
-        id: 6,
-        label: 'Level two 2-2',
-      },
-    ],
-  },
-  {
-    id: 3,
-    label: 'Level one 3',
-    children: [
-      {
-        id: 7,
-        label: 'Level two 3-1',
-      },
-      {
-        id: 8,
-        label: 'Level two 3-2',
-      },
-    ],
-  },
-]
+
 </script>
 
 <style scoped>

@@ -1,16 +1,17 @@
 <template>
   <el-dialog width="30%" top="10vh"
              v-model="dialogVisibleRef"
+             destroy-on-close
              :title="props.title">
 
 
     <el-tree
         ref="treeRef"
-        :data="data"
         show-checkbox
         default-expand-all
         node-key="id"
         highlight-current
+        :data="data"
         :props="defaultProps"
         :default-checked-keys="defaultCheckedKeys"
     />
@@ -33,7 +34,7 @@ import type {Locale} from "@/locale/zh-cn";
 //@ts-ignore
 import {ElTree} from 'element-plus';
 import type Node from 'element-plus/es/components/tree/src/model/node'
-import {TreeNode,CheckedNode} from "@/components/common/index";
+import {TreeNode, CheckedNode} from "@/components/common/index";
 
 
 const props = withDefaults(defineProps<{
@@ -58,22 +59,22 @@ const getCheckedNodes = () => {
   return treeRef.value!.getCheckedNodes(false, false);
 }
 
-const setCheckedNodes = (nodes: CheckedNode[]) => {
-  treeRef.value!.setCheckedNodes(nodes as Node[], false);
-}
-const setCheckedKeys = () => {
-  treeRef.value!.setCheckedKeys([3], false)
-}
-const getCheckedKeys = () => {
-  console.log(treeRef.value!.getCheckedKeys(false))
-}
-const resetChecked = () => {
-  treeRef.value!.setCheckedKeys([], false)
-}
+// const setCheckedNodes = (nodes: CheckedNode[]) => {
+//   treeRef.value!.setCheckedNodes(nodes as Node[], false);
+// }
+// const setCheckedKeys = () => {
+//   treeRef.value!.setCheckedKeys([3], false)
+// }
+// const getCheckedKeys = () => {
+//   console.log(treeRef.value!.getCheckedKeys(false))
+// }
+// const resetChecked = () => {
+//   treeRef.value!.setCheckedKeys([], false)
+// }
 
 const defaultProps = {
   children: 'children',
-  label: 'label',
+  label: 'label'
 }
 
 
@@ -85,11 +86,11 @@ const handleConfirm = () => {
 
 }
 defineExpose<{ showDialog: (checkedKeys?: number[] | string[]) => void }>({
+
   showDialog(checkedKeys?: number[] | string[]) {
 
     defaultCheckedKeys.value = checkedKeys ?? [];
     dialogVisibleRef.value = true;
-
 
   }
 
@@ -100,4 +101,11 @@ defineExpose<{ showDialog: (checkedKeys?: number[] | string[]) => void }>({
 
 <style scoped>
 
+</style>
+
+<style>
+.is-leaf > svg {
+
+  display: none;
+}
 </style>

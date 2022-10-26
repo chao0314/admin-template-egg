@@ -2,7 +2,7 @@ import {Controller} from 'egg';
 // import {emailDes, phoneDes, usernameDes, passwordDes, ValidateError} from "../descriptor";
 // import {Locale} from "../../config/locale";
 import {RoleRow, PermissionRow} from "../model/role";
-import {validateNumberObj, validateStringObj} from "../descriptor/regexp";
+import { validateNumberObj, validateStringObj} from "../descriptor/regexp";
 
 export default class Role extends Controller {
 
@@ -47,7 +47,7 @@ export default class Role extends Controller {
         const {id} = ctx.request.query;
         const numObj = validateNumberObj({id});
         if (numObj instanceof Error) return ctx.badRequest(numObj.message);
-        await service.role.deleteRole({id: Number(id)});
+        await service.role.deleteRole(numObj as { id: number });
         ctx.success();
 
     }
@@ -91,11 +91,12 @@ export default class Role extends Controller {
 
         const {ctx, service} = this;
 
-        const {id} = ctx.request.body;
+        const {id} = ctx.request.query;
 
-        if (!id) return ctx.badRequest(`id ${id}`);
+        const numObj = validateNumberObj({id});
+        if (numObj instanceof Error) return ctx.badRequest(numObj.message);
 
-        const permissionList: PermissionRow[] = await service.role.queryRolePermissionList({id});
+        const permissionList: PermissionRow[] = await service.role.queryRolePermissionList(numObj as {id:number});
 
         ctx.success(permissionList);
 

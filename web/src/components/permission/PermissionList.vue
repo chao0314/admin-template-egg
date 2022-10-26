@@ -110,7 +110,7 @@ import {inject, onMounted, reactive, ref, shallowReactive, watch} from "vue";
 import type {Locale} from "@/locale/zh-cn";
 import {Delete, Edit} from '@element-plus/icons-vue';
 import {Types} from "@/components/common";
-import {PermissionFilter, PermissionNode, PermissionRow, userPermission} from "@/stores/permission";
+import {PermissionFilter, PermissionNode, PermissionRow, usePermission} from "@/stores/permission";
 import {methods} from "@/stores/network";
 import {exclude} from "@/utils";
 
@@ -119,7 +119,7 @@ const types = ['danger', 'warning', 'success'];
 const methodOptions: Option[] = methods.map(method => ({value: method, label: method}))
 const locale = inject<Locale>('locale');
 // const props = withDefaults(defineProps<{}>(), {})
-const permissionStore = userPermission();
+const permissionStore = usePermission();
 const filter: PermissionFilter = reactive({page: 1, pageSize: 10})
 const permTypeOptionsRef = ref<Option[]>([]);
 const parentOptionsRef = ref<Option[]>();

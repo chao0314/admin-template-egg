@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8d274c5b-0fea-4388-887a-12074aeced64" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/controller/role.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/controller/role.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/components.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/components.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/components/user/UserList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/user/UserList.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/stores/role.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/stores/role.ts" afterDir="false" />
-    </list>
+    <list default="true" id="8d274c5b-0fea-4388-887a-12074aeced64" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -44,15 +38,16 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/Users/wzc/WebstormProjects/admin-template-egg",
+    "last_opened_file_path": "/Users/wzc/WebstormProjects/admin-template-egg/web/src/components/common",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "preferences.lookFeel",
-    "ts.external.directory.path": "E:\\workspace\\admin-template-egg\\web\\node_modules\\typescript\\lib",
+    "ts.external.directory.path": "/Users/wzc/WebstormProjects/admin-template-egg/web/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/web/src/components/common" />
       <recent name="E:\workspace\admin-template-egg\server" />
       <recent name="E:\workspace\admin-template-egg\server\app" />
       <recent name="E:\workspace\admin-template-egg\server\app\model" />
