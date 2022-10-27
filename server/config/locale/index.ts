@@ -19,6 +19,11 @@ export const enum Locale {
     serverInternalError = 'serverInternalError',
     badRequest = 'badRequest',
     unauthorized = 'unauthorized',
-    forbidden = 'Forbidden'
+    forbidden = 'Forbidden',
+    username = 'username',
+    email = 'email',
+    phone = 'phone',
+    state = 'state',
+    roles = 'roles'
 
 }

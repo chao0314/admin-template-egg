@@ -27,7 +27,7 @@ export default (app: Application) => {
     router.get(`/${apiVersion}/user-permiss`, user.queryUserPermissionList);
     router.post(`/${apiVersion}/user-role`, user.createUserRole);
     router.delete(`/${apiVersion}/user-role`, user.delUserRole);
-
+    router.get(`/${apiVersion}/users-xlsx`,user.exportUsersXlsxFile);
 
     router.get(`/${apiVersion}/roles`, role.queryRoleList);
     router.post(`/${apiVersion}/role`, role.createRole);

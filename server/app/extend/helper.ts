@@ -94,13 +94,14 @@ export default {
 
     async genXlsxFile(columns: { label: string, value: string }[], rows: any[][]) {
 
-        const workbook = new ExcelJS.workbook();
+        const workbook = new ExcelJS.Workbook();
         const sheet = workbook.addWorksheet('sheet');
         sheet.columns = columns.map(({label, value}) => ({header: label, key: value}));
         sheet.addRows(rows);
-        const filename =  `${uuidv4().slice(-8)}`
-        await workbook.xlsx.writeFile(filename);
-
+        const filename = `${Date.now()}.xlsx`;
+        const filePath  = path.join(__dirname, `../public/excels/${filename}`)
+        await workbook.xlsx.writeFile(filePath);
+        return {filename,filePath};
     }
 
 }

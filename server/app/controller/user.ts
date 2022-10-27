@@ -134,31 +134,29 @@ export default class User extends Controller {
 
     }
 
-    async exportUsersFile(){
+    async exportUsersXlsxFile() {
 
-        const {ctx} =  this;
+        const {ctx} = this;
 
         await this.queryUserList();
 
-        const data =  ctx.body;
+        const data = ctx.body;
 
-        if(data&&data.list){
+        if (data && data.list && data.list.length > 0) {
 
-            const users:UserRow[]= data.list;
+            const users: UserRow[] = data.list;
 
+            const res = await ctx.service.base.genXlsxFile<UserRow>(users);
 
+            res && ctx.redirect(`/public/excels/${res.filename}`);
 
         }
-
-
-
-
 
 
     }
 
 
-    async importUsersFile(){
+    async importUsersFile() {
 
 
     }
