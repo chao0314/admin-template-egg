@@ -2,6 +2,9 @@ import {v4 as uuidv4} from 'uuid';
 import {createHash} from "crypto";
 import jwt from 'jsonwebtoken';
 import {readFileSync} from 'fs';
+import ExcelJS from 'exceljs';
+import path from 'path';
+
 
 const secret = readFileSync('secret.key');
 
@@ -86,6 +89,17 @@ export default {
 
         if (Array.isArray(token)) token = token.join('');
         return jwt.verify(token, secret);
+
+    },
+
+    async genXlsxFile(columns: { label: string, value: string }[], rows: any[][]) {
+
+        const workbook = new ExcelJS.workbook();
+        const sheet = workbook.addWorksheet('sheet');
+        sheet.columns = columns.map(({label, value}) => ({header: label, key: value}));
+        sheet.addRows(rows);
+        const filename =  `${uuidv4().slice(-8)}`
+        await workbook.xlsx.writeFile(filename);
 
     }
 

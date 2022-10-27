@@ -28,6 +28,7 @@ export default (app: Application) => {
     router.post(`/${apiVersion}/user-role`, user.createUserRole);
     router.delete(`/${apiVersion}/user-role`, user.delUserRole);
 
+
     router.get(`/${apiVersion}/roles`, role.queryRoleList);
     router.post(`/${apiVersion}/role`, role.createRole);
     router.put(`/${apiVersion}/role`, role.updateRole);

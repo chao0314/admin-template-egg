@@ -133,4 +133,33 @@ export default class User extends Controller {
         ctx.success(permissionList);
 
     }
+
+    async exportUsersFile(){
+
+        const {ctx} =  this;
+
+        await this.queryUserList();
+
+        const data =  ctx.body;
+
+        if(data&&data.list){
+
+            const users:UserRow[]= data.list;
+
+
+
+        }
+
+
+
+
+
+
+    }
+
+
+    async importUsersFile(){
+
+
+    }
 }
