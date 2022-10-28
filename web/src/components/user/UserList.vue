@@ -43,7 +43,9 @@
           <el-button type="primary">{{ locale.query }}</el-button>
         </el-col>
         <el-col :span="3">
-          <el-button type="primary">{{ locale.exportSearchResult }}</el-button>
+          <el-button type="primary" @click="handleExportResult">
+            {{ locale.exportSearchResult }}
+          </el-button>
         </el-col>
         <el-col :span="2" :offset="1">
           <el-button type="primary"
@@ -131,7 +133,10 @@
   <el-button>前端导出</el-button>
   <el-button>前端导入</el-button>
   <form-dialog :form-data="userData" ref="createUserDialogRef" @confirm="handleConfirmUser"></form-dialog>
-  <upload-file-dialog ref="importDialogRef"></upload-file-dialog>
+  <upload-file-dialog ref="importDialogRef"
+                      file-types="xlsx"
+                      :action="uploadAction"
+  ></upload-file-dialog>
   <form-dialog :form-data="rolesData" ref="setRoleDialogRef" @confirm="handleConfirmRole"></form-dialog>
 </template>
 
@@ -145,8 +150,9 @@ import {Edit, Lock, Message, Phone, Setting, User} from '@element-plus/icons-vue
 import type {Locale} from "@/locale/zh-cn";
 import useRules from "@/rules";
 import {useUser, UserRow, UserInfo, UserFilter} from "@/stores/user";
-import {exclude} from "@/utils";
+import {downloadFile, exclude} from "@/utils";
 import {useRole} from "@/stores/role";
+import {baseURL,version} from "@/stores/network";
 
 
 type UserWithOperation = UserRow & { operation: ['edit', 'del', 'setting'] };
@@ -242,6 +248,7 @@ const rolesData: FormData = reactive({
   ]
 
 })
+const uploadAction:string = `${baseURL}/${version}/users-result`;
 
 let currentUser: UserRow;
 onMounted(() => {
@@ -262,7 +269,7 @@ onMounted(() => {
 const handleQueryUsers = () => {
 
 
-  userStore.getUsersAction(toRaw(filter)).then((data) => {
+  userStore.getUsersAction(Object.assign({}, filter)).then((data) => {
 
     const {total, list} = data;
     const users: UserWithOperation[] = list.map(item => ({
@@ -303,7 +310,6 @@ const handleConfirmUser = (form: UserInfo) => {
 
 }
 
-
 const handleSwitchChange = (row: UserRow) => {
 
   const {id, state} = row;
@@ -324,7 +330,6 @@ const handleCurrentChange = (val: number) => {
   handleQueryUsers();
 }
 
-
 const handleEdit = (index: number, row: UserInfo) => {
   // console.log(index, row)
   createUserDialogRef.value?.showDialog(row);
@@ -338,8 +343,6 @@ const handleDelete = (index: number, row: UserInfo) => {
   if (id) userStore.deleteUserAction({id}).then(() => handleQueryUsers());
 
 }
-
-
 const handleDelRole = (row: UserRow, tag: { roleId: number, roleName: string }) => {
 
   const {id} = row;
@@ -357,8 +360,6 @@ const handleDelRole = (row: UserRow, tag: { roleId: number, roleName: string }) 
 
 
 }
-
-
 const handleSettings = (index: number, row: UserRow) => {
 
   currentUser = row;
@@ -387,6 +388,12 @@ const handleConfirmRole = (form: { role: number }) => {
 
   })
 
+
+}
+
+const handleExportResult = () => {
+
+  userStore.exportUsersResultAction(Object.assign({}, filter)).then(data => downloadFile(data as any));
 
 }
 const importDialogRef = ref<InstanceType<typeof UploadFileDialog> | null>(null);

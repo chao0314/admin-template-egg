@@ -59,6 +59,13 @@ export const useUser = defineStore('user', () => {
     }
 
 
+    const exportUsersResultAction = async (payload: UserFilter) => {
+
+        const query = createQuery(payload);
+
+        return instance.get(`/${version}/users-result?${query}`, {responseType: 'blob'});
+    }
+
     return {
 
         getUsersAction,
@@ -67,7 +74,8 @@ export const useUser = defineStore('user', () => {
         deleteUserAction,
         updateUserStateAction,
         deleteUserRoleAction,
-        createUserRoleAction
+        createUserRoleAction,
+        exportUsersResultAction
 
     }
 

@@ -1,21 +1,24 @@
 <template>
-  <el-dialog width="30%"
-             v-model="dialogFormVisible"
+  <el-dialog width="30%" destroy-on-close
+             v-model="dialogFormVisibleRef"
              :title="locale.uploadFile">
     <el-upload
         ref="uploadRef"
         class="file-uploader"
-        action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+        :action="props.action"
         :auto-upload="false"
         :multiple="props.multiple"
+        :headers="headers"
+        :on-success="handleSuccess"
+        :on-error="handleError"
     >
       <template #trigger>
         <el-button type="primary">{{ locale.selectFile }}</el-button>
       </template>
 
-      <el-button class="ml-3" type="success" @click="submitUpload" v-if="false">
-        upload to server
-      </el-button>
+      <!--      <el-button class="ml-3" type="success" @click="submitUpload" v-if="false">-->
+      <!--        upload to server-->
+      <!--      </el-button>-->
 
       <template #tip>
         <div class="el-upload__tip">
@@ -25,36 +28,57 @@
     </el-upload>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ locale.cancel }}</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">{{ locale.confirm }}</el-button>
+        <el-button @click="dialogFormVisibleRef = false">{{ locale.cancel }}</el-button>
+        <el-button type="primary" @click="submitUpload">{{ locale.confirm }}</el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 
 <script setup lang="ts">
+import {ElMessage} from "element-plus";
+
 const props = withDefaults(defineProps<{
+  action: string,
   size?: string,
   fileTypes?: string,
   multiple?: boolean
 }>(), {size: '1M', fileTypes: 'jpg/png', multiple: true})
-import {inject, ref, watch} from 'vue'
+import {inject, ref} from 'vue'
 import type {UploadInstance} from 'element-plus'
 import type {Locale} from "@/locale/zh-cn";
+import {useHomeStore} from "@/stores/home";
 
+const homeStore = useHomeStore();
 const locale = inject<Locale>('locale');
-const dialogFormVisible = ref(false);
-
-
+const dialogFormVisibleRef = ref(false);
+const headers = {Authorization: homeStore.getToken()};
 const uploadRef = ref<UploadInstance>()
 
 
 const submitUpload = () => {
-  uploadRef.value!.submit()
+  uploadRef.value!.submit();
+  // dialogFormVisibleRef.value = false;
 }
 
+const handleSuccess = () => {
+
+  dialogFormVisibleRef.value = false;
+
+}
+
+const handleError = (error: Error) => {
+
+  console.log(error)
+  ElMessage({
+    type: 'error',
+    message: locale?.error,
+    offset: 100
+  })
+
+}
 defineExpose({
-  showDialog: () => dialogFormVisible.value = true
+  showDialog: () => dialogFormVisibleRef.value = true
 
 })
 </script>

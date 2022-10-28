@@ -4,7 +4,7 @@ import {locale} from "@/locale/zh-cn";
 
 export const version = 'v1';
 
-const baseURL = 'http://127.0.0.1:7001';
+export const baseURL = 'http://127.0.0.1:7001';
 
 const instance = axios.create({baseURL});
 

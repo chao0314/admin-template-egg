@@ -136,21 +136,30 @@ export default class User extends Controller {
 
     async exportUsersXlsxFile() {
 
-        const {ctx} = this;
-
-        await this.queryUserList();
-
-        const data = ctx.body;
+        const {ctx, service} = this;
+        const {role, origin, state, keyword} = ctx.request.query;
+        const strObj = validateStringObj({origin, keyword})
+        const numObj = validateNumberObj({role, state});
+        if (numObj instanceof Error) return ctx.badRequest(numObj.message);
+        const data: { list: UserRow[] } = await service.user.queryUserList(
+            {...strObj, ...numObj}
+        );
 
         if (data && data.list && data.list.length > 0) {
 
+            ctx.res.statusCode = 200;
+            ctx.res.setHeader('Content-type', 'application/octet-stream');
             const users: UserRow[] = data.list;
 
-            const res = await ctx.service.base.genXlsxFile<UserRow>(users);
-
-            res && ctx.redirect(`/public/excels/${res.filename}`);
+            await service.base.genXlsxFile(users.map(user => ({
+                ...user,
+                roles: user.roles.map(role => role.roleName)
+            })), ctx.res);
 
         }
+
+
+        // ctx.body = ctx.res;
 
 
     }
@@ -158,6 +167,21 @@ export default class User extends Controller {
 
     async importUsersFile() {
 
+        const {ctx, service} = this;
+        const file = ctx.request.files[0];
+        try {
+            await service.base.genRowsFromXlsxFile(file.filepath);
+        } catch (e) {
+
+            ctx.badRequest(`${file.filename}`);
+
+        } finally {
+
+
+        }
+
+
+        ctx.success();
 
     }
 }

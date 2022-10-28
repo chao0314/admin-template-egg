@@ -9,13 +9,19 @@ export default (appInfo: EggAppInfo) => {
     config.keys = appInfo.name + '_admin_template_egg_123456';
 
     // add your egg config in here
+
+    config.multipart = {
+        mode: 'file',
+        fileExtensions: ['.xlsx']
+    };
+
     config.middleware = ['permission'];
 
     config.security = {
         csrf: {
             enable: false
         }
-    }
+    };
 
     config.cors = {
         origin: (ctx: Context) => {
@@ -29,11 +35,11 @@ export default (appInfo: EggAppInfo) => {
     config.cookies = {
         httpOnly: true,
         sameSite: 'lax'
-    }
+    };
 
     config.i18n = {
         defaultLocale: 'zh-CN'
-    }
+    };
 
     config.mysql2 = {
         client: {
@@ -63,7 +69,7 @@ export default (appInfo: EggAppInfo) => {
         noise: 4, // 干扰线条的数量
         color: true, // 验证码的字符是否有颜色，默认没有，如果设定了背景，则默认有
         background: '#eee' // 验证码图片背景颜色
-    }
+    };
     config.mailer = {
         host: "smtp.qq.com",
         port: 465,

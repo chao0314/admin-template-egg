@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import {readFileSync} from 'fs';
 import ExcelJS from 'exceljs';
 import path from 'path';
+import {Writable} from "stream";
 
 
 const secret = readFileSync('secret.key');
@@ -92,17 +93,41 @@ export default {
 
     },
 
-    async genXlsxFile(columns: { label: string, value: string }[], rows: any[][]) {
+    async genXlsxFile(columns: { label: string, value: string }[], rows: any[][], stream?: Writable) {
 
         const workbook = new ExcelJS.Workbook();
         const sheet = workbook.addWorksheet('sheet');
         sheet.columns = columns.map(({label, value}) => ({header: label, key: value}));
         sheet.addRows(rows);
-        const filename = `${Date.now()}.xlsx`;
-        const filePath  = path.join(__dirname, `../public/excels/${filename}`)
-        await workbook.xlsx.writeFile(filePath);
-        return {filename,filePath};
-    }
+        if (stream === undefined) {
+            const filename = `${Date.now()}.xlsx`;
+            const filePath = path.join(__dirname, `../public/excels/${filename}`)
+            await workbook.xlsx.writeFile(filePath);
+            return {filename, filePath};
+        }
 
+        await workbook.xlsx.write(stream);
+
+    },
+
+
+    async genRowsFromXlsxFile(filePath: string) {
+
+        try {
+            const workbook = new ExcelJS.Workbook();
+            await workbook.xlsx.readFile(filePath);
+
+            workbook.eachSheet(function (worksheet, sheetId) {
+
+                console.log('sheetId----', sheetId);
+                console.log('worksheet---', worksheet);
+
+            });
+        } catch (e) {
+            throw e
+
+        }
+
+    }
 }
 

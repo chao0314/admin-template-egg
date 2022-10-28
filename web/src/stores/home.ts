@@ -1,11 +1,10 @@
 import {defineStore} from "pinia";
 import instance from "@/stores/network";
-import {ref} from "vue";
 
 
-export const useHomeStore = defineStore('home', () => {
+export  const useHomeStore = defineStore('home', () => {
 
-    const tokenRef = ref<string>();
+    let tokenCache:string|null;
 
 
     const getCaptchaAction = async () => {
@@ -70,11 +69,21 @@ export const useHomeStore = defineStore('home', () => {
     const setToken = (token: string) => {
 
         localStorage.setItem('token', token);
-        tokenRef.value = token;
+        tokenCache= token;
+    }
+
+    const getToken = () => {
+
+        if(tokenCache) return tokenCache;
+
+        tokenCache = localStorage.getItem('token');
+
+        return  tokenCache;
+
     }
 
     return {
-        tokenRef,
+        getToken,
         getCaptchaAction,
         verifyCaptchaAction,
         sendSmsAction,
@@ -85,7 +94,6 @@ export const useHomeStore = defineStore('home', () => {
         singInAction,
         singInEmailAction,
         singInPhoneAction
-
     }
 
 })

@@ -34,3 +34,14 @@ export const filterObj = (obj: Record<string, any>) => {
     return temp;
 
 }
+
+
+export const downloadFile = (data: Blob, filename: string = 'file.xlsx') => {
+
+    const url = window.URL.createObjectURL(data);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+}

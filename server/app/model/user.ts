@@ -157,7 +157,7 @@ export default function (ctx: Context) {
             //      LIMIT 10 OFFSET 0;`
 
 
-            const {role, origin, state, username, email, phone, page = 1, pageSize = 10} = filter;
+            const {role, origin, state, username, email, phone, page, pageSize} = filter;
             const andFragments: string[] = [];
             const orFragments: string[] = [];
             const values: (number | string)[] = [];
@@ -189,9 +189,17 @@ export default function (ctx: Context) {
             if (orFragments.length > 0) sqlFragment += `AND (${orFragments.join('OR')})`;
 
             let havingSqlFragment = '';
-            if (role) {
+            if (role !== undefined) {
                 havingSqlFragment = `HAVING JSON_CONTAINS(roles, JSON_OBJECT('roleId', ?))`;
                 values.push(role);
+            }
+
+            let limitSqlFragment = '';
+
+            if (page !== undefined && pageSize !== undefined) {
+
+                limitSqlFragment = `LIMIT ? OFFSET ?`;
+                values.push(`${pageSize}`, `${pageSize * (page - 1)}`);
             }
 
             const sql = `SELECT SQL_CALC_FOUND_ROWS
@@ -211,9 +219,9 @@ export default function (ctx: Context) {
                         GROUP BY u.id
                         ${havingSqlFragment}
                         ORDER BY u.id DESC
-                        LIMIT ? OFFSET ?;`
+                        ${limitSqlFragment};`
 
-            const [list] = await pool.execute<Rows<UserRow>>(sql, [...values, `${pageSize}`, `${pageSize * (page - 1)}`]);
+            const [list] = await pool.execute<Rows<UserRow>>(sql, [...values]);
             const [[{total}]] = await pool.execute<Rows<{ total: number }>>(queryUserCount);
 
             return {
