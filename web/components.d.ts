@@ -41,6 +41,7 @@ declare module '@vue/runtime-core' {
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElUpload: typeof import('element-plus/es')['ElUpload']
     FormDialog: typeof import('./src/components/common/FormDialog.vue')['default']
+    FrontXlsxFile: typeof import('./src/components/common/FrontXlsxFile.vue')['default']
     HomeIndex: typeof import('./src/components/home/HomeIndex.vue')['default']
     HomeMain: typeof import('./src/components/home/HomeMain.vue')['default']
     HomeMenu: typeof import('./src/components/home/HomeMenu.vue')['default']
@@ -58,11 +59,10 @@ declare module '@vue/runtime-core' {
     SingUp: typeof import('./src/components/sing/SingUp.vue')['default']
     TablePagination: typeof import('./src/components/common/TablePagination.vue')['default']
     TreeDialog: typeof import('./src/components/common/TreeDialog.vue')['default']
-    TreeDialog1: typeof import('./src/components/common/TreeDialog1.vue')['default']
-    TreeDialogTest: typeof import('./src/components/common/TreeDialogTest.vue')['default']
     UploadAvatarDialog: typeof import('./src/components/common/UploadAvatarDialog.vue')['default']
     UploadFileDialog: typeof import('./src/components/common/UploadFileDialog.vue')['default']
     UserIndex: typeof import('./src/components/user/UserIndex.vue')['default']
     UserList: typeof import('./src/components/user/UserList.vue')['default']
+    XlsxFileTest: typeof import('./src/components/common/XlsxFileTest.vue')['default']
   }
 }

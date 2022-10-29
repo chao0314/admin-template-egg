@@ -119,8 +119,18 @@ export default {
 
             workbook.eachSheet(function (worksheet, sheetId) {
 
-                console.log('sheetId----', sheetId);
-                console.log('worksheet---', worksheet);
+                console.log('sheetId :', sheetId);
+
+                worksheet.eachRow(function (row, rowNumber) {
+                    // console.log('Row ' + rowNumber + ' = ' + JSON.stringify(row.values));
+                    console.log('rowNumber :', rowNumber);
+                    row.eachCell(function (cell, colNumber) {
+                        console.log('Cell ' + colNumber + ' = ' + cell.value);
+                    });
+                });
+
+                // todo... insert to db;
+
 
             });
         } catch (e) {

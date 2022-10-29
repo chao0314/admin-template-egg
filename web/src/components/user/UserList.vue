@@ -130,14 +130,13 @@
       </el-tooltip>
     </template>
   </table-pagination>
-  <el-button>前端导出</el-button>
-  <el-button>前端导入</el-button>
   <form-dialog :form-data="userData" ref="createUserDialogRef" @confirm="handleConfirmUser"></form-dialog>
   <upload-file-dialog ref="importDialogRef"
                       file-types="xlsx"
                       :action="uploadAction"
   ></upload-file-dialog>
   <form-dialog :form-data="rolesData" ref="setRoleDialogRef" @confirm="handleConfirmRole"></form-dialog>
+  <xlsx-file-test></xlsx-file-test>
 </template>
 
 <script setup lang="ts">
@@ -145,6 +144,7 @@ import TablePagination from '../common/TablePagination.vue';
 import {TableData, FormData, Types} from "../common/index";
 import UploadFileDialog from '../common/UploadFileDialog.vue';
 import FormDialog from '../common/FormDialog.vue';
+import XlsxFileTest from '../common/XlsxFileTest.vue';
 import {inject, onMounted, reactive, ref, shallowReactive, toRaw} from 'vue';
 import {Edit, Lock, Message, Phone, Setting, User} from '@element-plus/icons-vue';
 import type {Locale} from "@/locale/zh-cn";
@@ -284,7 +284,6 @@ const handleQueryUsers = () => {
   })
 
 }
-
 
 const handleCreateUser = () => {
   createUserDialogRef.value?.showDialog();

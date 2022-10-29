@@ -3,6 +3,7 @@ import {usernameDes, emailDes, phoneDes, passwordDes, mergeDes, ValidateError} f
 import {UserRow} from "../model/user";
 import {PermissionRow} from "../model/user";
 import {validateNumberObj, validateStringObj} from "../descriptor/regexp";
+import pfs from "fs/promises";
 
 type UserInfo = { username: string, email: string, phone: string, password: string, id?: number };
 export default class User extends Controller {
@@ -171,17 +172,15 @@ export default class User extends Controller {
         const file = ctx.request.files[0];
         try {
             await service.base.genRowsFromXlsxFile(file.filepath);
+            ctx.success();
         } catch (e) {
-
             ctx.badRequest(`${file.filename}`);
 
         } finally {
-
-
+            console.log('filepath:---',file.filepath);
+            await pfs.rm(file.filepath);
         }
 
-
-        ctx.success();
 
     }
 }
